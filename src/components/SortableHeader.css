@@ -1,0 +1,30 @@
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+.sortable-header:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.sortable-header-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sort-icon {
+    font-size: 0.625rem;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+}
+
+.sort-icon.active {
+    opacity: 1;
+    color: var(--color-primary);
+}
+
+.sortable-header:hover .sort-icon {
+    opacity: 0.7;
+}

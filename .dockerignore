@@ -1,0 +1,5 @@
+# 忽略本地開發用的 .env 檔案
+.env
+
+# 忽略 Docker 相關暫存
+docker-compose.override.yml

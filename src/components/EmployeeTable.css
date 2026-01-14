@@ -1,0 +1,436 @@
+.table-container {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.employee-table thead {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.employee-table th {
+    padding: 14px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    white-space: nowrap;
+}
+
+.employee-table tbody tr {
+    animation: fadeInUp 0.3s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.employee-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    color: var(--color-text-primary);
+}
+
+.employee-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.employee-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 員工編號 */
+.emp-id {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.8125rem;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--color-text-secondary);
+}
+
+/* 員工姓名 */
+.employee-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+}
+
+.name-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.chinese-name {
+    font-weight: 500;
+}
+
+.english-name {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+/* 標籤樣式 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-department {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--color-primary);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.type-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.badge-blue {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+}
+
+.badge-purple {
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+}
+
+.badge-green {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.badge-orange {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+.badge-gray {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+}
+
+/* 狀態標籤 */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.status-badge.inactive {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+.email-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.email-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+.btn-edit {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.btn-edit:hover {
+    background: rgba(59, 130, 246, 0.2);
+    transform: scale(1.1);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: scale(1.1);
+}
+
+/* 空狀態 */
+.empty-state,
+.loading-state {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h3,
+.loading-state p {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 8px 0;
+}
+
+.empty-state p {
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* 載入動畫 */
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(59, 130, 246, 0.2);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   響應式設計 - RWD
+   ============================================ */
+
+/* 大螢幕平板 (1024px - 1200px) */
+@media (max-width: 1200px) {
+    .table-container {
+        overflow-x: auto;
+    }
+}
+
+/* 平板螢幕 (768px - 1024px) */
+@media (max-width: 1024px) {
+    .hide-tablet {
+        display: none;
+    }
+
+    .employee-table th,
+    .employee-table td {
+        padding: 12px 10px;
+    }
+}
+
+/* 手機螢幕 (小於 768px) */
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none;
+    }
+
+    /* 卡片式表格 */
+    .table-container {
+        background: transparent;
+        border: none;
+        overflow: visible;
+    }
+
+    .employee-table {
+        min-width: unset;
+    }
+
+    .employee-table thead {
+        display: none;
+    }
+
+    .employee-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .employee-table tbody tr {
+        display: flex;
+        flex-direction: column;
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        gap: 10px;
+    }
+
+    .employee-table tbody tr:hover {
+        background: rgba(30, 41, 59, 0.95);
+    }
+
+    .employee-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        border-bottom: none;
+    }
+
+    .employee-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+
+    /* 姓名欄位特殊處理 */
+    .employee-table td[data-label="姓名"] {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 12px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .employee-table td[data-label="姓名"]::before {
+        display: none;
+    }
+
+    .employee-name {
+        width: 100%;
+    }
+
+    /* 操作欄位 */
+    .employee-table td[data-label="操作"] {
+        border-top: 1px solid rgba(148, 163, 184, 0.1);
+        padding-top: 12px;
+        margin-top: 4px;
+        justify-content: flex-end;
+    }
+
+    .employee-table td[data-label="操作"]::before {
+        display: none;
+    }
+
+    .action-buttons {
+        gap: 8px;
+    }
+
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* 狀態標籤調整 */
+    .status-badge {
+        padding: 6px 12px;
+    }
+
+    /* 員工編號調整 */
+    .emp-id {
+        font-size: 0.875rem;
+        padding: 6px 10px;
+    }
+}
+
+/* 小手機螢幕 (小於 480px) */
+@media (max-width: 480px) {
+    .employee-table tbody tr {
+        padding: 12px;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+
+    .chinese-name {
+        font-size: 0.9375rem;
+    }
+
+    .english-name {
+        font-size: 0.6875rem;
+    }
+
+    .empty-state,
+    .loading-state {
+        padding: 40px 16px;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+    }
+
+    .empty-state h3 {
+        font-size: 1rem;
+    }
+}
