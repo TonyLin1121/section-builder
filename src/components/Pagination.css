@@ -113,3 +113,10 @@
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(100, 116, 139, 0.2);
 }
+
+/* NOTE: 明亮模式下當前頁碼需要保持深色背景以突出顯示 */
+[data-theme="light"] .pagination-btn.active {
+    background: linear-gradient(135deg, var(--color-primary), #6366f1);
+    border-color: transparent;
+    color: white;
+}
