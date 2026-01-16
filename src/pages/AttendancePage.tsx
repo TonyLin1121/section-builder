@@ -5,6 +5,7 @@ import { Pagination } from '../components/Pagination';
 import { SortableHeader } from '../components/SortableHeader';
 import { ExportDropdown, type ExportFormat } from '../components/ExportDropdown';
 import { PdfPreview } from '../components/PdfPreview';
+import { EmployeeSelect } from '../components/EmployeeSelect';
 import type { AttendanceFormData } from '../types/attendance';
 import { DAY_PERIOD_OPTIONS } from '../types/attendance';
 import './AttendancePage.css';
@@ -198,19 +199,14 @@ export function AttendancePage() {
                         <div className="form-grid">
                             <div className="form-group">
                                 <label>員工 *</label>
-                                <select
+                                <EmployeeSelect
+                                    employees={employees}
                                     value={formData.emp_id}
-                                    onChange={(e) => setFormData({ ...formData, emp_id: e.target.value })}
+                                    onChange={(empId) => setFormData({ ...formData, emp_id: empId })}
                                     disabled={!!editingRecord}
                                     required
-                                >
-                                    <option value="">請選擇員工</option>
-                                    {employees.map(emp => (
-                                        <option key={emp.emp_id} value={emp.emp_id}>
-                                            {emp.chinese_name || emp.name} ({emp.emp_id})
-                                        </option>
-                                    ))}
-                                </select>
+                                    placeholder="輸入英文名搜尋或選擇員工"
+                                />
                             </div>
 
                             <div className="form-group">

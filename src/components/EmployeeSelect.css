@@ -1,0 +1,180 @@
+/* ============================================
+   員工選擇組件樣式
+   ============================================ */
+
+.employee-select {
+    position: relative;
+    width: 100%;
+}
+
+.employee-select.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.employee-select-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.employee-select-input {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    padding: 10px 60px 10px 12px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.employee-select-input::placeholder {
+    color: rgba(148, 163, 184, 0.5);
+}
+
+.employee-select-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.employee-select.disabled .employee-select-input {
+    cursor: not-allowed;
+}
+
+.employee-select-clear {
+    position: absolute;
+    right: 32px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 50%;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.625rem;
+    transition: all 0.2s ease;
+}
+
+.employee-select-clear:hover {
+    background: rgba(148, 163, 184, 0.5);
+    color: var(--color-text-primary);
+}
+
+.employee-select-arrow {
+    position: absolute;
+    right: 12px;
+    font-size: 0.625rem;
+    color: var(--color-text-secondary);
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+.employee-select.open .employee-select-arrow {
+    transform: rotate(180deg);
+}
+
+/* 下拉選單 */
+.employee-select-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: rgba(30, 41, 59, 0.98);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 10px;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.employee-select-list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+}
+
+.employee-select-item {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.employee-select-item:hover {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--color-primary);
+}
+
+.employee-select-item.selected {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.employee-select-no-result {
+    padding: 16px;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+}
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .employee-select-input {
+    background: rgba(248, 250, 252, 1);
+    border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+[data-theme="light"] .employee-select-input::placeholder {
+    color: rgba(100, 116, 139, 0.6);
+}
+
+[data-theme="light"] .employee-select-input:focus {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+[data-theme="light"] .employee-select-clear {
+    background: rgba(100, 116, 139, 0.2);
+}
+
+[data-theme="light"] .employee-select-clear:hover {
+    background: rgba(100, 116, 139, 0.35);
+}
+
+[data-theme="light"] .employee-select-dropdown {
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .employee-select-item:hover {
+    background: rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="light"] .employee-select-item.selected {
+    background: rgba(37, 99, 235, 0.12);
+}
