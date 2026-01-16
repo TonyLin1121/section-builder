@@ -131,10 +131,18 @@ export function AnnualLeavePage() {
         }
     }, [records, annualLeaveExportConfig, previewPdf, downloadPdf, downloadCsv, downloadXlsx]);
 
+    // 計算年度選項：當年前後各一年
+    const currentYear = new Date().getFullYear();
+    const yearOptions = useMemo(() => [
+        String(currentYear - 1),
+        String(currentYear),
+        String(currentYear + 1),
+    ], [currentYear]);
+
     const [formData, setFormData] = useState<AnnualLeaveFormData>({
         emp_id: '',
-        year: String(new Date().getFullYear()),
-        leave_type: '',
+        year: String(currentYear),
+        leave_type: '01', // NOTE: 預設為特休
         days_of_leave: 0,
         remark: '',
     });
@@ -207,8 +215,8 @@ export function AnnualLeavePage() {
             // 重置表單
             setFormData({
                 emp_id: '',
-                year: String(new Date().getFullYear()),
-                leave_type: '',
+                year: String(currentYear),
+                leave_type: '01', // NOTE: 預設為特休
                 days_of_leave: 0,
                 remark: '',
             });
@@ -286,6 +294,7 @@ export function AnnualLeavePage() {
                                 <label>給假年度 *</label>
                                 <input
                                     type="text"
+                                    list="year-options"
                                     maxLength={4}
                                     placeholder="例: 2026"
                                     value={formData.year}
@@ -296,6 +305,11 @@ export function AnnualLeavePage() {
                                     disabled={!!editingRecord}
                                     required
                                 />
+                                <datalist id="year-options">
+                                    {yearOptions.map(year => (
+                                        <option key={year} value={year} />
+                                    ))}
+                                </datalist>
                                 {formErrors.year && (
                                     <span className="form-error">{formErrors.year}</span>
                                 )}

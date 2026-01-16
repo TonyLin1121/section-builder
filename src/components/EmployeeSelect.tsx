@@ -163,8 +163,8 @@ export function EmployeeSelect({
         if (e.key === 'Escape') {
             setIsOpen(false);
             setSearchText('');
-        } else if (e.key === 'Enter' && filteredEmployees.length === 1) {
-            // 只有一個結果時按 Enter 直接選擇
+        } else if ((e.key === 'Enter' || e.key === 'Tab') && filteredEmployees.length === 1) {
+            // 只有一個結果時按 Enter 或 Tab 直接選擇
             e.preventDefault();
             handleSelect(filteredEmployees[0].emp_id);
         }
