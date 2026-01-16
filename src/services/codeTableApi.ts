@@ -2,43 +2,7 @@
  * CodeTable API 服務模組
  */
 import type { CodeTable, CodeTableFormData } from '../types/codeTable';
-
-const API_BASE_URL = 'http://localhost:8000/api';
-
-/**
- * 分頁回應結構
- */
-export interface PaginatedResponse<T> {
-    items: T[];
-    total: number;
-    page: number;
-    page_size: number;
-    total_pages: number;
-}
-
-/**
- * 通用請求處理
- */
-async function request<T>(
-    endpoint: string,
-    options?: RequestInit
-): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-
-    const response = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        ...options,
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: '請求失敗' }));
-        throw new Error(error.detail || `HTTP ${response.status}`);
-    }
-
-    return response.json();
-}
+import { httpRequest, type PaginatedResponse } from './httpClient';
 
 /**
  * 取得參數檔清單（支援分頁、排序）
@@ -73,7 +37,7 @@ export async function getCodeTables(params?: {
     }
 
     const query = searchParams.toString();
-    return request<PaginatedResponse<CodeTable>>(`/codes${query ? `?${query}` : ''}`);
+    return httpRequest<PaginatedResponse<CodeTable>>(`/codes${query ? `?${query}` : ''}`);
 }
 
 /**
@@ -83,7 +47,7 @@ export async function getCodeTable(
     codeCode: string,
     codeSubcode: string
 ): Promise<CodeTable> {
-    return request<CodeTable>(
+    return httpRequest<CodeTable>(
         `/codes/${encodeURIComponent(codeCode)}/${encodeURIComponent(codeSubcode)}`
     );
 }
@@ -92,7 +56,7 @@ export async function getCodeTable(
  * 新增參數
  */
 export async function createCodeTable(data: CodeTableFormData): Promise<CodeTable> {
-    return request<CodeTable>('/codes', {
+    return httpRequest<CodeTable>('/codes', {
         method: 'POST',
         body: JSON.stringify(data),
     });
@@ -106,7 +70,7 @@ export async function updateCodeTable(
     codeSubcode: string,
     data: Partial<CodeTableFormData>
 ): Promise<CodeTable> {
-    return request<CodeTable>(
+    return httpRequest<CodeTable>(
         `/codes/${encodeURIComponent(codeCode)}/${encodeURIComponent(codeSubcode)}`,
         {
             method: 'PUT',
@@ -122,7 +86,7 @@ export async function deleteCodeTable(
     codeCode: string,
     codeSubcode: string
 ): Promise<{ message: string }> {
-    return request<{ message: string }>(
+    return httpRequest<{ message: string }>(
         `/codes/${encodeURIComponent(codeCode)}/${encodeURIComponent(codeSubcode)}`,
         {
             method: 'DELETE',

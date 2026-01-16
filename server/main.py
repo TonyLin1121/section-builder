@@ -8,12 +8,19 @@ from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import JSONResponse
 
 from database import get_cursor
 from models import (
     Member, MemberCreate, MemberUpdate,
     Attendance, AttendanceCreate, AttendanceUpdate,
     CodeTable, CodeTableCreate, CodeTableUpdate
+)
+from csrf import (
+    CSRFMiddleware,
+    generate_csrf_token,
+    set_csrf_cookie,
+    CSRF_COOKIE_NAME,
 )
 
 # 設定日誌
@@ -50,7 +57,12 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-CSRF-Token"],  # 允許前端讀取 CSRF header
 )
+
+# 添加 CSRF 中間件
+# NOTE: CSRF 中間件必須在 CORS 之後添加
+app.add_middleware(CSRFMiddleware)
 
 
 @app.get("/health")
@@ -68,6 +80,19 @@ def root():
     API 根路徑
     """
     return {"message": "部門人員管理 API", "version": "1.0.0"}
+
+
+@app.get("/api/csrf-token")
+def get_csrf_token():
+    """
+    取得 CSRF Token
+    NOTE: 前端在應用啟動時調用此端點獲取 token，
+          token 會同時設置在 Cookie 和回應 body 中
+    """
+    token = generate_csrf_token()
+    response = JSONResponse(content={"csrf_token": token})
+    set_csrf_cookie(response, token)
+    return response
 
 
 @app.get("/api/members")

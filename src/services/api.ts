@@ -3,43 +3,10 @@
  * NOTE: 封裝與後端的 HTTP 請求
  */
 import type { Member, MemberFormData } from '../types/employee';
+import { httpRequest, type PaginatedResponse } from './httpClient';
 
-const API_BASE_URL = 'http://localhost:8000/api';
-
-/**
- * 分頁回應結構
- */
-export interface PaginatedResponse<T> {
-    items: T[];
-    total: number;
-    page: number;
-    page_size: number;
-    total_pages: number;
-}
-
-/**
- * 通用請求處理
- */
-async function request<T>(
-    endpoint: string,
-    options?: RequestInit
-): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-
-    const response = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        ...options,
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: '請求失敗' }));
-        throw new Error(error.detail || `HTTP ${response.status}`);
-    }
-
-    return response.json();
-}
+// 重新導出 PaginatedResponse 供其他模組使用
+export type { PaginatedResponse } from './httpClient';
 
 /**
  * 取得所有員工（支援分頁、排序）
@@ -85,21 +52,21 @@ export async function getMembers(params?: {
     }
 
     const query = searchParams.toString();
-    return request<PaginatedResponse<Member>>(`/members${query ? `?${query}` : ''}`);
+    return httpRequest<PaginatedResponse<Member>>(`/members${query ? `?${query}` : ''}`);
 }
 
 /**
  * 取得單一員工
  */
 export async function getMember(empId: string): Promise<Member> {
-    return request<Member>(`/members/${encodeURIComponent(empId)}`);
+    return httpRequest<Member>(`/members/${encodeURIComponent(empId)}`);
 }
 
 /**
  * 新增員工
  */
 export async function createMember(data: MemberFormData & { emp_id: string }): Promise<Member> {
-    return request<Member>('/members', {
+    return httpRequest<Member>('/members', {
         method: 'POST',
         body: JSON.stringify(data),
     });
@@ -109,7 +76,7 @@ export async function createMember(data: MemberFormData & { emp_id: string }): P
  * 更新員工
  */
 export async function updateMember(empId: string, data: MemberFormData): Promise<Member> {
-    return request<Member>(`/members/${encodeURIComponent(empId)}`, {
+    return httpRequest<Member>(`/members/${encodeURIComponent(empId)}`, {
         method: 'PUT',
         body: JSON.stringify(data),
     });
@@ -119,7 +86,7 @@ export async function updateMember(empId: string, data: MemberFormData): Promise
  * 刪除員工
  */
 export async function deleteMember(empId: string): Promise<{ message: string; emp_id: string }> {
-    return request<{ message: string; emp_id: string }>(`/members/${encodeURIComponent(empId)}`, {
+    return httpRequest<{ message: string; emp_id: string }>(`/members/${encodeURIComponent(empId)}`, {
         method: 'DELETE',
     });
 }
@@ -128,5 +95,6 @@ export async function deleteMember(empId: string): Promise<{ message: string; em
  * 取得部門清單
  */
 export async function getDivisions(): Promise<string[]> {
-    return request<string[]>('/divisions');
+    return httpRequest<string[]>('/divisions');
 }
+

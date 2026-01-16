@@ -2,8 +2,7 @@
  * Attendance API 服務模組
  */
 import type { Attendance, AttendanceFormData } from '../types/attendance';
-
-const API_BASE_URL = 'http://localhost:8000/api';
+import { httpRequest, type PaginatedResponse } from './httpClient';
 
 /**
  * 假別資料介面（來自 gen001_allcode）
@@ -17,46 +16,11 @@ export interface LeaveType {
 }
 
 /**
- * 分頁回應結構
- */
-export interface PaginatedResponse<T> {
-    items: T[];
-    total: number;
-    page: number;
-    page_size: number;
-    total_pages: number;
-}
-
-/**
  * 請假記錄（含員工名稱）
  */
 export interface AttendanceWithName extends Attendance {
     chinese_name?: string;
     english_name?: string;
-}
-
-/**
- * 通用請求處理
- */
-async function request<T>(
-    endpoint: string,
-    options?: RequestInit
-): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-
-    const response = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        ...options,
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: '請求失敗' }));
-        throw new Error(error.detail || `HTTP ${response.status}`);
-    }
-
-    return response.json();
 }
 
 /**
@@ -104,7 +68,7 @@ export async function getAttendanceRecords(params?: {
     }
 
     const query = searchParams.toString();
-    return request<PaginatedResponse<AttendanceWithName>>(`/attendance${query ? `?${query}` : ''}`);
+    return httpRequest<PaginatedResponse<AttendanceWithName>>(`/attendance${query ? `?${query}` : ''}`);
 }
 
 /**
@@ -115,7 +79,7 @@ export async function getAttendanceRecord(
     leaveDate: string,
     leaveType: string
 ): Promise<Attendance> {
-    return request<Attendance>(
+    return httpRequest<Attendance>(
         `/attendance/${encodeURIComponent(empId)}/${encodeURIComponent(leaveDate)}/${encodeURIComponent(leaveType)}`
     );
 }
@@ -124,7 +88,7 @@ export async function getAttendanceRecord(
  * 新增請假記錄
  */
 export async function createAttendanceRecord(data: AttendanceFormData): Promise<Attendance> {
-    return request<Attendance>('/attendance', {
+    return httpRequest<Attendance>('/attendance', {
         method: 'POST',
         body: JSON.stringify(data),
     });
@@ -139,7 +103,7 @@ export async function updateAttendanceRecord(
     leaveType: string,
     data: Partial<AttendanceFormData>
 ): Promise<Attendance> {
-    return request<Attendance>(
+    return httpRequest<Attendance>(
         `/attendance/${encodeURIComponent(empId)}/${encodeURIComponent(leaveDate)}/${encodeURIComponent(leaveType)}`,
         {
             method: 'PUT',
@@ -156,7 +120,7 @@ export async function deleteAttendanceRecord(
     leaveDate: string,
     leaveType: string
 ): Promise<{ message: string }> {
-    return request<{ message: string }>(
+    return httpRequest<{ message: string }>(
         `/attendance/${encodeURIComponent(empId)}/${encodeURIComponent(leaveDate)}/${encodeURIComponent(leaveType)}`,
         {
             method: 'DELETE',
@@ -168,7 +132,7 @@ export async function deleteAttendanceRecord(
  * 取得假別清單（來自 gen001_allcode code_code='0001'）
  */
 export async function getLeaveTypes(): Promise<LeaveType[]> {
-    return request<LeaveType[]>('/codes/leave-types');
+    return httpRequest<LeaveType[]>('/codes/leave-types');
 }
 
 /**
@@ -185,11 +149,10 @@ export interface EmployeeOption {
  */
 export async function getEmployeeOptions(): Promise<EmployeeOption[]> {
     // 使用分頁 API，取得員工（後端限制 page_size 最大為 100）
-    const response = await request<{ items: any[] }>('/members?page_size=100');
+    const response = await httpRequest<{ items: { emp_id: string; chinese_name?: string; name?: string }[] }>('/members?page_size=100');
     return response.items.map(m => ({
         emp_id: m.emp_id,
         chinese_name: m.chinese_name || '',
         name: m.name || m.emp_id,
     }));
 }
-
