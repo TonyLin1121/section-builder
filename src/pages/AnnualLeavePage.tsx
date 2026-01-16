@@ -133,21 +133,34 @@ export function AnnualLeavePage() {
 
     // 計算年度選項：當年前後各一年
     const currentYear = new Date().getFullYear();
-    const yearOptions = useMemo(() => [
+    const yearOptions = [
         String(currentYear - 1),
         String(currentYear),
         String(currentYear + 1),
-    ], [currentYear]);
+    ];
 
     const [formData, setFormData] = useState<AnnualLeaveFormData>({
         emp_id: '',
         year: String(currentYear),
-        leave_type: '01', // NOTE: 預設為特休
+        leave_type: '',
         days_of_leave: 0,
         remark: '',
     });
 
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+    // NOTE: 載入假別後，自動設定預設為特休
+    useEffect(() => {
+        if (leaveTypes.length > 0 && !formData.leave_type && !editingRecord) {
+            // 找到特休（名稱包含"特休"）
+            const annualLeave = leaveTypes.find(lt =>
+                lt.code_subname?.trim() === '特休' || lt.code_content?.includes('特休')
+            );
+            if (annualLeave) {
+                setFormData(prev => ({ ...prev, leave_type: annualLeave.code_subcode }));
+            }
+        }
+    }, [leaveTypes, formData.leave_type, editingRecord]);
 
     // 編輯模式下填充表單
     useEffect(() => {
@@ -213,10 +226,13 @@ export function AnnualLeavePage() {
                 await addRecord(formData);
             }
             // 重置表單
+            const annualLeave = leaveTypes.find(lt =>
+                lt.code_subname?.trim() === '特休' || lt.code_content?.includes('特休')
+            );
             setFormData({
                 emp_id: '',
                 year: String(currentYear),
-                leave_type: '01', // NOTE: 預設為特休
+                leave_type: annualLeave?.code_subcode || '',
                 days_of_leave: 0,
                 remark: '',
             });
@@ -292,24 +308,16 @@ export function AnnualLeavePage() {
 
                             <div className="form-group">
                                 <label>給假年度 *</label>
-                                <input
-                                    type="text"
-                                    list="year-options"
-                                    maxLength={4}
-                                    placeholder="例: 2026"
+                                <select
                                     value={formData.year}
-                                    onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, '');
-                                        setFormData({ ...formData, year: value });
-                                    }}
+                                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
                                     disabled={!!editingRecord}
                                     required
-                                />
-                                <datalist id="year-options">
+                                >
                                     {yearOptions.map(year => (
-                                        <option key={year} value={year} />
+                                        <option key={year} value={year}>{year}</option>
                                     ))}
-                                </datalist>
+                                </select>
                                 {formErrors.year && (
                                     <span className="form-error">{formErrors.year}</span>
                                 )}
