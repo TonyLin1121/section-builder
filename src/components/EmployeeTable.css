@@ -434,3 +434,78 @@
         font-size: 1rem;
     }
 }
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .table-container {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .employee-table thead {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .employee-table th {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .employee-table td {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+}
+
+[data-theme="light"] .employee-table tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+[data-theme="light"] .emp-id {
+    background: rgba(241, 245, 249, 0.9);
+    color: var(--color-text-secondary);
+}
+
+[data-theme="light"] .empty-state,
+[data-theme="light"] .loading-state {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .btn-edit {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .btn-edit:hover {
+    background: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="light"] .btn-delete {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+[data-theme="light"] .btn-delete:hover {
+    background: rgba(220, 38, 38, 0.2);
+}
+
+/* 手機版卡片樣式 - 明亮模式 */
+@media (max-width: 768px) {
+    [data-theme="light"] .employee-table tbody tr {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(100, 116, 139, 0.15);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="light"] .employee-table tbody tr:hover {
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="light"] .employee-table td[data-label="姓名"] {
+        border-bottom: 1px solid rgba(100, 116, 139, 0.12);
+    }
+
+    [data-theme="light"] .employee-table td[data-label="操作"] {
+        border-top: 1px solid rgba(100, 116, 139, 0.12);
+    }
+}

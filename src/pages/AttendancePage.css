@@ -475,3 +475,109 @@
         font-size: 0.875rem;
     }
 }
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .attendance-form {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group select,
+[data-theme="light"] .form-group textarea {
+    background: rgba(248, 250, 252, 1);
+    border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+[data-theme="light"] .form-group input:focus,
+[data-theme="light"] .form-group select:focus,
+[data-theme="light"] .form-group textarea:focus {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+[data-theme="light"] .filters input,
+[data-theme="light"] .filters select {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .table-container {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .attendance-table thead {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .attendance-table th {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .attendance-table td {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+}
+
+[data-theme="light"] .attendance-table tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+[data-theme="light"] .btn-secondary {
+    background: rgba(241, 245, 249, 0.9);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(226, 232, 240, 1);
+}
+
+[data-theme="light"] .btn-edit {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .btn-edit:hover {
+    background: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="light"] .btn-delete {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+[data-theme="light"] .btn-delete:hover {
+    background: rgba(220, 38, 38, 0.2);
+}
+
+/* 手機版卡片樣式 - 明亮模式 */
+@media (max-width: 768px) {
+    [data-theme="light"] .table-container {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    [data-theme="light"] .attendance-table tbody tr {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(100, 116, 139, 0.15);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="light"] .attendance-table tbody tr:hover {
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="light"] .attendance-table td:last-child {
+        border-top: 1px solid rgba(100, 116, 139, 0.12);
+    }
+}

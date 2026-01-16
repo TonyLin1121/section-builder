@@ -128,3 +128,27 @@
         padding: 12px;
     }
 }
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .pdf-modal-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .pdf-modal {
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .pdf-modal-header {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.12);
+}
+
+[data-theme="light"] .btn-close {
+    background: rgba(100, 116, 139, 0.1);
+}
+
+[data-theme="light"] .btn-close:hover {
+    background: rgba(100, 116, 139, 0.2);
+}

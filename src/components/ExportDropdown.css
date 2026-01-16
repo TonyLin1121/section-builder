@@ -72,3 +72,20 @@
     margin: 6px 12px;
     background: rgba(148, 163, 184, 0.15);
 }
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .export-menu {
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .export-menu-item:hover {
+    background: rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="light"] .export-menu-divider {
+    background: rgba(100, 116, 139, 0.12);
+}

@@ -96,3 +96,20 @@
         font-size: 0.75rem;
     }
 }
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .pagination-btn {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+[data-theme="light"] .pagination-btn:hover:not(:disabled) {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .pagination-size select {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
