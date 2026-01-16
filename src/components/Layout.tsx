@@ -15,6 +15,7 @@ export function Layout({ children }: LayoutProps) {
     const menuItems = [
         { path: '/', label: '👥 員工管理', icon: '👥' },
         { path: '/attendance', label: '📅 請假維護', icon: '📅' },
+        { path: '/annual-leave', label: '🗓️ 年度休假', icon: '🗓️' },
         { path: '/codetable', label: '⚙️ 參數檔維護', icon: '⚙️' },
     ];
 

@@ -1,0 +1,494 @@
+/* ============================================
+   年度休假頁面樣式
+   NOTE: 基於 AttendancePage.css 調整
+   ============================================ */
+
+.annual-leave-page {
+    min-height: 100vh;
+}
+
+.page-header {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.page-header .header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.page-content {
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* 表單 */
+.form-section {
+    margin-bottom: 32px;
+}
+
+.annual-leave-form {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.annual-leave-form h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.form-group input:disabled,
+.form-group select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-error {
+    font-size: 0.75rem;
+    color: #f87171;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary), #6366f1);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+    background: rgba(100, 116, 139, 0.2);
+    color: var(--color-text-secondary);
+}
+
+.btn-secondary:hover {
+    background: rgba(100, 116, 139, 0.3);
+    color: var(--color-text-primary);
+}
+
+/* 篩選 */
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filters {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filters input,
+.filters select {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    min-width: 180px;
+    transition: all 0.2s ease;
+}
+
+.filters input:focus,
+.filters select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    outline: none;
+}
+
+/* 表格 */
+.table-section {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.table-section h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.annual-leave-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.annual-leave-table thead {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.annual-leave-table th,
+.annual-leave-table td {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.annual-leave-table th {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.annual-leave-table td {
+    color: var(--color-text-primary);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+}
+
+.annual-leave-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.08);
+}
+
+/* 員工資訊 */
+.employee-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.employee-name {
+    font-weight: 500;
+}
+
+.employee-id {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+/* 徽章 */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+/* 天數欄位 */
+.days-cell {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* 操作按鈕 */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.btn-edit:hover {
+    background: rgba(59, 130, 246, 0.25);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.btn-delete:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+/* 狀態 */
+.loading,
+.empty {
+    text-align: center;
+    padding: 48px;
+    color: var(--color-text-secondary);
+}
+
+.error-banner {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 12px 20px;
+    margin: 16px 32px;
+    border-radius: 8px;
+    color: #fca5a5;
+}
+
+/* 響應式 */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 16px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-content {
+        padding: 20px;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .table-container {
+        overflow-x: visible;
+    }
+
+    .annual-leave-table thead {
+        display: none;
+    }
+
+    .annual-leave-table tbody tr {
+        display: block;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .annual-leave-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: none;
+    }
+
+    .annual-leave-table td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: var(--color-text-secondary);
+        margin-right: 16px;
+    }
+
+    .annual-leave-table td:last-child {
+        border-top: 1px solid rgba(148, 163, 184, 0.1);
+        padding-top: 12px;
+        margin-top: 8px;
+        justify-content: flex-end;
+    }
+
+    .hide-tablet {
+        display: none;
+    }
+}
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .annual-leave-form {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group select,
+[data-theme="light"] .form-group textarea {
+    background: rgba(248, 250, 252, 1);
+    border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+[data-theme="light"] .form-group input:focus,
+[data-theme="light"] .form-group select:focus,
+[data-theme="light"] .form-group textarea:focus {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+[data-theme="light"] .filters input,
+[data-theme="light"] .filters select {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .table-section {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .annual-leave-table thead {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .annual-leave-table th {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .annual-leave-table td {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+}
+
+[data-theme="light"] .annual-leave-table tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+[data-theme="light"] .badge {
+    background: rgba(124, 58, 237, 0.12);
+    color: #7c3aed;
+}
+
+[data-theme="light"] .btn-secondary {
+    background: rgba(241, 245, 249, 0.9);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(226, 232, 240, 1);
+}
+
+[data-theme="light"] .btn-edit {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .btn-edit:hover {
+    background: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="light"] .btn-delete {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+[data-theme="light"] .btn-delete:hover {
+    background: rgba(220, 38, 38, 0.2);
+}
+
+/* 手機版卡片樣式 - 明亮模式 */
+@media (max-width: 768px) {
+    [data-theme="light"] .table-section {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    [data-theme="light"] .annual-leave-table tbody tr {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(100, 116, 139, 0.15);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="light"] .annual-leave-table tbody tr:hover {
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="light"] .annual-leave-table td:last-child {
+        border-top: 1px solid rgba(100, 116, 139, 0.12);
+    }
+}

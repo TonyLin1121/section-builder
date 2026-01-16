@@ -3,6 +3,7 @@ import { Layout } from './components/Layout';
 import App from './App';
 import { AttendancePage } from './pages/AttendancePage';
 import { CodeTablePage } from './pages/CodeTablePage';
+import { AnnualLeavePage } from './pages/AnnualLeavePage';
 
 /**
  * 路由配置
@@ -17,8 +18,11 @@ export const router = createBrowserRouter([
         element: <Layout><AttendancePage /></Layout>,
     },
     {
+        path: '/annual-leave',
+        element: <Layout><AnnualLeavePage /></Layout>,
+    },
+    {
         path: '/codetable',
         element: <Layout><CodeTablePage /></Layout>,
     },
 ]);
-

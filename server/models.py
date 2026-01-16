@@ -143,3 +143,45 @@ class CodeTable(CodeTableBase):
 
     class Config:
         from_attributes = True
+
+
+# ============================================
+# AnnualLeave (年度休假) 模型
+# ============================================
+
+class AnnualLeaveBase(BaseModel):
+    """
+    年度休假基礎資料模型
+    """
+    days_of_leave: Optional[float] = Field(None, ge=0, le=365.5, description="可休天數")
+    remark: Optional[str] = Field(None, max_length=255, description="備註")
+
+
+class AnnualLeaveCreate(AnnualLeaveBase):
+    """
+    新增年度休假時使用的模型
+    """
+    emp_id: str = Field(..., max_length=12, description="員工編號")
+    year: str = Field(..., min_length=4, max_length=4, description="西元年度")
+    leave_type: str = Field(..., max_length=4, description="假別")
+    days_of_leave: float = Field(..., ge=0, le=365.5, description="可休天數")
+
+
+class AnnualLeaveUpdate(AnnualLeaveBase):
+    """
+    更新年度休假時使用的模型
+    """
+    pass
+
+
+class AnnualLeave(AnnualLeaveBase):
+    """
+    完整年度休假資料模型（包含複合主鍵）
+    """
+    emp_id: str = Field(..., max_length=12, description="員工編號")
+    year: str = Field(..., max_length=4, description="西元年度")
+    leave_type: str = Field(..., max_length=4, description="假別")
+
+    class Config:
+        from_attributes = True
+

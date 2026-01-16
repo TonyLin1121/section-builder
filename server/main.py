@@ -14,7 +14,8 @@ from database import get_cursor
 from models import (
     Member, MemberCreate, MemberUpdate,
     Attendance, AttendanceCreate, AttendanceUpdate,
-    CodeTable, CodeTableCreate, CodeTableUpdate
+    CodeTable, CodeTableCreate, CodeTableUpdate,
+    AnnualLeave, AnnualLeaveCreate, AnnualLeaveUpdate
 )
 from csrf import (
     CSRFMiddleware,
@@ -721,6 +722,231 @@ def delete_code_table(code_code: str, code_subcode: str):
         raise
     except Exception as e:
         logger.error(f"刪除參數失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ============================================
+# AnnualLeave (年度休假) API 端點
+# ============================================
+
+@app.get("/api/annual-leave")
+def get_annual_leave_records(
+    emp_id: Optional[str] = Query(None, description="員工編號篩選"),
+    emp_name: Optional[str] = Query(None, description="員工姓名篩選"),
+    year: Optional[str] = Query(None, description="年度篩選"),
+    leave_type: Optional[str] = Query(None, description="假別篩選"),
+    page: int = Query(1, ge=1, description="頁碼"),
+    page_size: int = Query(20, ge=1, le=100, description="每頁筆數"),
+    sort_by: Optional[str] = Query(None, description="排序欄位"),
+    sort_order: Optional[str] = Query("desc", description="排序方向 asc/desc"),
+):
+    """
+    取得年度休假記錄清單
+    支援分頁、排序和篩選
+    """
+    try:
+        with get_cursor() as cursor:
+            # 基礎查詢（JOIN 員工資料取得姓名）
+            base_sql = """
+                SELECT a.*, m.chinese_name, m.name as english_name
+                FROM member_annual_leave a
+                LEFT JOIN member m ON a.emp_id = m.emp_id
+                WHERE 1=1
+            """
+            params = []
+
+            if emp_id:
+                base_sql += " AND a.emp_id = %s"
+                params.append(emp_id)
+
+            if emp_name:
+                base_sql += " AND (m.chinese_name LIKE %s OR m.name LIKE %s)"
+                params.append(f"%{emp_name}%")
+                params.append(f"%{emp_name}%")
+
+            if year:
+                base_sql += " AND a.year = %s"
+                params.append(year)
+
+            if leave_type:
+                base_sql += " AND a.leave_type = %s"
+                params.append(leave_type)
+
+            # 計算總筆數
+            count_sql = f"SELECT COUNT(*) as total FROM ({base_sql}) as subquery"
+            cursor.execute(count_sql, params)
+            total = cursor.fetchone()['total']
+
+            # 排序
+            allowed_sort_fields = ['emp_id', 'year', 'leave_type', 'days_of_leave', 'chinese_name']
+            if sort_by and sort_by in allowed_sort_fields:
+                order_direction = 'ASC' if sort_order == 'asc' else 'DESC'
+                base_sql += f" ORDER BY {sort_by} {order_direction}"
+            else:
+                base_sql += " ORDER BY a.year DESC, a.emp_id"
+
+            # 分頁
+            offset = (page - 1) * page_size
+            base_sql += " LIMIT %s OFFSET %s"
+            params.extend([page_size, offset])
+
+            cursor.execute(base_sql, params)
+            rows = cursor.fetchall()
+
+            total_pages = (total + page_size - 1) // page_size
+
+            return {
+                "items": [dict(row) for row in rows],
+                "total": total,
+                "page": page,
+                "page_size": page_size,
+                "total_pages": total_pages,
+            }
+
+    except Exception as e:
+        logger.error(f"取得年度休假記錄失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/annual-leave/{emp_id}/{year}/{leave_type}")
+def get_annual_leave_record(emp_id: str, year: str, leave_type: str):
+    """
+    根據複合主鍵取得單一年度休假記錄
+    """
+    try:
+        with get_cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT a.*, m.chinese_name, m.name as english_name
+                FROM member_annual_leave a
+                LEFT JOIN member m ON a.emp_id = m.emp_id
+                WHERE a.emp_id = %s AND a.year = %s AND a.leave_type = %s
+                """,
+                (emp_id, year, leave_type)
+            )
+            row = cursor.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="年度休假記錄不存在")
+            return dict(row)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"取得年度休假記錄失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/annual-leave", status_code=201)
+def create_annual_leave_record(record: AnnualLeaveCreate):
+    """
+    新增年度休假記錄
+    """
+    try:
+        # 驗證可休天數：小數位只能是 0 或 0.5
+        if record.days_of_leave is not None:
+            decimal_part = record.days_of_leave % 1
+            if decimal_part != 0 and decimal_part != 0.5:
+                raise HTTPException(
+                    status_code=400,
+                    detail="可休天數的小數位僅能為 0 或 0.5"
+                )
+
+        with get_cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO member_annual_leave (emp_id, year, leave_type, days_of_leave, remark)
+                VALUES (%s, %s, %s, %s, %s)
+                RETURNING emp_id, year, leave_type
+                """,
+                (
+                    record.emp_id,
+                    record.year,
+                    record.leave_type,
+                    record.days_of_leave,
+                    record.remark,
+                )
+            )
+            result = cursor.fetchone()
+            return {
+                "message": "新增成功",
+                "emp_id": result['emp_id'],
+                "year": result['year'],
+                "leave_type": result['leave_type']
+            }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        if "duplicate key" in str(e).lower():
+            raise HTTPException(status_code=409, detail="該員工的此年度假別記錄已存在")
+        logger.error(f"新增年度休假記錄失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.put("/api/annual-leave/{emp_id}/{year}/{leave_type}")
+def update_annual_leave_record(emp_id: str, year: str, leave_type: str, record: AnnualLeaveUpdate):
+    """
+    更新年度休假記錄
+    """
+    try:
+        # 驗證可休天數：小數位只能是 0 或 0.5
+        if record.days_of_leave is not None:
+            decimal_part = record.days_of_leave % 1
+            if decimal_part != 0 and decimal_part != 0.5:
+                raise HTTPException(
+                    status_code=400,
+                    detail="可休天數的小數位僅能為 0 或 0.5"
+                )
+
+        update_data = record.model_dump(exclude_unset=True)
+        if not update_data:
+            raise HTTPException(status_code=400, detail="無更新欄位")
+
+        with get_cursor() as cursor:
+            set_clause = ", ".join([f"{k} = %s" for k in update_data.keys()])
+            values = list(update_data.values())
+            values.extend([emp_id, year, leave_type])
+
+            cursor.execute(
+                f"""
+                UPDATE member_annual_leave
+                SET {set_clause}
+                WHERE emp_id = %s AND year = %s AND leave_type = %s
+                RETURNING emp_id
+                """,
+                values
+            )
+            row = cursor.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="年度休假記錄不存在")
+            return {"message": "更新成功", "emp_id": emp_id, "year": year, "leave_type": leave_type}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"更新年度休假記錄失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/api/annual-leave/{emp_id}/{year}/{leave_type}")
+def delete_annual_leave_record(emp_id: str, year: str, leave_type: str):
+    """
+    刪除年度休假記錄
+    """
+    try:
+        with get_cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM member_annual_leave WHERE emp_id = %s AND year = %s AND leave_type = %s RETURNING emp_id",
+                (emp_id, year, leave_type)
+            )
+            row = cursor.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="年度休假記錄不存在")
+            return {"message": "刪除成功", "emp_id": emp_id, "year": year, "leave_type": leave_type}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"刪除年度休假記錄失敗: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
