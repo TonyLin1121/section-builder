@@ -1,0 +1,77 @@
+/* ============================================
+   主題切換組件樣式
+   ============================================ */
+
+.theme-toggle {
+    padding: 16px 12px;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.theme-toggle-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 12px;
+    padding: 0 4px;
+}
+
+.theme-toggle-options {
+    display: flex;
+    gap: 4px;
+    background: var(--color-bg-tertiary);
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.theme-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--color-text-secondary);
+}
+
+.theme-option:hover {
+    background: rgba(148, 163, 184, 0.1);
+    color: var(--color-text-primary);
+}
+
+.theme-option.active {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+    color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+.theme-option-icon {
+    font-size: 1.25rem;
+}
+
+.theme-option-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+}
+
+/* 響應式：側邊欄收縮時隱藏文字 */
+@media (max-width: 768px) {
+    .theme-toggle-label {
+        display: none;
+    }
+
+    .theme-toggle-options {
+        flex-direction: column;
+    }
+
+    .theme-option {
+        padding: 8px;
+    }
+
+    .theme-option-label {
+        display: none;
+    }
+}

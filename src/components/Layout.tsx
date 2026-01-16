@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { ThemeToggle } from './ThemeToggle';
 import './Layout.css';
 
 interface LayoutProps {
@@ -36,6 +37,8 @@ export function Layout({ children }: LayoutProps) {
                         </Link>
                     ))}
                 </nav>
+                {/* 主題設定 */}
+                <ThemeToggle />
             </aside>
 
             {/* 主要內容區 */}
@@ -45,3 +48,4 @@ export function Layout({ children }: LayoutProps) {
         </div>
     );
 }
+

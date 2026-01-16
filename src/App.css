@@ -179,6 +179,28 @@
   border-color: rgba(148, 163, 184, 0.5);
 }
 
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .app-header {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .app-footer {
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .btn-outline {
+  border-color: rgba(100, 116, 139, 0.3);
+}
+
+[data-theme="light"] .btn-outline:hover:not(:disabled) {
+  background: rgba(100, 116, 139, 0.1);
+  border-color: rgba(100, 116, 139, 0.4);
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
   .header-content {
