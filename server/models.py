@@ -185,3 +185,67 @@ class AnnualLeave(AnnualLeaveBase):
     class Config:
         from_attributes = True
 
+
+# ============================================
+# ProjectInfo (專案資訊) 模型
+# ============================================
+
+class ProjectInfoBase(BaseModel):
+    """
+    專案資訊基礎資料模型
+    """
+    so_no: Optional[str] = Field(None, max_length=7, description="合約代號")
+    project_name: Optional[str] = Field(None, max_length=100, description="專案名稱")
+    customer_name: Optional[str] = Field(None, max_length=100, description="客戶名稱")
+    project_plan_start: Optional[str] = Field(None, max_length=10, description="專案計畫開始日")
+    project_plan_end: Optional[str] = Field(None, max_length=10, description="專案計畫結束日")
+    warranty_sdate: Optional[str] = Field(None, max_length=10, description="保固開始日")
+    warranty_edate: Optional[str] = Field(None, max_length=10, description="保固結束日")
+    project_amt: Optional[float] = Field(None, description="專案金額")
+    project_department: Optional[str] = Field(None, max_length=100, description="專案歸屬部門")
+    project_manager: Optional[str] = Field(None, max_length=20, description="專案負責人")
+    project_status: Optional[str] = Field(None, max_length=10, description="專案狀態")
+    agreed_acceptance: Optional[str] = Field(None, max_length=10, description="約定驗收日")
+    estimated_acceptance: Optional[str] = Field(None, max_length=10, description="預計驗收日")
+    actual_acceptance: Optional[str] = Field(None, max_length=10, description="實際驗收日")
+    actual_progress: Optional[float] = Field(None, description="專案實際進度")
+    project_income: Optional[str] = Field(None, max_length=255, description="專案收入")
+    actual_cost: Optional[float] = Field(None, description="專案實際成本")
+    project_category: Optional[str] = Field(None, max_length=50, description="專案類別")
+    project_plan_progress: Optional[float] = Field(None, description="專案計畫進度")
+    progress_status: Optional[str] = Field(None, max_length=4, description="進度狀態")
+    manpower_status: Optional[str] = Field(None, max_length=4, description="人力狀態")
+    quality_status: Optional[str] = Field(None, max_length=4, description="品質狀態")
+    plan_status: Optional[str] = Field(None, max_length=4, description="計畫狀態")
+    is_penalty: Optional[bool] = Field(None, description="是否罰則")
+    development_person: Optional[float] = Field(None, description="開發/維護階段人月")
+    estimated_dev_person: Optional[float] = Field(None, description="開發/維護階段預估人月")
+    actual_person_month: Optional[float] = Field(None, description="全案實際人月")
+    estimated_warranty: Optional[float] = Field(None, description="預估保固成本")
+    estimated_warranty_person: Optional[float] = Field(None, description="預估保固人月")
+    actual_warranty: Optional[float] = Field(None, description="保固階段實際成本")
+    actual_warranty_person: Optional[float] = Field(None, description="保固階段實際人月")
+
+
+class ProjectInfoCreate(ProjectInfoBase):
+    """
+    新增專案時使用的模型
+    """
+    project_id: str = Field(..., max_length=7, description="專案代號")
+
+
+class ProjectInfoUpdate(ProjectInfoBase):
+    """
+    更新專案時使用的模型
+    """
+    pass
+
+
+class ProjectInfo(ProjectInfoBase):
+    """
+    完整專案資料模型（包含主鍵）
+    """
+    project_id: str = Field(..., max_length=7, description="專案代號")
+
+    class Config:
+        from_attributes = True

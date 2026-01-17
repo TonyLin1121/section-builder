@@ -4,9 +4,11 @@ NOTE: 提供 member 資料表的 CRUD API
 """
 import logging
 import os
+import io
 from typing import List, Optional
+from enum import Enum
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
@@ -15,7 +17,8 @@ from models import (
     Member, MemberCreate, MemberUpdate,
     Attendance, AttendanceCreate, AttendanceUpdate,
     CodeTable, CodeTableCreate, CodeTableUpdate,
-    AnnualLeave, AnnualLeaveCreate, AnnualLeaveUpdate
+    AnnualLeave, AnnualLeaveCreate, AnnualLeaveUpdate,
+    ProjectInfo, ProjectInfoCreate, ProjectInfoUpdate
 )
 from csrf import (
     CSRFMiddleware,
@@ -947,6 +950,428 @@ def delete_annual_leave_record(emp_id: str, year: str, leave_type: str):
         raise
     except Exception as e:
         logger.error(f"刪除年度休假記錄失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ============================================
+# ProjectInfo (專案資訊) API
+# ============================================
+
+class ImportMode(str, Enum):
+    """匯入模式"""
+    DELETE_ALL = "delete_all"  # 全部刪除後新增
+    INSERT_ONLY = "insert_only"  # 僅新增不存在
+    UPSERT = "upsert"  # 存在更新，不存在新增
+
+
+# Excel 欄位名稱對應資料庫欄位
+EXCEL_COLUMN_MAPPING = {
+    "專案代號": "project_id",
+    "合約代號": "so_no",
+    "專案名稱": "project_name",
+    "客戶名稱": "customer_name",
+    "專案計畫開始日": "project_plan_start",
+    "專案計畫結束日": "project_plan_end",
+    "約定驗收日": "agreed_acceptance",
+    "預計驗收日": "estimated_acceptance",
+    "實際驗收日": "actual_acceptance",
+    "保固開始日": "warranty_sdate",
+    "保固結日日": "warranty_edate",
+    "保固結束日": "warranty_edate",  # NOTE: 兩種可能的寫法
+    "專案金額": "project_amt",
+    "專案歸屬部門": "project_department",
+    "專案負責人": "project_manager",
+    "專案狀態": "project_status",
+    "專案實際進度": "actual_progress",
+    "專案收入": "project_income",
+    "專案實際成本": "actual_cost",
+    "專案類別": "project_category",
+    "專案計畫進度": "project_plan_progress",
+    "進度": "progress_status",
+    "人力": "manpower_status",
+    "品質": "quality_status",
+    "計畫": "plan_status",
+    "是否罰則": "is_penalty",
+    "開發/維護階段預估人月": "development_person",
+    "全案實際人月": "actual_person_month",
+    "預估保固成本": "estimated_warranty",
+    "預估保固人月": "estimated_warranty_person",
+    "保固階段實際成本": "actual_warranty",
+    "保固階段實際人月": "actual_warranty_person",
+}
+
+
+@app.get("/api/projects")
+def get_projects(
+    project_id: Optional[str] = Query(None, description="專案代號篩選"),
+    project_name: Optional[str] = Query(None, description="專案名稱篩選"),
+    customer_name: Optional[str] = Query(None, description="客戶名稱篩選"),
+    project_status: Optional[str] = Query(None, description="專案狀態篩選"),
+    project_manager: Optional[str] = Query(None, description="專案負責人篩選"),
+    page: int = Query(1, ge=1, description="頁碼"),
+    page_size: int = Query(20, ge=1, le=100, description="每頁筆數"),
+    sort_by: Optional[str] = Query(None, description="排序欄位"),
+    sort_order: Optional[str] = Query("desc", description="排序方向 asc/desc"),
+):
+    """
+    取得專案列表
+    """
+    try:
+        with get_cursor() as cursor:
+            # 構建 WHERE 子句
+            conditions = []
+            params = []
+
+            if project_id:
+                conditions.append("project_id LIKE %s")
+                params.append(f"%{project_id}%")
+            if project_name:
+                conditions.append("project_name LIKE %s")
+                params.append(f"%{project_name}%")
+            if customer_name:
+                conditions.append("customer_name LIKE %s")
+                params.append(f"%{customer_name}%")
+            if project_status:
+                conditions.append("project_status = %s")
+                params.append(project_status)
+            if project_manager:
+                conditions.append("project_manager LIKE %s")
+                params.append(f"%{project_manager}%")
+
+            where_clause = " AND ".join(conditions) if conditions else "1=1"
+
+            # 計算總數
+            count_sql = f"SELECT COUNT(*) FROM project_info WHERE {where_clause}"
+            cursor.execute(count_sql, params)
+            total = cursor.fetchone()[0]
+
+            # 排序
+            valid_sort_columns = [
+                "project_id", "project_name", "customer_name", "project_status",
+                "project_manager", "project_amt", "project_plan_start", "project_plan_end",
+                "actual_progress", "created_at", "updated_at"
+            ]
+            order_clause = "project_id ASC"
+            if sort_by and sort_by in valid_sort_columns:
+                direction = "DESC" if sort_order and sort_order.lower() == "desc" else "ASC"
+                order_clause = f"{sort_by} {direction}"
+
+            # 分頁
+            offset = (page - 1) * page_size
+            query = f"""
+                SELECT * FROM project_info
+                WHERE {where_clause}
+                ORDER BY {order_clause}
+                LIMIT %s OFFSET %s
+            """
+            cursor.execute(query, params + [page_size, offset])
+            columns = [desc[0] for desc in cursor.description]
+            rows = cursor.fetchall()
+
+            items = []
+            for row in rows:
+                item = dict(zip(columns, row))
+                # 處理 Decimal 和日期類型
+                for key, value in item.items():
+                    if hasattr(value, 'isoformat'):
+                        item[key] = value.isoformat()
+                    elif hasattr(value, '__float__'):
+                        item[key] = float(value)
+                items.append(item)
+
+            return {
+                "items": items,
+                "total": total,
+                "page": page,
+                "page_size": page_size,
+                "total_pages": (total + page_size - 1) // page_size,
+            }
+
+    except Exception as e:
+        logger.error(f"查詢專案列表失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/projects/{project_id}")
+def get_project(project_id: str):
+    """
+    取得單一專案
+    """
+    try:
+        with get_cursor() as cursor:
+            cursor.execute("SELECT * FROM project_info WHERE project_id = %s", (project_id,))
+            row = cursor.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="專案不存在")
+            columns = [desc[0] for desc in cursor.description]
+            item = dict(zip(columns, row))
+            for key, value in item.items():
+                if hasattr(value, 'isoformat'):
+                    item[key] = value.isoformat()
+                elif hasattr(value, '__float__'):
+                    item[key] = float(value)
+            return item
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"查詢專案失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/projects", status_code=201)
+def create_project(project: ProjectInfoCreate):
+    """
+    新增專案
+    """
+    try:
+        with get_cursor() as cursor:
+            # 檢查是否已存在
+            cursor.execute("SELECT 1 FROM project_info WHERE project_id = %s", (project.project_id,))
+            if cursor.fetchone():
+                raise HTTPException(status_code=400, detail="專案代號已存在")
+
+            # 構建欄位和值
+            data = project.model_dump(exclude_none=True)
+            columns = list(data.keys())
+            placeholders = ", ".join(["%s"] * len(columns))
+            values = [data[col] for col in columns]
+
+            sql = f"""
+                INSERT INTO project_info ({', '.join(columns)})
+                VALUES ({placeholders})
+            """
+            cursor.execute(sql, values)
+            return {"message": "新增成功", "project_id": project.project_id}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"新增專案失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.put("/api/projects/{project_id}")
+def update_project(project_id: str, project: ProjectInfoUpdate):
+    """
+    更新專案
+    """
+    try:
+        with get_cursor() as cursor:
+            # 檢查是否存在
+            cursor.execute("SELECT 1 FROM project_info WHERE project_id = %s", (project_id,))
+            if not cursor.fetchone():
+                raise HTTPException(status_code=404, detail="專案不存在")
+
+            # 構建更新語句
+            data = project.model_dump(exclude_none=True)
+            if not data:
+                raise HTTPException(status_code=400, detail="沒有要更新的欄位")
+
+            set_clause = ", ".join([f"{k} = %s" for k in data.keys()])
+            values = list(data.values()) + [project_id]
+
+            sql = f"UPDATE project_info SET {set_clause}, updated_at = NOW() WHERE project_id = %s"
+            cursor.execute(sql, values)
+            return {"message": "更新成功"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"更新專案失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/api/projects/{project_id}")
+def delete_project(project_id: str):
+    """
+    刪除專案
+    """
+    try:
+        with get_cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM project_info WHERE project_id = %s RETURNING project_id",
+                (project_id,)
+            )
+            if not cursor.fetchone():
+                raise HTTPException(status_code=404, detail="專案不存在")
+            return {"message": "刪除成功", "project_id": project_id}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"刪除專案失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/projects/import")
+async def import_projects(
+    file: UploadFile = File(...),
+    mode: str = Form(...),
+):
+    """
+    匯入專案資料
+    支援 Excel 格式 (.xlsx, .xls)
+
+    mode:
+    - delete_all: 全部刪除後新增
+    - insert_only: 僅新增不存在
+    - upsert: 存在更新，不存在新增
+    """
+    try:
+        import openpyxl
+    except ImportError:
+        raise HTTPException(status_code=500, detail="需要安裝 openpyxl 模組")
+
+    # 驗證檔案類型
+    if not file.filename.endswith(('.xlsx', '.xls')):
+        raise HTTPException(status_code=400, detail="只支援 Excel 檔案 (.xlsx, .xls)")
+
+    # 驗證匯入模式
+    if mode not in ["delete_all", "insert_only", "upsert"]:
+        raise HTTPException(status_code=400, detail="無效的匯入模式")
+
+    try:
+        # 讀取 Excel 檔案
+        contents = await file.read()
+        workbook = openpyxl.load_workbook(io.BytesIO(contents), data_only=True)
+        sheet = workbook.active
+
+        # 找到標題行（搜尋「專案代號」所在位置）
+        header_row = None
+        header_col_start = None
+        column_mapping = {}
+
+        for row_idx, row in enumerate(sheet.iter_rows(min_row=1, max_row=20), start=1):
+            for col_idx, cell in enumerate(row, start=1):
+                cell_value = str(cell.value).strip() if cell.value else ""
+                if cell_value == "專案代號":
+                    header_row = row_idx
+                    header_col_start = col_idx
+                    break
+            if header_row:
+                break
+
+        if not header_row:
+            raise HTTPException(status_code=400, detail="找不到標題行（需包含「專案代號」欄位）")
+
+        # 建立欄位對應
+        for col_idx, cell in enumerate(
+            sheet.iter_rows(min_row=header_row, max_row=header_row, min_col=header_col_start).__next__(),
+            start=header_col_start
+        ):
+            cell_value = str(cell.value).strip() if cell.value else ""
+            if cell_value in EXCEL_COLUMN_MAPPING:
+                column_mapping[col_idx] = EXCEL_COLUMN_MAPPING[cell_value]
+
+        if "project_id" not in column_mapping.values():
+            raise HTTPException(status_code=400, detail="找不到專案代號欄位")
+
+        # 解析資料行
+        records = []
+        for row in sheet.iter_rows(min_row=header_row + 1, min_col=header_col_start):
+            record = {}
+            has_data = False
+            for col_idx, cell in enumerate(row, start=header_col_start):
+                if col_idx in column_mapping:
+                    field_name = column_mapping[col_idx]
+                    value = cell.value
+                    if value is not None:
+                        has_data = True
+                        # 處理不同類型的值
+                        if field_name == "is_penalty":
+                            record[field_name] = bool(value) if value else False
+                        elif field_name in ["project_amt", "actual_cost", "actual_progress",
+                                            "project_plan_progress", "development_person",
+                                            "estimated_dev_person", "actual_person_month",
+                                            "estimated_warranty", "estimated_warranty_person",
+                                            "actual_warranty", "actual_warranty_person"]:
+                            try:
+                                # 處理百分比格式
+                                if isinstance(value, str) and "%" in value:
+                                    record[field_name] = float(value.replace("%", "").strip())
+                                else:
+                                    record[field_name] = float(value) if value else None
+                            except (ValueError, TypeError):
+                                record[field_name] = None
+                        elif hasattr(value, 'strftime'):
+                            # 日期格式
+                            record[field_name] = value.strftime("%Y/%m/%d")
+                        else:
+                            record[field_name] = str(value).strip() if value else None
+
+            if has_data and record.get("project_id"):
+                records.append(record)
+
+        if not records:
+            raise HTTPException(status_code=400, detail="沒有找到有效的資料")
+
+        # 執行匯入
+        with get_cursor() as cursor:
+            inserted = 0
+            updated = 0
+            skipped = 0
+
+            if mode == "delete_all":
+                # 全部刪除後新增
+                cursor.execute("DELETE FROM project_info")
+                for record in records:
+                    columns = list(record.keys())
+                    placeholders = ", ".join(["%s"] * len(columns))
+                    values = [record[col] for col in columns]
+                    sql = f"INSERT INTO project_info ({', '.join(columns)}) VALUES ({placeholders})"
+                    cursor.execute(sql, values)
+                    inserted += 1
+
+            elif mode == "insert_only":
+                # 僅新增不存在的
+                for record in records:
+                    project_id = record.get("project_id")
+                    cursor.execute("SELECT 1 FROM project_info WHERE project_id = %s", (project_id,))
+                    if cursor.fetchone():
+                        skipped += 1
+                        continue
+                    columns = list(record.keys())
+                    placeholders = ", ".join(["%s"] * len(columns))
+                    values = [record[col] for col in columns]
+                    sql = f"INSERT INTO project_info ({', '.join(columns)}) VALUES ({placeholders})"
+                    cursor.execute(sql, values)
+                    inserted += 1
+
+            elif mode == "upsert":
+                # 存在更新，不存在新增
+                for record in records:
+                    project_id = record.get("project_id")
+                    cursor.execute("SELECT 1 FROM project_info WHERE project_id = %s", (project_id,))
+                    if cursor.fetchone():
+                        # 更新
+                        update_data = {k: v for k, v in record.items() if k != "project_id"}
+                        if update_data:
+                            set_clause = ", ".join([f"{k} = %s" for k in update_data.keys()])
+                            values = list(update_data.values()) + [project_id]
+                            sql = f"UPDATE project_info SET {set_clause}, updated_at = NOW() WHERE project_id = %s"
+                            cursor.execute(sql, values)
+                            updated += 1
+                    else:
+                        # 新增
+                        columns = list(record.keys())
+                        placeholders = ", ".join(["%s"] * len(columns))
+                        values = [record[col] for col in columns]
+                        sql = f"INSERT INTO project_info ({', '.join(columns)}) VALUES ({placeholders})"
+                        cursor.execute(sql, values)
+                        inserted += 1
+
+        return {
+            "message": "匯入完成",
+            "inserted": inserted,
+            "updated": updated,
+            "skipped": skipped,
+            "total": len(records),
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"匯入專案資料失敗: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

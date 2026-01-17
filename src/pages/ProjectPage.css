@@ -1,0 +1,458 @@
+/* ============================================
+   專案管理頁面樣式
+   ============================================ */
+
+.project-page {
+    min-height: 100vh;
+}
+
+.page-header {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-import {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-import:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.page-content {
+    padding: 32px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* 表單 */
+.form-section {
+    margin-bottom: 32px;
+}
+
+.project-form {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.project-form h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group-wide {
+    grid-column: span 2;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.form-group input,
+.form-group select {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.form-group input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-error {
+    font-size: 0.75rem;
+    color: #f87171;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary), #6366f1);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+    background: rgba(100, 116, 139, 0.2);
+    color: var(--color-text-secondary);
+}
+
+.btn-secondary:hover {
+    background: rgba(100, 116, 139, 0.3);
+    color: var(--color-text-primary);
+}
+
+/* 篩選 */
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filters input,
+.filters select {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    min-width: 150px;
+    transition: all 0.2s ease;
+}
+
+.filters input:focus,
+.filters select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    outline: none;
+}
+
+/* 表格 */
+.table-section {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.table-section h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.project-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.project-table thead {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.project-table th,
+.project-table td {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.project-table th {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.project-table td {
+    color: var(--color-text-primary);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+}
+
+.project-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.08);
+}
+
+/* 表格欄位樣式 */
+.project-id {
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.project-name {
+    font-weight: 500;
+}
+
+.amount-cell {
+    text-align: right;
+    font-family: monospace;
+    color: #10b981;
+}
+
+.progress-cell {
+    font-weight: 600;
+}
+
+/* 狀態標籤 */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.status-進行中 {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+.status-已完成 {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+.status-維護中 {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+
+.status-暫停 {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.status-已結案 {
+    background: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
+}
+
+/* 操作按鈕 */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.btn-edit:hover {
+    background: rgba(59, 130, 246, 0.25);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.btn-delete:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+/* 狀態 */
+.loading,
+.empty {
+    text-align: center;
+    padding: 48px;
+    color: var(--color-text-secondary);
+}
+
+.error-banner {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 12px 20px;
+    margin: 16px 32px;
+    border-radius: 8px;
+    color: #fca5a5;
+}
+
+/* 響應式 */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 16px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-content {
+        padding: 20px;
+    }
+
+    .form-group-wide {
+        grid-column: span 1;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* ============================================
+   明亮模式
+   ============================================ */
+[data-theme="light"] .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .project-form {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group select {
+    background: rgba(248, 250, 252, 1);
+    border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+[data-theme="light"] .filters input,
+[data-theme="light"] .filters select {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .table-section {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .project-table thead {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .project-table th {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .project-table td {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+}
+
+[data-theme="light"] .project-table tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+[data-theme="light"] .status-進行中 {
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+}
+
+[data-theme="light"] .status-已完成 {
+    background: rgba(22, 163, 74, 0.12);
+    color: #16a34a;
+}
+
+[data-theme="light"] .status-維護中 {
+    background: rgba(217, 119, 6, 0.12);
+    color: #d97706;
+}
+
+[data-theme="light"] .status-暫停 {
+    background: rgba(220, 38, 38, 0.12);
+    color: #dc2626;
+}
+
+[data-theme="light"] .status-已結案 {
+    background: rgba(100, 116, 139, 0.12);
+    color: #64748b;
+}
+
+[data-theme="light"] .amount-cell {
+    color: #059669;
+}

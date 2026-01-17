@@ -4,6 +4,7 @@ import App from './App';
 import { AttendancePage } from './pages/AttendancePage';
 import { CodeTablePage } from './pages/CodeTablePage';
 import { AnnualLeavePage } from './pages/AnnualLeavePage';
+import { ProjectPage } from './pages/ProjectPage';
 
 /**
  * 路由配置
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
     {
         path: '/annual-leave',
         element: <Layout><AnnualLeavePage /></Layout>,
+    },
+    {
+        path: '/projects',
+        element: <Layout><ProjectPage /></Layout>,
     },
     {
         path: '/codetable',
