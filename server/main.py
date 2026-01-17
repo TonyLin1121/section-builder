@@ -1040,9 +1040,9 @@ def get_projects(
             where_clause = " AND ".join(conditions) if conditions else "1=1"
 
             # 計算總數
-            count_sql = f"SELECT COUNT(*) FROM project_info WHERE {where_clause}"
+            count_sql = f"SELECT COUNT(*) as cnt FROM project_info WHERE {where_clause}"
             cursor.execute(count_sql, params)
-            total = cursor.fetchone()[0]
+            total = cursor.fetchone()["cnt"]
 
             # 排序
             valid_sort_columns = [
@@ -1064,12 +1064,11 @@ def get_projects(
                 LIMIT %s OFFSET %s
             """
             cursor.execute(query, params + [page_size, offset])
-            columns = [desc[0] for desc in cursor.description]
             rows = cursor.fetchall()
 
             items = []
             for row in rows:
-                item = dict(zip(columns, row))
+                item = dict(row)
                 # 處理 Decimal 和日期類型
                 for key, value in item.items():
                     if hasattr(value, 'isoformat'):
@@ -1102,8 +1101,7 @@ def get_project(project_id: str):
             row = cursor.fetchone()
             if not row:
                 raise HTTPException(status_code=404, detail="專案不存在")
-            columns = [desc[0] for desc in cursor.description]
-            item = dict(zip(columns, row))
+            item = dict(row)
             for key, value in item.items():
                 if hasattr(value, 'isoformat'):
                     item[key] = value.isoformat()
