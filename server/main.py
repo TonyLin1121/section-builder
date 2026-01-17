@@ -964,16 +964,17 @@ class ImportMode(str, Enum):
 
 
 # Excel 欄位名稱對應資料庫欄位
+# NOTE: 欄位名稱與資料表 project_info 一致
 EXCEL_COLUMN_MAPPING = {
     "專案代號": "project_id",
     "合約代號": "so_no",
     "專案名稱": "project_name",
     "客戶名稱": "customer_name",
-    "專案計畫開始日": "project_plan_start",
-    "專案計畫結束日": "project_plan_end",
-    "約定驗收日": "agreed_acceptance",
-    "預計驗收日": "estimated_acceptance",
-    "實際驗收日": "actual_acceptance",
+    "專案計畫開始日": "project_plan_sdate",
+    "專案計畫結束日": "project_plan_edate",
+    "約定驗收日": "agreed_acceptance_date",
+    "預計驗收日": "estimated_acceptance_date",
+    "實際驗收日": "actual_acceptance_date",
     "保固開始日": "warranty_sdate",
     "保固結日日": "warranty_edate",
     "保固結束日": "warranty_edate",  # NOTE: 兩種可能的寫法
@@ -991,12 +992,12 @@ EXCEL_COLUMN_MAPPING = {
     "品質": "quality_status",
     "計畫": "plan_status",
     "是否罰則": "is_penalty",
-    "開發/維護階段預估人月": "development_person",
+    "開發/維護階段預估人月": "estimated_dev_person_month",
     "全案實際人月": "actual_person_month",
-    "預估保固成本": "estimated_warranty",
-    "預估保固人月": "estimated_warranty_person",
-    "保固階段實際成本": "actual_warranty",
-    "保固階段實際人月": "actual_warranty_person",
+    "預估保固成本": "estimated_warranty_cost",
+    "預估保固人月": "estimated_warranty_person_month",
+    "保固階段實際成本": "actual_warranty_cost",
+    "保固階段實際人月": "actual_warranty_person_month",
 }
 
 

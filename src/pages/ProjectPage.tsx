@@ -81,8 +81,8 @@ export function ProjectPage() {
         customer_name: '',
         project_manager: '',
         project_status: '',
-        project_plan_start: '',
-        project_plan_end: '',
+        project_plan_sdate: '',
+        project_plan_edate: '',
         project_amt: 0,
     });
 
@@ -101,8 +101,8 @@ export function ProjectPage() {
             { key: 'project_manager', title: '專案負責人', width: 20 },
             { key: 'project_status', title: '專案狀態', width: 15 },
             { key: 'project_amt', title: '專案金額', width: 20, format: (v) => v ? Number(v).toLocaleString() : '-' },
-            { key: 'project_plan_start', title: '計畫開始日', width: 20 },
-            { key: 'project_plan_end', title: '計畫結束日', width: 20 },
+            { key: 'project_plan_sdate', title: '計畫開始日', width: 20 },
+            { key: 'project_plan_edate', title: '計畫結束日', width: 20 },
             { key: 'actual_progress', title: '實際進度', width: 15, format: (v) => v !== undefined ? `${v}%` : '-' },
         ],
     }), []);
@@ -178,8 +178,8 @@ export function ProjectPage() {
                 customer_name: '',
                 project_manager: '',
                 project_status: '',
-                project_plan_start: '',
-                project_plan_end: '',
+                project_plan_sdate: '',
+                project_plan_edate: '',
                 project_amt: 0,
             });
             setFormErrors({});
@@ -212,8 +212,8 @@ export function ProjectPage() {
             customer_name: record.customer_name || '',
             project_manager: record.project_manager || '',
             project_status: record.project_status || '',
-            project_plan_start: record.project_plan_start || '',
-            project_plan_end: record.project_plan_end || '',
+            project_plan_sdate: record.project_plan_sdate || '',
+            project_plan_edate: record.project_plan_edate || '',
             project_amt: record.project_amt || 0,
         });
         setFormErrors({});
@@ -231,8 +231,8 @@ export function ProjectPage() {
             customer_name: '',
             project_manager: '',
             project_status: '',
-            project_plan_start: '',
-            project_plan_end: '',
+            project_plan_sdate: '',
+            project_plan_edate: '',
             project_amt: 0,
         });
         setFormErrors({});
@@ -383,8 +383,8 @@ export function ProjectPage() {
                                     type="text"
                                     maxLength={10}
                                     placeholder="YYYY/MM/DD"
-                                    value={formData.project_plan_start || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_plan_start: e.target.value })}
+                                    value={formData.project_plan_sdate || ''}
+                                    onChange={(e) => setFormData({ ...formData, project_plan_sdate: e.target.value })}
                                 />
                             </div>
 
@@ -394,8 +394,8 @@ export function ProjectPage() {
                                     type="text"
                                     maxLength={10}
                                     placeholder="YYYY/MM/DD"
-                                    value={formData.project_plan_end || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_plan_end: e.target.value })}
+                                    value={formData.project_plan_edate || ''}
+                                    onChange={(e) => setFormData({ ...formData, project_plan_edate: e.target.value })}
                                 />
                             </div>
                         </div>

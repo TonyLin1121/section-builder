@@ -5,23 +5,24 @@ import { httpRequest, getCsrfToken } from './httpClient';
 
 /**
  * 專案資料結構
+ * NOTE: 欄位名稱與資料表 project_info 一致
  */
 export interface Project {
     project_id: string;
     so_no?: string;
     project_name?: string;
     customer_name?: string;
-    project_plan_start?: string;
-    project_plan_end?: string;
+    project_plan_sdate?: string;
+    project_plan_edate?: string;
     warranty_sdate?: string;
     warranty_edate?: string;
     project_amt?: number;
     project_department?: string;
     project_manager?: string;
     project_status?: string;
-    agreed_acceptance?: string;
-    estimated_acceptance?: string;
-    actual_acceptance?: string;
+    agreed_acceptance_date?: string;
+    estimated_acceptance_date?: string;
+    actual_acceptance_date?: string;
     actual_progress?: number;
     project_income?: string;
     actual_cost?: number;
@@ -32,13 +33,13 @@ export interface Project {
     quality_status?: string;
     plan_status?: string;
     is_penalty?: boolean;
-    development_person?: number;
-    estimated_dev_person?: number;
+    development_phase_amt?: number;
+    estimated_dev_person_month?: number;
     actual_person_month?: number;
-    estimated_warranty?: number;
-    estimated_warranty_person?: number;
-    actual_warranty?: number;
-    actual_warranty_person?: number;
+    estimated_warranty_cost?: number;
+    estimated_warranty_person_month?: number;
+    actual_warranty_cost?: number;
+    actual_warranty_person_month?: number;
     created_at?: string;
     updated_at?: string;
 }
@@ -51,17 +52,17 @@ export interface ProjectFormData {
     so_no?: string;
     project_name?: string;
     customer_name?: string;
-    project_plan_start?: string;
-    project_plan_end?: string;
+    project_plan_sdate?: string;
+    project_plan_edate?: string;
     warranty_sdate?: string;
     warranty_edate?: string;
     project_amt?: number;
     project_department?: string;
     project_manager?: string;
     project_status?: string;
-    agreed_acceptance?: string;
-    estimated_acceptance?: string;
-    actual_acceptance?: string;
+    agreed_acceptance_date?: string;
+    estimated_acceptance_date?: string;
+    actual_acceptance_date?: string;
     actual_progress?: number;
     project_income?: string;
     actual_cost?: number;
