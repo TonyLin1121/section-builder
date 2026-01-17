@@ -192,17 +192,19 @@ export async function deleteProject(projectId: string): Promise<{ message: strin
 /**
  * 匯入專案資料
  * NOTE: 此 API 使用 FormData，需獨立處理但使用統一的 CSRF token
+ * 支援 CSRF token 過期時自動刷新並重試
  */
 export async function importProjects(
     file: File,
-    mode: ImportMode
+    mode: ImportMode,
+    isRetry = false
 ): Promise<ImportResult> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('mode', mode);
 
-    // 使用統一的 getCsrfToken 取得 CSRF Token
-    const csrfToken = await getCsrfToken();
+    // 使用統一的 getCsrfToken 取得 CSRF Token（重試時強制刷新）
+    const csrfToken = await getCsrfToken(isRetry);
 
     const response = await fetch('/api/projects/import', {
         method: 'POST',
@@ -212,6 +214,16 @@ export async function importProjects(
         },
         credentials: 'include',
     });
+
+    // 處理 CSRF 驗證失敗（403）：自動刷新 token 並重試一次
+    if (response.status === 403 && !isRetry) {
+        const error = await response.json().catch(() => ({ detail: '' }));
+        if (error.detail?.includes('CSRF') || error.detail?.includes('token')) {
+            // 強制刷新 token 並重試
+            return importProjects(file, mode, true);
+        }
+        throw new Error(error.detail || '匯入失敗');
+    }
 
     if (!response.ok) {
         const error = await response.json();

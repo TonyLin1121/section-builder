@@ -24,9 +24,14 @@ function getCookie(name: string): string | null {
 
 /**
  * 取得 CSRF Token
- * NOTE: 優先從 Cookie 讀取，若不存在則初始化
+ * NOTE: 優先從 Cookie 讀取，若不存在或強制刷新則重新獲取
  */
-export async function getCsrfToken(): Promise<string> {
+export async function getCsrfToken(forceRefresh = false): Promise<string> {
+    // 強制刷新時直接獲取新 token
+    if (forceRefresh) {
+        return initCsrfToken();
+    }
+
     // 嘗試從 Cookie 讀取
     const existingToken = getCookie(CSRF_COOKIE_NAME);
     if (existingToken) {
@@ -57,11 +62,12 @@ export async function initCsrfToken(): Promise<string> {
 
 /**
  * 通用 HTTP 請求函數
- * NOTE: 自動處理 CSRF token 和錯誤
+ * NOTE: 自動處理 CSRF token 和錯誤，403 時自動刷新 token 並重試
  */
 export async function httpRequest<T>(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
+    isRetry = false
 ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     const method = options?.method || 'GET';
@@ -75,7 +81,8 @@ export async function httpRequest<T>(
     // 非安全方法需要添加 CSRF token
     const unsafeMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
     if (unsafeMethods.includes(method.toUpperCase())) {
-        const csrfToken = await getCsrfToken();
+        // 重試時強制刷新 token
+        const csrfToken = await getCsrfToken(isRetry);
         headers[CSRF_HEADER_NAME] = csrfToken;
     }
 
@@ -84,6 +91,15 @@ export async function httpRequest<T>(
         headers,
         credentials: 'include', // 包含 Cookie
     });
+
+    // 處理 CSRF 驗證失敗（403）：自動刷新 token 並重試一次
+    if (response.status === 403 && !isRetry) {
+        const error = await response.json().catch(() => ({ detail: '' }));
+        if (error.detail?.includes('CSRF') || error.detail?.includes('token')) {
+            // 強制刷新 token 並重試
+            return httpRequest<T>(endpoint, options, true);
+        }
+    }
 
     if (!response.ok) {
         const error = await response.json().catch(() => ({ detail: '請求失敗' }));
