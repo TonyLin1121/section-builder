@@ -1,7 +1,7 @@
 /**
  * 專案管理 API 服務
  */
-import { httpRequest } from './httpClient';
+import { httpRequest, getCsrfToken } from './httpClient';
 
 /**
  * 專案資料結構
@@ -190,7 +190,7 @@ export async function deleteProject(projectId: string): Promise<{ message: strin
 
 /**
  * 匯入專案資料
- * NOTE: 此 API 不使用 httpRequest，因為需要處理 FormData
+ * NOTE: 此 API 使用 FormData，需獨立處理但使用統一的 CSRF token
  */
 export async function importProjects(
     file: File,
@@ -200,16 +200,15 @@ export async function importProjects(
     formData.append('file', file);
     formData.append('mode', mode);
 
-    // 取得 CSRF Token
-    const csrfToken = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('csrf_token='))
-        ?.split('=')[1];
+    // 使用統一的 getCsrfToken 取得 CSRF Token
+    const csrfToken = await getCsrfToken();
 
     const response = await fetch('/api/projects/import', {
         method: 'POST',
         body: formData,
-        headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : {},
+        headers: {
+            'X-CSRF-Token': csrfToken,
+        },
         credentials: 'include',
     });
 
