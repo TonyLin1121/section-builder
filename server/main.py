@@ -1008,6 +1008,8 @@ def get_projects(
     customer_name: Optional[str] = Query(None, description="客戶名稱篩選"),
     project_status: Optional[str] = Query(None, description="專案狀態篩選"),
     project_manager: Optional[str] = Query(None, description="專案負責人篩選"),
+    date_from: Optional[str] = Query(None, description="專案開始日期（起）"),
+    date_to: Optional[str] = Query(None, description="專案結束日期（迄）"),
     page: int = Query(1, ge=1, description="頁碼"),
     page_size: int = Query(20, ge=1, le=100, description="每頁筆數"),
     sort_by: Optional[str] = Query(None, description="排序欄位"),
@@ -1032,13 +1034,23 @@ def get_projects(
                 conditions.append("customer_name LIKE %s")
                 params.append(f"%{customer_name}%")
             if project_status:
-                conditions.append("project_status = %s")
+                # NOTE: project_status 為 char 類型，需使用 TRIM 去除尾部空格
+                conditions.append("TRIM(project_status) = %s")
                 params.append(project_status)
             if project_manager:
                 conditions.append("project_manager LIKE %s")
                 params.append(f"%{project_manager}%")
+            # 日期篩選：專案計畫開始日 >= date_from
+            if date_from:
+                conditions.append("project_plan_sdate >= %s")
+                params.append(date_from)
+            # 日期篩選：專案計畫結束日 <= date_to
+            if date_to:
+                conditions.append("project_plan_edate <= %s")
+                params.append(date_to)
 
             where_clause = " AND ".join(conditions) if conditions else "1=1"
+
 
             # 計算總數
             count_sql = f"SELECT COUNT(*) as cnt FROM project_info WHERE {where_clause}"

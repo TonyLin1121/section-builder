@@ -30,6 +30,8 @@ export function useProject() {
     const [customerNameFilter, setCustomerNameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [managerFilter, setManagerFilter] = useState('');
+    const [dateFromFilter, setDateFromFilter] = useState('');
+    const [dateToFilter, setDateToFilter] = useState('');
 
     // 分頁
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,6 +55,8 @@ export function useProject() {
                 customer_name: customerNameFilter || undefined,
                 project_status: statusFilter || undefined,
                 project_manager: managerFilter || undefined,
+                date_from: dateFromFilter || undefined,
+                date_to: dateToFilter || undefined,
                 page: currentPage,
                 page_size: pageSize,
                 sort_by: sortBy || undefined,
@@ -65,7 +69,7 @@ export function useProject() {
         } finally {
             setIsLoading(false);
         }
-    }, [projectIdFilter, projectNameFilter, customerNameFilter, statusFilter, managerFilter, currentPage, pageSize, sortBy, sortOrder]);
+    }, [projectIdFilter, projectNameFilter, customerNameFilter, statusFilter, managerFilter, dateFromFilter, dateToFilter, currentPage, pageSize, sortBy, sortOrder]);
 
     // 初始載入及篩選變更時重新載入
     useEffect(() => {
@@ -75,7 +79,7 @@ export function useProject() {
     // 篩選變更時重置頁碼
     useEffect(() => {
         setCurrentPage(1);
-    }, [projectIdFilter, projectNameFilter, customerNameFilter, statusFilter, managerFilter]);
+    }, [projectIdFilter, projectNameFilter, customerNameFilter, statusFilter, managerFilter, dateFromFilter, dateToFilter]);
 
     /**
      * 處理排序
@@ -181,6 +185,10 @@ export function useProject() {
         setStatusFilter,
         managerFilter,
         setManagerFilter,
+        dateFromFilter,
+        setDateFromFilter,
+        dateToFilter,
+        setDateToFilter,
         // 分頁
         currentPage,
         setCurrentPage,

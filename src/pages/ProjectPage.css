@@ -193,6 +193,26 @@
     outline: none;
 }
 
+.filters-row-2 {
+    margin-top: 12px;
+}
+
+.date-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-filter-group label {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.date-filter-group input[type="date"] {
+    min-width: 140px;
+}
+
 /* 表格 */
 .table-section {
     background: rgba(30, 41, 59, 0.8);
@@ -275,24 +295,14 @@
     font-weight: 500;
 }
 
-.status-進行中 {
+.status-開發中 {
     background: rgba(59, 130, 246, 0.2);
     color: #60a5fa;
 }
 
-.status-已完成 {
-    background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
-}
-
-.status-維護中 {
+.status-保固中 {
     background: rgba(251, 191, 36, 0.2);
     color: #fbbf24;
-}
-
-.status-暫停 {
-    background: rgba(239, 68, 68, 0.2);
-    color: #f87171;
 }
 
 .status-已結案 {
@@ -428,24 +438,14 @@
     background: rgba(37, 99, 235, 0.05);
 }
 
-[data-theme="light"] .status-進行中 {
+[data-theme="light"] .status-開發中 {
     background: rgba(37, 99, 235, 0.12);
     color: #2563eb;
 }
 
-[data-theme="light"] .status-已完成 {
-    background: rgba(22, 163, 74, 0.12);
-    color: #16a34a;
-}
-
-[data-theme="light"] .status-維護中 {
+[data-theme="light"] .status-保固中 {
     background: rgba(217, 119, 6, 0.12);
     color: #d97706;
-}
-
-[data-theme="light"] .status-暫停 {
-    background: rgba(220, 38, 38, 0.12);
-    color: #dc2626;
 }
 
 [data-theme="light"] .status-已結案 {

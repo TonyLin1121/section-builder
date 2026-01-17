@@ -14,13 +14,12 @@ import './ProjectPage.css';
 
 /**
  * 專案狀態選項
+ * NOTE: 與資料庫實際存放的值一致
  */
 const PROJECT_STATUSES = [
     { value: '', label: '全部狀態' },
-    { value: '進行中', label: '進行中' },
-    { value: '已完成', label: '已完成' },
-    { value: '維護中', label: '維護中' },
-    { value: '暫停', label: '暫停' },
+    { value: '開發中', label: '開發中' },
+    { value: '保固中', label: '保固中' },
     { value: '已結案', label: '已結案' },
 ];
 
@@ -43,6 +42,10 @@ export function ProjectPage() {
         setStatusFilter,
         managerFilter,
         setManagerFilter,
+        dateFromFilter,
+        setDateFromFilter,
+        dateToFilter,
+        setDateToFilter,
         currentPage,
         setCurrentPage,
         pageSize,
@@ -358,10 +361,8 @@ export function ProjectPage() {
                                     onChange={(e) => setFormData({ ...formData, project_status: e.target.value })}
                                 >
                                     <option value="">請選擇</option>
-                                    <option value="進行中">進行中</option>
-                                    <option value="已完成">已完成</option>
-                                    <option value="維護中">維護中</option>
-                                    <option value="暫停">暫停</option>
+                                    <option value="開發中">開發中</option>
+                                    <option value="保固中">保固中</option>
                                     <option value="已結案">已結案</option>
                                 </select>
                             </div>
@@ -448,6 +449,24 @@ export function ProjectPage() {
                                 <option key={status.value} value={status.value}>{status.label}</option>
                             ))}
                         </select>
+                    </div>
+                    <div className="filters filters-row-2">
+                        <div className="date-filter-group">
+                            <label>開始日：</label>
+                            <input
+                                type="date"
+                                value={dateFromFilter}
+                                onChange={(e) => setDateFromFilter(e.target.value)}
+                            />
+                        </div>
+                        <div className="date-filter-group">
+                            <label>結束日：</label>
+                            <input
+                                type="date"
+                                value={dateToFilter}
+                                onChange={(e) => setDateToFilter(e.target.value)}
+                            />
+                        </div>
                     </div>
                 </section>
 

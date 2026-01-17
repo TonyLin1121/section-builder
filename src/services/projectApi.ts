@@ -95,6 +95,8 @@ interface ProjectQueryParams {
     customer_name?: string;
     project_status?: string;
     project_manager?: string;
+    date_from?: string;
+    date_to?: string;
     page?: number;
     page_size?: number;
     sort_by?: string;
