@@ -1,0 +1,256 @@
+/**
+ * 員工統計頁面樣式
+ * NOTE: 複用專案統計頁面的樣式結構
+ */
+
+.employee-stats-page {
+    padding: 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.employee-stats-page .page-header {
+    margin-bottom: 16px;
+}
+
+.employee-stats-page .page-header h1 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+}
+
+/* 篩選工具列 */
+.employee-stats-page .stats-toolbar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.employee-stats-page .filter-section {
+    background: var(--color-surface);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.employee-stats-page .filter-section h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 12px 0;
+}
+
+.employee-stats-page .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.employee-stats-page .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.employee-stats-page .filter-group label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
+.employee-stats-page .filter-group select {
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.875rem;
+}
+
+/* 多選 Chips */
+.employee-stats-page .multi-select-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.employee-stats-page .chip {
+    padding: 6px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.employee-stats-page .chip:hover {
+    border-color: var(--color-primary);
+    background: #eff6ff;
+}
+
+.employee-stats-page .chip.selected {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.employee-stats-page .chip.clear {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+.employee-stats-page .chip.clear:hover {
+    background: #fecaca;
+}
+
+.employee-stats-page .filter-hint {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 6px;
+    display: block;
+}
+
+/* 圖表類型按鈕 */
+.employee-stats-page .chart-type-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.employee-stats-page .chart-type-buttons button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg);
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.employee-stats-page .chart-type-buttons button:hover {
+    background: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+.employee-stats-page .chart-type-buttons button.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* 圖表容器 */
+.employee-stats-page .chart-container {
+    background: var(--color-surface);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+}
+
+.employee-stats-page .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.employee-stats-page .chart-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.employee-stats-page .chart-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.employee-stats-page .chart-actions button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.employee-stats-page .chart-actions button:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.employee-stats-page .chart-wrapper {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.employee-stats-page .chart-wrapper .loading,
+.employee-stats-page .chart-wrapper .no-data {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+}
+
+.employee-stats-page .error-banner {
+    padding: 12px 16px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    margin-bottom: 16px;
+}
+
+/* 統計摘要 */
+.employee-stats-page .stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.employee-stats-page .summary-card {
+    background: var(--color-surface);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.employee-stats-page .summary-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.employee-stats-page .summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+    .employee-stats-page .stats-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .employee-stats-page .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

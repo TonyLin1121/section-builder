@@ -1,6 +1,6 @@
 /**
  * 主題切換組件
- * NOTE: 提供明亮/暗黑/跟隨系統三種模式的切換按鈕
+ * NOTE: 提供明亮/暗黑/跟隨系統三種模式的切換按鈕（只顯示圖示）
  */
 import { useTheme, type ThemeMode } from '../hooks/useTheme';
 import './ThemeToggle.css';
@@ -25,7 +25,6 @@ export function ThemeToggle() {
 
     return (
         <div className="theme-toggle">
-            <div className="theme-toggle-label">🎨 主題設定</div>
             <div className="theme-toggle-options">
                 {themeOptions.map(option => (
                     <button
@@ -36,7 +35,6 @@ export function ThemeToggle() {
                         aria-label={`切換到${option.label}模式`}
                     >
                         <span className="theme-option-icon">{option.icon}</span>
-                        <span className="theme-option-label">{option.label}</span>
                     </button>
                 ))}
             </div>

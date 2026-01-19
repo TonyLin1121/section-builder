@@ -32,7 +32,9 @@ EXEMPT_PATHS = {
     "/openapi.json",
     "/redoc",
     "/",
+    "/api/auth/login",  # 登入 API 不需要 CSRF
 }
+
 
 # 初始化序列化器
 serializer = URLSafeTimedSerializer(CSRF_SECRET_KEY)

@@ -26,6 +26,7 @@ from csrf import (
     set_csrf_cookie,
     CSRF_COOKIE_NAME,
 )
+from routes import auth_router, system_router
 
 # 設定日誌
 logging.basicConfig(level=logging.INFO)
@@ -68,6 +69,9 @@ app.add_middleware(
 # NOTE: CSRF 中間件必須在 CORS 之後添加
 app.add_middleware(CSRFMiddleware)
 
+# 註冊認證與系統管理路由
+app.include_router(auth_router)
+app.include_router(system_router)
 
 @app.get("/health")
 def health_check():
@@ -187,6 +191,119 @@ def get_members(
 
     except Exception as e:
         logger.error(f"取得員工清單失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/members/stats")
+def get_member_stats(
+    dimension: str = Query("member_type", description="統計維度: member_type, division, job_title"),
+    member_types: Optional[str] = Query(None, description="員工類型（逗號分隔）: member,manager,intern,consultant,outsourcing"),
+    employed_status: Optional[str] = Query(None, description="在職狀態（逗號分隔）: employed,unemployed"),
+):
+    """
+    取得員工統計資料
+    NOTE: 支援依員工類型、部門、職稱統計，可多選篩選
+    """
+    try:
+        with get_cursor() as cursor:
+            # 員工類型欄位對照
+            type_column_map = {
+                'member': 'is_member',
+                'manager': 'is_manager',
+                'intern': 'is_intern',
+                'consultant': 'is_consultant',
+                'outsourcing': 'is_outsourcing'
+            }
+            
+            # 建立基礎條件
+            conditions = []
+            
+            # 員工類型篩選
+            selected_types = []
+            if member_types:
+                selected_types = [t.strip() for t in member_types.split(",") if t.strip() in type_column_map]
+            
+            if selected_types:
+                type_conditions = [f"{type_column_map[t]} = TRUE" for t in selected_types]
+                conditions.append(f"({' OR '.join(type_conditions)})")
+            
+            # 在職狀態篩選
+            if employed_status:
+                status_list = [s.strip() for s in employed_status.split(",") if s.strip()]
+                if 'employed' in status_list and 'unemployed' not in status_list:
+                    conditions.append("is_employed = TRUE")
+                elif 'unemployed' in status_list and 'employed' not in status_list:
+                    conditions.append("is_employed = FALSE")
+                # 如果兩者都選，則不加條件（顯示全部）
+            
+            where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+            
+            if dimension == "member_type":
+                # 員工類型需要特殊處理（多個布林欄位）
+                items = []
+                types_to_count = selected_types if selected_types else list(type_column_map.keys())
+                
+                for label in types_to_count:
+                    col = type_column_map[label]
+                    # 構建條件：員工類型 + 在職狀態
+                    type_conditions = [f"{col} = TRUE"]
+                    
+                    if employed_status:
+                        status_list = [s.strip() for s in employed_status.split(",") if s.strip()]
+                        if 'employed' in status_list and 'unemployed' not in status_list:
+                            type_conditions.append("is_employed = TRUE")
+                        elif 'unemployed' in status_list and 'employed' not in status_list:
+                            type_conditions.append("is_employed = FALSE")
+                    
+                    type_where = f"WHERE {' AND '.join(type_conditions)}"
+                    
+                    query = f"""
+                        SELECT COUNT(*) as count
+                        FROM member
+                        {type_where}
+                    """
+                    cursor.execute(query)
+                    row = cursor.fetchone()
+                    count = row["count"] if row else 0
+                    if count > 0:
+                        items.append({"name": label, "count": count})
+                
+                # 按數量排序
+                items.sort(key=lambda x: x["count"], reverse=True)
+                return {"items": items}
+            
+            elif dimension == "division":
+                group_field = "COALESCE(division_name, '未設定')"
+            elif dimension == "job_title":
+                group_field = "COALESCE(job_title, '未設定')"
+            else:
+                group_field = "COALESCE(division_name, '未設定')"
+            
+            query = f"""
+                SELECT 
+                    {group_field} as name,
+                    COUNT(*) as count
+                FROM member
+                {where_clause}
+                GROUP BY {group_field}
+                ORDER BY count DESC
+            """
+            
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            
+            items = [
+                {
+                    "name": row["name"] if row["name"] else "未設定",
+                    "count": row["count"]
+                }
+                for row in rows
+            ]
+            
+            return {"items": items}
+            
+    except Exception as e:
+        logger.error(f"統計員工失敗: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -1100,6 +1217,123 @@ def get_projects(
 
     except Exception as e:
         logger.error(f"查詢專案列表失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/projects/filter-options")
+def get_project_filter_options():
+    """
+    取得專案過濾器選項
+    """
+    try:
+        with get_cursor() as cursor:
+            # 取得所有狀態
+            cursor.execute("SELECT DISTINCT project_status FROM project_info WHERE project_status IS NOT NULL ORDER BY project_status")
+            statuses = [row["project_status"] for row in cursor.fetchall()]
+            
+            # 取得所有專案
+            cursor.execute("SELECT project_id, project_name FROM project_info ORDER BY project_name")
+            projects = [{"id": row["project_id"], "name": row["project_name"]} for row in cursor.fetchall()]
+            
+            return {"statuses": statuses, "projects": projects}
+    except Exception as e:
+        logger.error(f"取得過濾選項失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/projects/stats")
+def get_project_stats(
+    dimension: str = Query("status", description="統計維度: status, customer, department"),
+    interval: str = Query("none", description="統計區間: none, monthly, quarterly, yearly"),
+    date_from: Optional[str] = Query(None, description="起始日期 (YYYY-MM-DD)"),
+    date_to: Optional[str] = Query(None, description="結束日期 (YYYY-MM-DD)"),
+    statuses: Optional[str] = Query(None, description="專案狀態（逗號分隔）"),
+):
+    """
+    取得專案統計資料
+    NOTE: 支援日期範圍、狀態多選、時間區間分組
+    """
+    try:
+        with get_cursor() as cursor:
+            # 建立篩選條件
+            conditions = []
+            params = []
+            
+            # NOTE: project_plan_sdate 是字串類型 (YYYY-MM-DD)
+            
+            # 日期範圍篩選
+            if date_from:
+                conditions.append("project_plan_sdate >= %s")
+                params.append(date_from)
+            if date_to:
+                conditions.append("project_plan_sdate <= %s")
+                params.append(date_to)
+            
+            # 專案狀態多選
+            if statuses:
+                status_list = [s.strip() for s in statuses.split(",") if s.strip()]
+                if status_list:
+                    placeholders = ", ".join(["%s"] * len(status_list))
+                    conditions.append(f"project_status IN ({placeholders})")
+                    params.extend(status_list)
+            
+            where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+            
+            # 根據區間選擇時間分組欄位
+            if interval == "monthly":
+                time_group = "SUBSTRING(project_plan_sdate, 1, 7)"  # YYYY-MM
+            elif interval == "quarterly":
+                time_group = "SUBSTRING(project_plan_sdate, 1, 4) || '-Q' || ((CAST(SUBSTRING(project_plan_sdate, 6, 2) AS INT) - 1) / 3 + 1)::TEXT"
+            elif interval == "yearly":
+                time_group = "SUBSTRING(project_plan_sdate, 1, 4)"  # YYYY
+            else:
+                time_group = None
+            
+            # 根據維度選擇分組欄位
+            if dimension == "status":
+                dim_group = "COALESCE(project_status, '未設定')"
+            elif dimension == "customer":
+                dim_group = "COALESCE(customer_name, '未設定')"
+            elif dimension == "department":
+                dim_group = "COALESCE(project_department, '未設定')"
+            else:
+                dim_group = "COALESCE(project_status, '未設定')"
+            
+            # 組合分組欄位
+            if time_group:
+                # 有時間區間：時間 + 維度
+                group_field = f"{time_group} || ' - ' || {dim_group}"
+                order_field = "name"
+            else:
+                # 無時間區間：只用維度
+                group_field = dim_group
+                order_field = "count DESC"
+            
+            query = f"""
+                SELECT 
+                    {group_field} as name,
+                    COUNT(*) as count,
+                    COALESCE(SUM(project_amt), 0) as amount
+                FROM project_info
+                {where_clause}
+                GROUP BY {group_field}
+                ORDER BY {order_field}
+            """
+            
+            cursor.execute(query, params)
+            rows = cursor.fetchall()
+            
+            items = [
+                {
+                    "name": row["name"] if row["name"] else "未設定",
+                    "count": row["count"],
+                    "amount": float(row["amount"]) if row["amount"] else 0
+                }
+                for row in rows
+            ]
+            
+            return {"items": items}
+            
+    except Exception as e:
+        logger.error(f"統計專案失敗: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

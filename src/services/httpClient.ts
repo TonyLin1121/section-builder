@@ -102,11 +102,39 @@ export async function httpRequest<T>(
     }
 
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: '請求失敗' }));
-        throw new Error(error.detail || `HTTP ${response.status}`);
+        // 嘗試解析錯誤回應
+        let errorMessage = `HTTP ${response.status}`;
+        try {
+            const text = await response.text();
+            try {
+                const error = JSON.parse(text);
+                if (typeof error.detail === 'string') {
+                    errorMessage = error.detail;
+                } else if (Array.isArray(error.detail)) {
+                    // Pydantic 驗證錯誤格式
+                    errorMessage = error.detail.map((e: { msg?: string; loc?: string[] }) =>
+                        e.msg || JSON.stringify(e)
+                    ).join('; ');
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+            } catch {
+                // 非 JSON 回應，使用原始文字
+                errorMessage = text || `HTTP ${response.status}`;
+            }
+        } catch {
+            errorMessage = `請求失敗 (HTTP ${response.status})`;
+        }
+        throw new Error(errorMessage);
     }
 
-    return response.json();
+    // 解析成功回應
+    try {
+        return await response.json();
+    } catch {
+        // 成功但無 JSON 回應（少見情況）
+        return {} as T;
+    }
 }
 
 /**

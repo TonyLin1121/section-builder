@@ -1,41 +1,63 @@
 /* ============================================
    設計系統 - CSS 變數與全域樣式
+   Wrike 風格重新設計
    ============================================ */
 
 /* 字體引入 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* 色彩變數 */
+/* 色彩變數 - 預設明亮模式 */
 :root {
+  /* 側邊欄 - 淺色主題 */
+  --color-sidebar-bg: #f8fafc;
+  --color-sidebar-hover: #e2e8f0;
+  --color-sidebar-active: #dbeafe;
+  --color-sidebar-text: #475569;
+  --color-sidebar-text-active: #1e293b;
+  --color-sidebar-accent: #05cd99;
+
   /* 主色調 */
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-accent: #8b5cf6;
+  --color-primary: #05cd99;
+  --color-primary-dark: #04b888;
+  --color-primary-light: rgba(5, 205, 153, 0.15);
+  --color-accent: #3b82f6;
 
   /* 狀態色 */
-  --color-success: #10b981;
+  --color-success: #05cd99;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
+  --color-info: #3b82f6;
 
-  /* 背景色 */
-  --color-bg-primary: #0f172a;
-  --color-bg-secondary: #1e293b;
-  --color-bg-tertiary: #334155;
+  /* 狀態標籤色 */
+  --color-status-new: #05cd99;
+  --color-status-inreview: #3b82f6;
+  --color-status-completed: rgba(5, 205, 153, 0.9);
+  --color-status-low: #10b981;
+  --color-status-medium: #f59e0b;
+  --color-status-high: #ef4444;
+
+  /* 背景色 - 主內容區淺色 */
+  --color-bg-primary: #f7f9fc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #eef2f6;
+  --color-bg-card: #ffffff;
 
   /* 文字色 */
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
 
   /* 邊框與分隔線 */
-  --color-border: rgba(148, 163, 184, 0.1);
-  --color-border-hover: rgba(148, 163, 184, 0.2);
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-border-hover: #cbd5e1;
 
   /* 陰影 */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.15);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
 
   /* 間距 */
   --spacing-xs: 4px;
@@ -46,50 +68,78 @@
   --spacing-2xl: 48px;
 
   /* 圓角 */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 
   /* 過渡 */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.2s ease;
   --transition-slow: 0.3s ease;
+
+  /* 舊變數相容 */
+  --primary-color: var(--color-primary);
+  --primary-color-rgb: 5, 205, 153;
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --card-bg: var(--color-bg-card);
+  --card-shadow: var(--shadow-card);
+  --border-color: var(--color-border);
+  --input-bg: var(--color-bg-secondary);
+  --hover-bg: var(--color-bg-tertiary);
+  --active-bg: #e2e8f0;
+  --disabled-bg: #f1f5f9;
+
+  /* 暗黑模式通用變數 */
+  --color-surface: var(--color-bg-card);
+  --color-bg: var(--color-bg-primary);
+  --color-text: var(--color-text-primary);
+  --color-text-muted: var(--color-text-secondary);
 }
 
-/* ============================================
-   明亮模式樣式
-   ============================================ */
-[data-theme="light"] {
-  /* 主色調 */
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-accent: #7c3aed;
+/* 暗黑模式 */
+[data-theme="dark"] {
+  /* 背景色 - 深色 */
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-tertiary: #334155;
+  --color-bg-card: #1e293b;
 
-  /* 狀態色 */
-  --color-success: #059669;
-  --color-warning: #d97706;
-  --color-danger: #dc2626;
+  /* 文字色 - 淺色 */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
 
-  /* 背景色 */
-  --color-bg-primary: #f8fafc;
-  --color-bg-secondary: #ffffff;
-  --color-bg-tertiary: #e2e8f0;
+  /* 邊框 */
+  --color-border: #334155;
+  --color-border-light: #475569;
+  --color-border-hover: #475569;
 
-  /* 文字色 */
-  --color-text-primary: #1e293b;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
+  /* 側邊欄 - 深色 */
+  --color-sidebar-bg: #0f172a;
+  --color-sidebar-hover: #1e293b;
+  --color-sidebar-active: #334155;
+  --color-sidebar-text: #94a3b8;
+  --color-sidebar-text-active: #ffffff;
 
-  /* 邊框與分隔線 */
-  --color-border: rgba(100, 116, 139, 0.2);
-  --color-border-hover: rgba(100, 116, 139, 0.3);
+  /* 輸入框 */
+  --input-bg: #1e293b;
+  --hover-bg: #334155;
+  --active-bg: #475569;
+  --disabled-bg: #1e293b;
+
+  /* 卡片 */
+  --card-bg: #1e293b;
+  --color-surface: #1e293b;
+  --color-bg: #0f172a;
+  --color-text: #f1f5f9;
 
   /* 陰影 */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.1);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* 重置樣式 */
@@ -112,31 +162,8 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
-  line-height: 1.6;
+  line-height: 1.5;
   min-height: 100vh;
-}
-
-/* 背景裝飾 */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% -20%, rgba(59, 130, 246, 0.15), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139, 92, 246, 0.1), transparent);
-  pointer-events: none;
-  z-index: -1;
-  transition: background 0.3s ease;
-}
-
-/* 明亮模式背景裝飾 */
-[data-theme="light"] body::before {
-  background:
-    radial-gradient(ellipse 80% 50% at 20% -20%, rgba(37, 99, 235, 0.08), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(124, 58, 237, 0.05), transparent);
 }
 
 #root {
@@ -145,7 +172,7 @@ body::before {
 
 /* 選取樣式 */
 ::selection {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(5, 205, 153, 0.3);
   color: var(--color-text-primary);
 }
 
@@ -166,4 +193,91 @@ body::before {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
+}
+
+/* 載入畫面 */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  color: var(--color-text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 權限不足頁面 */
+.access-denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 8px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.access-denied h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: var(--color-danger);
+}
+
+.access-denied p {
+  margin: 0;
+}
+
+.access-denied-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.access-denied-actions .btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.access-denied-actions .btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.access-denied-actions .btn-secondary {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.access-denied-actions .btn-secondary:hover {
+  background: var(--color-bg-secondary);
 }

@@ -1,0 +1,1597 @@
+/**
+ * 系統管理頁面樣式
+ */
+
+.system-page {
+    padding: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.system-page .page-header {
+    margin-bottom: 1.5rem;
+}
+
+.system-page .page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Tab 切換 - Wrike 風格 */
+.tab-container {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    background: var(--color-bg-tertiary);
+    padding: 0.25rem;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.tab-button {
+    padding: 0.625rem 1.25rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+.tab-button:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.tab-button.active {
+    color: var(--text-primary);
+    background: var(--color-bg-secondary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 表單區塊 */
+.system-page .form-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--card-shadow);
+}
+
+.system-form h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+}
+
+.form-group input:disabled {
+    background: var(--disabled-bg);
+    cursor: not-allowed;
+}
+
+/* 使用者帳號輸入 - 搭配圖示選擇器 */
+.user-id-with-picker {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.user-id-with-picker input {
+    flex: 1;
+    min-width: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+.employee-picker {
+    position: relative;
+}
+
+.picker-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border-color);
+    border-left: none;
+    background: var(--color-bg-tertiary);
+    border-radius: 0 8px 8px 0;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.picker-btn:hover {
+    background: var(--hover-bg);
+}
+
+.picker-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 280px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    margin-top: 4px;
+}
+
+.employee-picker:hover .picker-dropdown,
+.picker-btn:focus+.picker-dropdown,
+.picker-dropdown:hover {
+    display: block;
+}
+
+.picker-empty {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.picker-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.picker-item:hover {
+    background: var(--hover-bg);
+}
+
+.picker-id {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    min-width: 60px;
+}
+
+.picker-name {
+    color: var(--text-primary);
+    font-size: 0.8125rem;
+}
+
+/* 密碼輸入欄位 - 帶顯示/隱藏按鈕 */
+.password-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.password-input-wrapper input {
+    flex: 1;
+    min-width: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+.password-toggle-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border-color);
+    border-left: none;
+    background: var(--color-bg-tertiary);
+    border-radius: 0 8px 8px 0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.password-toggle-btn:hover {
+    background: var(--hover-bg);
+}
+
+.password-toggle-btn:active {
+    background: var(--active-bg);
+}
+
+/* Checkbox 群組 */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--hover-bg);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.checkbox-item:hover {
+    background: var(--active-bg);
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.checkbox-item span {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+/* 表單操作按鈕 */
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* 篩選區塊 */
+.filter-section {
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+}
+
+/* 表格區塊 */
+.system-page .table-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+}
+
+.table-section h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.system-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+
+.system-table th,
+.system-table td {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.system-table th {
+    background: var(--hover-bg);
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.system-table tbody tr:hover {
+    background: var(--hover-bg);
+}
+
+/* 狀態徽章 */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.status-badge.inactive {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* 角色徽章 */
+.role-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    background: rgba(var(--primary-color-rgb), 0.1);
+    color: var(--primary-color);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* 代碼徽章 */
+.code-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: var(--hover-bg);
+    border-radius: 4px;
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.8125rem;
+}
+
+/* 操作按鈕 */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-icon {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.btn-edit {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.btn-edit:hover:not(:disabled) {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-delete:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* 通用按鈕 */
+.btn {
+    padding: 0.625rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-secondary {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--active-bg);
+}
+
+/* 載入與空狀態 */
+.loading,
+.empty {
+    padding: 3rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* 錯誤提示 */
+.error-banner {
+    padding: 0.875rem 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .system-page {
+        padding: 1rem;
+    }
+
+    .tab-container {
+        overflow-x: auto;
+    }
+
+    .tab-button {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hide-mobile {
+        display: none;
+    }
+
+    /* 移動端表格卡片化 */
+    .system-table thead {
+        display: none;
+    }
+
+    .system-table tbody tr {
+        display: block;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+
+    .system-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: none;
+    }
+
+    .system-table td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .system-table td:last-child {
+        justify-content: flex-end;
+    }
+
+    .system-table td:last-child::before {
+        display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    .hide-tablet {
+        display: none;
+    }
+}
+
+/* ============================================
+   功能清單 Tab 樣式
+   ============================================ */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.section-header h2 {
+    margin: 0;
+}
+
+.section-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.menu-tree-container {
+    padding: 0.5rem;
+}
+
+.menu-tree-node {
+    margin-bottom: 0.25rem;
+}
+
+.menu-tree-node.level-1 {
+    margin-left: 1.5rem;
+}
+
+.menu-tree-node.level-2 {
+    margin-left: 3rem;
+}
+
+.menu-tree-header {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 1rem;
+    background: var(--hover-bg);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.menu-tree-header.expandable {
+    cursor: pointer;
+}
+
+.menu-tree-header.expandable:hover {
+    background: var(--active-bg);
+}
+
+.menu-tree-header.expanded {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.menu-tree-toggle {
+    width: 1rem;
+    font-size: 0.625rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.menu-tree-icon {
+    font-size: 1.25rem;
+}
+
+.menu-tree-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.menu-tree-code {
+    padding: 0.125rem 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--primary-color);
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+.menu-tree-path {
+    padding: 0.125rem 0.5rem;
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border-radius: 4px;
+    font-size: 0.6875rem;
+}
+
+.menu-tree-order {
+    padding: 0.125rem 0.5rem;
+    background: var(--active-bg);
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+}
+
+.menu-tree-content {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 0 0 8px 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+[data-theme="light"] .menu-tree-content {
+    background: rgba(241, 245, 249, 0.8);
+}
+
+.menu-tree-children {
+    margin-bottom: 0.5rem;
+}
+
+.menu-functions {
+    background: var(--card-bg);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.menu-functions-header {
+    padding: 0.5rem 0.75rem;
+    background: var(--active-bg);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.menu-functions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.375rem;
+    padding: 0.5rem;
+}
+
+.menu-function-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--hover-bg);
+    border-radius: 6px;
+}
+
+.menu-function-item .function-name {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.menu-function-item .function-id {
+    padding: 0.125rem 0.375rem;
+    background: rgba(var(--primary-color-rgb), 0.1);
+    color: var(--primary-color);
+    border-radius: 3px;
+    font-size: 0.625rem;
+}
+
+.menu-function-item .function-type {
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.function-type.type-view {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.function-type.type-create {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.function-type.type-edit {
+    background: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+}
+
+.function-type.type-delete {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.function-type.type-export {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+}
+
+.menus-tab .table-section {
+    margin-bottom: 1.5rem;
+}
+
+.section-desc {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* 選單列表 */
+.menu-list-container {
+    padding: 0.5rem;
+}
+
+.menu-list-item {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.menu-item-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+}
+
+.menu-item-icon {
+    font-size: 1.25rem;
+}
+
+.menu-item-name {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.menu-item-id {
+    padding: 0.125rem 0.5rem;
+    background: rgba(5, 205, 153, 0.1);
+    color: var(--primary-color);
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+.menu-item-path {
+    padding: 0.125rem 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-radius: 4px;
+    font-size: 0.6875rem;
+}
+
+.menu-item-order {
+    padding: 0.125rem 0.5rem;
+    background: var(--hover-bg);
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+}
+
+.menu-item-actions {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0 1rem 0.875rem;
+}
+
+.btn-move {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-color);
+    background: var(--color-bg-secondary);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 0.625rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-move:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-move:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.menu-children {
+    padding: 0 0.5rem 0.5rem 0.5rem;
+}
+
+.menu-children .menu-list {
+    margin-left: 0 !important;
+}
+
+/* ============================================
+   功能選單管理 - 新版樣式
+   ============================================ */
+.menus-toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-add-menu {
+    padding: 0.625rem 1.25rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-add-menu:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.btn-add-menu:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-apply {
+    padding: 0.625rem 1.25rem;
+    background: var(--color-bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: not-allowed;
+    transition: all 0.2s ease;
+}
+
+.btn-apply.active {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+    cursor: pointer;
+}
+
+.btn-apply.active:hover {
+    background: #059669;
+}
+
+/* 選單樹結構 */
+.menu-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.menu-tree-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-tree-item.is-new .menu-tree-row {
+    border-color: var(--primary-color);
+    border-style: dashed;
+}
+
+.menu-tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 0.25rem;
+}
+
+.menu-tree-row.is-directory {
+    background: var(--hover-bg);
+}
+
+.menu-tree-row.is-page {
+    background: var(--color-bg-secondary);
+}
+
+.menu-tree-icon {
+    font-size: 1.125rem;
+}
+
+.menu-tree-name {
+    flex: 1;
+    font-size: 0.9375rem;
+}
+
+.menu-tree-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.menu-tree-children {
+    padding-left: 0;
+}
+
+/* 帶加號徽章的圖示按鈕 */
+.btn-tree-icon {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    background: var(--color-bg-secondary);
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-tree-icon:hover {
+    background: var(--hover-bg);
+}
+
+.plus-badge {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    font-size: 0.625rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.plus-badge.blue {
+    background: #3b82f6;
+    color: white;
+}
+
+.plus-badge.green {
+    background: #10b981;
+    color: white;
+}
+
+.btn-add-submenu:hover {
+    border-color: #3b82f6;
+}
+
+.btn-add-page:hover {
+    border-color: #10b981;
+}
+
+.empty-picker {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* 圖示選擇器按鈕 */
+.btn-icon-picker {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    background: var(--color-bg-secondary);
+    border-radius: 8px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.btn-icon-picker:hover {
+    background: var(--hover-bg);
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+/* 圖示選擇器 Modal */
+.icon-picker-modal {
+    background: var(--color-bg-primary);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+}
+
+.icon-picker-modal h3 {
+    padding: 1rem 1.25rem;
+    margin: 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.125rem;
+}
+
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.icon-option {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border-color);
+    background: var(--color-bg-secondary);
+    border-radius: 8px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-option:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: scale(1.15);
+}
+
+.icon-picker-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.icon-picker-footer button {
+    padding: 0.5rem 1rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.icon-picker-footer button:hover {
+    background: var(--hover-bg);
+}
+
+.menu-editor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.menu-editor-item {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.menu-editor-item.is-new {
+    border-color: var(--primary-color);
+    border-style: dashed;
+}
+
+.menu-editor-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--hover-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.menu-icon {
+    font-size: 1.25rem;
+}
+
+.menu-name-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--color-bg-primary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+.menu-name-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.menu-header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    background: var(--color-bg-secondary);
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+    background: var(--hover-bg);
+}
+
+.btn-icon.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.function-list {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.function-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 0.875rem;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.function-item.is-new {
+    border-color: var(--primary-color);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.function-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.function-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-inline {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox-inline input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.btn-icon-sm {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-color);
+    background: var(--color-bg-secondary);
+    border-radius: 4px;
+    font-size: 0.625rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-icon-sm:hover:not(:disabled) {
+    background: var(--hover-bg);
+}
+
+.btn-icon-sm:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn-icon-sm.btn-danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* 功能選擇器對話框 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.function-picker-modal {
+    background: var(--color-bg-primary);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 480px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+}
+
+.function-picker-modal h3 {
+    padding: 1rem 1.25rem;
+    margin: 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.125rem;
+}
+
+.function-picker-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.function-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.function-picker-item:hover {
+    background: var(--hover-bg);
+}
+
+.function-picker-item input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.function-picker-item span {
+    flex: 1;
+    font-size: 0.9375rem;
+}
+
+.function-picker-item code {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: var(--hover-bg);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+}
+
+.function-picker-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.function-picker-actions button {
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.function-picker-actions button:not(.btn-primary) {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.function-picker-actions button:not(.btn-primary):hover {
+    background: var(--hover-bg);
+}
+
+.function-picker-actions .btn-primary {
+    background: var(--primary-color);
+    border: none;
+    color: white;
+}
+
+.function-picker-actions .btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* ============================================
+   密碼規範 Tab 樣式
+   ============================================ */
+.policy-card {
+    padding: 1.5rem;
+    background: var(--hover-bg);
+    border-radius: 12px;
+}
+
+.policy-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.policy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.policy-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+}
+
+.policy-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.policy-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+}
+
+.policy-label {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+}
+
+.policy-value {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.policy-value.yes {
+    color: #22c55e;
+}
+
+.policy-value.no {
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   權限樹狀結構樣式
+   ============================================ */
+.permission-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.permission-group {
+    background: var(--hover-bg);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.permission-group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--active-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.permission-group-icon {
+    font-size: 1.25rem;
+}
+
+.permission-group-name {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.btn-select-all {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-select-all:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.permission-group-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 0.5rem;
+    padding: 0.75rem;
+}
+
+.permission-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--card-bg);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.permission-item:hover {
+    background: rgba(var(--primary-color-rgb), 0.1);
+}
+
+.permission-item input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.permission-item-name {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.permission-item-type {
+    padding: 0.125rem 0.375rem;
+    background: rgba(var(--primary-color-rgb), 0.1);
+    color: var(--primary-color);
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   密碼規範表單樣式
+   ============================================ */
+.policy-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.policy-form-section {
+    padding: 1.25rem;
+    background: var(--hover-bg);
+    border-radius: 10px;
+}
+
+.policy-form-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-group-inline {
+    margin-bottom: 0.75rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.checkbox-label:hover {
+    background: rgba(var(--primary-color-rgb), 0.1);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    cursor: pointer;
+}
+
+.checkbox-label span {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+}
+
+.form-group small {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* 成功訊息 */
+.success-banner {
+    padding: 0.875rem 1rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 8px;
+    color: #22c55e;
+    margin-bottom: 1rem;
+}
