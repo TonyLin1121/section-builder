@@ -24,10 +24,16 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # 複製建置產物
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# 複製 entrypoint 腳本
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
 # 健康檢查
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# 使用 entrypoint 腳本啟動
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
