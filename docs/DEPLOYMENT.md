@@ -4,12 +4,118 @@
 
 ## 目錄
 
+- [使用 Docker Hub Image 部署（推薦）](#使用-docker-hub-image-部署推薦)
 - [前置需求](#前置需求)
-- [快速開始](#快速開始)
+- [從原始碼建置部署](#從原始碼建置部署)
 - [環境配置](#環境配置)
-- [部署步驟](#部署步驟)
 - [服務管理](#服務管理)
 - [常見問題](#常見問題)
+
+---
+
+## 使用 Docker Hub Image 部署（推薦）
+
+本專案已發布至 Docker Hub，您可以直接拉取 Image 進行部署，無需從原始碼建置。
+
+### Docker Hub Image 資訊
+
+| Image | Tag | 說明 |
+|-------|-----|------|
+| `tonyhowwhy/section-builder` | `frontend` | 前端服務（React + Nginx） |
+| `tonyhowwhy/section-builder` | `backend` | 後端服務（FastAPI） |
+
+**Docker Hub 連結：** https://hub.docker.com/r/tonyhowwhy/section-builder
+
+### 方式一：使用 Docker Compose（推薦）
+
+#### 1. 建立 docker-compose.yml
+
+```yaml
+services:
+  frontend:
+    image: tonyhowwhy/section-builder:frontend
+    container_name: section-builder-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backend:
+    image: tonyhowwhy/section-builder:backend
+    container_name: section-builder-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+```
+
+#### 2. 建立 .env 檔案
+
+```bash
+DB_HOST=your-db-host
+DB_PORT=5432
+DB_NAME=your-db-name
+DB_USER=your-db-user
+DB_PASSWORD=your-db-password
+```
+
+#### 3. 啟動服務
+
+```bash
+docker compose up -d
+```
+
+### 方式二：使用 Docker Run
+
+#### 1. 啟動後端服務
+
+```bash
+docker run -d \
+  --name section-builder-backend \
+  -p 8000:8000 \
+  -e DB_HOST=your-db-host \
+  -e DB_PORT=5432 \
+  -e DB_NAME=your-db-name \
+  -e DB_USER=your-db-user \
+  -e DB_PASSWORD=your-db-password \
+  tonyhowwhy/section-builder:backend
+```
+
+#### 2. 啟動前端服務
+
+```bash
+docker run -d \
+  --name section-builder-frontend \
+  -p 80:80 \
+  tonyhowwhy/section-builder:frontend
+```
+
+### 更新 Image
+
+當有新版本發布時：
+
+```bash
+# 拉取最新 Image
+docker pull tonyhowwhy/section-builder:frontend
+docker pull tonyhowwhy/section-builder:backend
+
+# 重新啟動容器
+docker compose down
+docker compose up -d
+```
 
 ---
 
@@ -27,7 +133,7 @@
 
 ---
 
-## 快速開始
+## 從原始碼建置部署
 
 ### 1. 複製環境變數檔案
 
