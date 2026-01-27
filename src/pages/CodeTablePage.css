@@ -1,32 +1,35 @@
 .codetable-page {
-    min-height: 100vh;
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.page-header {
+.codetable-page .page-header {
     background: rgba(30, 41, 59, 0.95);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     padding: 20px 32px;
+    margin: -24px -24px 24px -24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
 }
 
-.page-header h1 {
+.codetable-page .page-header h1 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-text-primary);
 }
 
-.page-header .header-actions {
+.codetable-page .page-header .header-actions {
     display: flex;
     gap: 12px;
     align-items: center;
 }
 
-.page-content {
+.codetable-page .page-content {
     padding: 32px;
     max-width: 1400px;
     margin: 0 auto;
@@ -292,34 +295,34 @@
 
 /* 平板螢幕 (768px - 1024px) */
 @media (max-width: 1024px) {
-    .page-header {
+    .codetable-page .page-header {
         padding: 16px 24px;
     }
 
-    .page-content {
+    .codetable-page .page-content {
         padding: 24px;
     }
 
-    .form-grid {
+    .codetable-page .form-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .hide-tablet {
+    .codetable-page .hide-tablet {
         display: none;
     }
 }
 
 /* 手機螢幕 (小於 768px) */
 @media (max-width: 768px) {
-    .page-header {
+    .codetable-page .page-header {
         padding: 16px;
     }
 
-    .page-header h1 {
+    .codetable-page .page-header h1 {
         font-size: 1.25rem;
     }
 
-    .page-content {
+    .codetable-page .page-content {
         padding: 16px;
     }
 
@@ -432,11 +435,11 @@
 
 /* 小手機螢幕 (小於 480px) */
 @media (max-width: 480px) {
-    .page-header h1 {
+    .codetable-page .page-header h1 {
         font-size: 1.125rem;
     }
 
-    .page-content {
+    .codetable-page .page-content {
         padding: 12px;
     }
 
@@ -460,7 +463,7 @@
 /* ============================================
    明亮模式樣式覆蓋
    ============================================ */
-[data-theme="light"] .page-header {
+[data-theme="light"] .codetable-page .page-header {
     background: rgba(255, 255, 255, 0.95);
     border-bottom: 1px solid rgba(100, 116, 139, 0.15);
 }

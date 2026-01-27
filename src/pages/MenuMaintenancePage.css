@@ -9,19 +9,20 @@
 }
 
 .menu-maintenance-page .page-header {
-    margin-bottom: 24px;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 20px 32px;
+    margin: -24px -24px 24px -24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .menu-maintenance-page .page-header h1 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0 0 8px 0;
-}
-
-.menu-maintenance-page .subtitle {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
     margin: 0;
 }
 
@@ -288,4 +289,39 @@
     border-radius: 8px;
     font-size: 0.875rem;
     color: var(--color-text-muted);
+}
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .menu-maintenance-page .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .menu-maintenance-page .page-header h1 {
+    color: #1e293b;
+}
+
+[data-theme="light"] .menu-maintenance-page .form-container {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .menu-maintenance-page .table-container {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .menu-maintenance-page .data-table th {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .menu-maintenance-page .data-table tr:hover {
+    background: rgba(241, 245, 249, 0.6);
+}
+
+[data-theme="light"] .menu-maintenance-page .stats-bar {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
 }

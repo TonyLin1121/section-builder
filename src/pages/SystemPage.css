@@ -3,19 +3,28 @@
  */
 
 .system-page {
-    padding: 1.5rem;
+    padding: 24px;
     max-width: 1400px;
     margin: 0 auto;
 }
 
 .system-page .page-header {
-    margin-bottom: 1.5rem;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 20px 32px;
+    margin: -24px -24px 24px -24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
 }
 
 .system-page .page-header h1 {
-    font-size: 1.75rem;
+    margin: 0;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
 }
 
 /* Tab 切換 - Wrike 風格 */
@@ -1594,4 +1603,16 @@
     border-radius: 8px;
     color: #22c55e;
     margin-bottom: 1rem;
+}
+
+/* ============================================
+   明亮模式 - 頁面標題樣式覆蓋
+   ============================================ */
+[data-theme="light"] .system-page .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .system-page .page-header h1 {
+    color: #1e293b;
 }

@@ -9,13 +9,21 @@
 }
 
 .project-stats-page .page-header {
-    margin-bottom: 16px;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 20px 32px;
+    margin: -24px -24px 24px -24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
 }
 
 .project-stats-page .page-header h1 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--color-text);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
     margin: 0;
 }
 
@@ -309,4 +317,16 @@
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+/* ============================================
+   明亮模式樣式覆蓋
+   ============================================ */
+[data-theme="light"] .project-stats-page .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .project-stats-page .page-header h1 {
+    color: #1e293b;
 }

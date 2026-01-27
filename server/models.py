@@ -2,7 +2,7 @@
 Pydantic 資料模型
 NOTE: 對應 PostgreSQL member 資料表結構
 """
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -247,6 +247,109 @@ class ProjectInfo(ProjectInfoBase):
     完整專案資料模型（包含主鍵）
     """
     project_id: str = Field(..., max_length=7, description="專案代號")
+
+    class Config:
+        from_attributes = True
+
+
+# ============================================
+# Announcement (公告) 模型
+# ============================================
+
+class AnnouncementCategoryBase(BaseModel):
+    """
+    公告類別基礎資料模型
+    """
+    category_name: Optional[str] = Field(None, max_length=50, description="類別名稱")
+    icon: Optional[str] = Field(None, max_length=50, description="類別圖示")
+    sort_order: Optional[int] = Field(0, description="排序順序")
+    is_active: Optional[bool] = Field(True, description="是否啟用")
+
+
+class AnnouncementCategoryCreate(AnnouncementCategoryBase):
+    """
+    新增公告類別時使用的模型
+    """
+    category_id: str = Field(..., max_length=20, description="類別代碼")
+    category_name: str = Field(..., max_length=50, description="類別名稱")
+
+
+class AnnouncementCategory(AnnouncementCategoryBase):
+    """
+    完整公告類別資料模型
+    """
+    category_id: str = Field(..., max_length=20, description="類別代碼")
+
+    class Config:
+        from_attributes = True
+
+
+class AnnouncementTargetBase(BaseModel):
+    """
+    公告目標對象模型
+    """
+    target_type: str = Field(..., max_length=20, description="目標類型（role/division/user）")
+    target_value: str = Field(..., max_length=50, description="目標值")
+
+
+class AnnouncementAttachment(BaseModel):
+    """
+    公告附件資料模型
+    """
+    attachment_id: int = Field(..., description="附件編號")
+    announcement_id: int = Field(..., description="公告編號")
+    file_name: str = Field(..., max_length=255, description="檔案名稱")
+    file_path: str = Field(..., max_length=500, description="檔案路徑")
+    file_size: Optional[int] = Field(None, description="檔案大小")
+    file_type: Optional[str] = Field(None, max_length=100, description="檔案類型")
+
+    class Config:
+        from_attributes = True
+
+
+class AnnouncementBase(BaseModel):
+    """
+    公告基礎資料模型
+    """
+    category_id: Optional[str] = Field(None, max_length=20, description="類別代碼")
+    title: Optional[str] = Field(None, max_length=200, description="公告標題")
+    content: Optional[str] = Field(None, description="公告內容")
+    target_type: Optional[str] = Field("all", max_length=20, description="目標類型（all/role/division/user）")
+    is_pinned: Optional[bool] = Field(False, description="是否置頂")
+    is_active: Optional[bool] = Field(True, description="是否啟用")
+    push_notification: Optional[bool] = Field(False, description="是否推送通知")
+    publish_date: Optional[str] = Field(None, max_length=10, description="發布日期")
+    expire_date: Optional[str] = Field(None, max_length=10, description="到期日期")
+
+
+class AnnouncementCreate(AnnouncementBase):
+    """
+    新增公告時使用的模型
+    """
+    title: str = Field(..., max_length=200, description="公告標題")
+    targets: Optional[List[AnnouncementTargetBase]] = Field(None, description="目標對象清單")
+
+
+class AnnouncementUpdate(AnnouncementBase):
+    """
+    更新公告時使用的模型
+    """
+    targets: Optional[List[AnnouncementTargetBase]] = Field(None, description="目標對象清單")
+
+
+class Announcement(AnnouncementBase):
+    """
+    完整公告資料模型（包含主鍵與關聯資料）
+    """
+    announcement_id: int = Field(..., description="公告編號")
+    created_by: Optional[str] = Field(None, max_length=20, description="建立者")
+    created_at: Optional[str] = Field(None, description="建立時間")
+    updated_at: Optional[str] = Field(None, description="更新時間")
+    category_name: Optional[str] = Field(None, description="類別名稱")
+    category_icon: Optional[str] = Field(None, description="類別圖示")
+    targets: Optional[List[AnnouncementTargetBase]] = Field(None, description="目標對象")
+    attachments: Optional[List[AnnouncementAttachment]] = Field(None, description="附件清單")
+    is_read: Optional[bool] = Field(None, description="是否已讀（使用者視角）")
 
     class Config:
         from_attributes = True

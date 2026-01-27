@@ -10,6 +10,7 @@ import { ProjectStatsPage } from './pages/ProjectStatsPage';
 import { EmployeeStatsPage } from './pages/EmployeeStatsPage';
 import { MenuMaintenancePage } from './pages/MenuMaintenancePage';
 import { SystemPage } from './pages/SystemPage';
+import { AnnouncementPage } from './pages/AnnouncementPage';
 import { LoginPage } from './pages/LoginPage';
 
 /**
@@ -127,6 +128,14 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute requiredRole="ADMIN">
                 <Layout><MenuMaintenancePage /></Layout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/system/announcements',
+        element: (
+            <ProtectedRoute requiredRole="ADMIN">
+                <Layout><AnnouncementPage /></Layout>
             </ProtectedRoute>
         ),
     },

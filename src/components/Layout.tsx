@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useMenus } from '../hooks/useMenus';
 import { ThemeToggle } from './ThemeToggle';
 import { ChangePasswordModal } from './ChangePasswordModal';
+import { AnnouncementModal } from './AnnouncementModal';
 import type { Menu } from '../services/systemApi';
 import './Layout.css';
 
@@ -82,6 +83,41 @@ function MenuItem({ menu, level = 0 }: { menu: Menu; level?: number }) {
 }
 
 /**
+ * 收合狀態選單項目組件
+ * NOTE: 只顯示圖示，hover 時顯示選單名稱
+ */
+function CollapsedMenuItem({ menu }: { menu: Menu }) {
+    const location = useLocation();
+    const hasChildren = menu.children && menu.children.length > 0;
+    const isActive = location.pathname === menu.menu_path;
+    const isParentActive = menu.children?.some(child => location.pathname === child.menu_path);
+
+    // 如果有子選單，取第一個有路徑的子項目作為連結
+    const targetPath = menu.menu_path || (hasChildren ? menu.children!.find(c => c.menu_path)?.menu_path : undefined);
+
+    if (targetPath) {
+        return (
+            <Link
+                to={targetPath}
+                className={`nav-item-collapsed ${isActive || isParentActive ? 'active' : ''}`}
+                title={menu.menu_name}
+            >
+                <span className="nav-icon">{menu.icon || '📄'}</span>
+            </Link>
+        );
+    }
+
+    return (
+        <div
+            className={`nav-item-collapsed ${isParentActive ? 'active' : ''}`}
+            title={menu.menu_name}
+        >
+            <span className="nav-icon">{menu.icon || '📄'}</span>
+        </div>
+    );
+}
+
+/**
  * 路徑映射：資料庫路徑 -> 前端路由
  * NOTE: 資料庫的路徑與前端路由不一定完全相同
  */
@@ -131,6 +167,7 @@ export function Layout({ children }: LayoutProps) {
             is_active: true,
             children: [
                 { menu_id: 'SYS_USER', menu_name: '使用者管理', menu_path: '/system', icon: '👤', sort_order: 1, is_active: true, children: [] },
+                { menu_id: 'SYS_ANNOUNCEMENT', menu_name: '公告管理', menu_path: '/system/announcements', icon: '📢', sort_order: 2, is_active: true, children: [] },
             ]
         }] : [])
     ], [hasRole]);
@@ -227,6 +264,9 @@ export function Layout({ children }: LayoutProps) {
                 isOpen={isPasswordModalOpen}
                 onClose={() => setIsPasswordModalOpen(false)}
             />
+
+            {/* 公告彈窗 */}
+            <AnnouncementModal />
         </div>
     );
 }

@@ -73,6 +73,10 @@ app.add_middleware(CSRFMiddleware)
 app.include_router(auth_router)
 app.include_router(system_router)
 
+# 註冊公告路由
+from routes import announcement_router
+app.include_router(announcement_router)
+
 @app.get("/health")
 def health_check():
     """

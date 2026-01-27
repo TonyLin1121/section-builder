@@ -257,7 +257,6 @@ export function MenuMaintenancePage() {
         <div className="menu-maintenance-page">
             <header className="page-header">
                 <h1>🔧 選單維護</h1>
-                <p className="subtitle">sys_menu 資料表維護 - 開發人員工具</p>
             </header>
 
             {/* 工具列 */}
