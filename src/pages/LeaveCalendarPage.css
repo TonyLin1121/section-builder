@@ -1,0 +1,728 @@
+/**
+ * 請假行事曆頁面樣式
+ * NOTE: 採用與現有頁面一致的設計風格，支援暗色/明亮模式
+ */
+
+.leave-calendar-page {
+    min-height: 100vh;
+}
+
+/* ============================================
+   頁面標題
+   ============================================ */
+
+.leave-calendar-page .page-header {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.leave-calendar-page .page-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.leave-calendar-page .header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* ============================================
+   工具列
+   ============================================ */
+
+.calendar-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background: rgba(30, 41, 59, 0.6);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* 日期導航 */
+.date-navigator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(30, 41, 59, 0.8);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+.nav-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary);
+}
+
+.today-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(30, 41, 59, 0.8);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.today-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary);
+}
+
+.nav-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-left: 12px;
+    min-width: 150px;
+}
+
+/* 視圖切換 */
+.view-switcher {
+    display: flex;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.view-btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+    color: var(--color-text-primary);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.view-btn.active {
+    background: linear-gradient(135deg, var(--color-primary), #6366f1);
+    color: white;
+}
+
+/* ============================================
+   行事曆容器
+   ============================================ */
+
+.calendar-container {
+    padding: 24px 32px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.calendar-grid {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* 星期標題 */
+.weekday-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: rgba(15, 23, 42, 0.6);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.weekday-cell {
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.weekday-cell.today {
+    color: var(--color-primary);
+}
+
+.weekday-cell .weekday-name {
+    display: block;
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+}
+
+.weekday-cell .weekday-date {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 0.875rem;
+}
+
+.weekday-date.today-badge {
+    background: linear-gradient(135deg, var(--color-primary), #6366f1);
+    color: white;
+}
+
+/* ============================================
+   月視圖
+   ============================================ */
+
+.calendar-grid.month .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.day-cell.month {
+    min-height: 100px;
+    padding: 8px;
+    border-right: 1px solid rgba(148, 163, 184, 0.05);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    transition: background 0.2s ease;
+}
+
+.day-cell.month:nth-child(7n) {
+    border-right: none;
+}
+
+.day-cell.month:hover {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.day-cell.month.today {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.day-cell.month.other-month {
+    opacity: 0.4;
+}
+
+.day-cell .day-header {
+    margin-bottom: 6px;
+}
+
+.day-cell .day-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.day-cell.today .day-number.today-badge {
+    background: linear-gradient(135deg, var(--color-primary), #6366f1);
+    color: white;
+}
+
+.day-cell .day-content {
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.leave-row {
+    margin-bottom: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.leave-type {
+    color: var(--color-primary);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.leave-employees {
+    color: var(--color-text-primary);
+    word-break: break-word;
+}
+
+/* ============================================
+   週視圖
+   ============================================ */
+
+.calendar-grid.week .weekday-header {
+    padding: 8px 0;
+}
+
+.calendar-grid.week .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    min-height: 400px;
+}
+
+.day-cell.week {
+    padding: 12px;
+    border-right: 1px solid rgba(148, 163, 184, 0.05);
+    transition: background 0.2s ease;
+}
+
+.day-cell.week:last-child {
+    border-right: none;
+}
+
+.day-cell.week:hover {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.day-cell.week.today {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.day-cell.week .day-header {
+    display: none;
+}
+
+.day-cell.week .day-content {
+    font-size: 0.8125rem;
+}
+
+.day-cell.week .leave-row {
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 6px;
+    display: block;
+}
+
+.day-cell.week .leave-type {
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* ============================================
+   日視圖
+   ============================================ */
+
+.calendar-grid.day {
+    min-height: 400px;
+}
+
+.day-detail {
+    padding: 24px;
+}
+
+.day-detail.today {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.day-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.day-detail-date {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.day-detail-weekday {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+}
+
+.today-tag {
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-primary), #6366f1);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.day-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.leave-detail-row {
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 12px;
+    border-left: 4px solid var(--color-primary);
+}
+
+.leave-detail-type {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+}
+
+.leave-detail-employees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.employee-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+}
+
+.period-tag {
+    padding: 2px 6px;
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #a5b4fc;
+}
+
+.no-leave {
+    text-align: center;
+    padding: 40px;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+}
+
+/* ============================================
+   通用元素
+   ============================================ */
+
+.leave-calendar-page .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.leave-calendar-page .btn-outline {
+    background: transparent;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    color: var(--color-text-secondary);
+}
+
+.leave-calendar-page .btn-outline:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-text-primary);
+}
+
+.leave-calendar-page .btn-outline:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.leave-calendar-page .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    color: var(--color-text-secondary);
+}
+
+.leave-calendar-page .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(148, 163, 184, 0.2);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.leave-calendar-page .error-banner {
+    margin: 0 32px;
+    padding: 12px 20px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 10px;
+    color: #fca5a5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.leave-calendar-page .error-banner button {
+    background: rgba(239, 68, 68, 0.2);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fca5a5;
+    cursor: pointer;
+}
+
+/* ============================================
+   響應式設計
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .leave-calendar-page .page-header {
+        padding: 16px 24px;
+    }
+
+    .calendar-toolbar {
+        padding: 12px 24px;
+    }
+
+    .calendar-container {
+        padding: 16px 24px;
+    }
+
+    .nav-title {
+        font-size: 1rem;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .leave-calendar-page .page-header {
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .leave-calendar-page .page-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .calendar-toolbar {
+        padding: 12px 16px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-navigator {
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .nav-title {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin: 0 0 12px 0;
+    }
+
+    .view-switcher {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .calendar-container {
+        padding: 12px 16px;
+    }
+
+    /* 週視圖改為單列 */
+    .calendar-grid.week .weekday-header,
+    .calendar-grid.week .days-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .calendar-grid.week .weekday-header {
+        display: none;
+    }
+
+    .day-cell.week {
+        border-right: none;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        padding: 16px;
+    }
+
+    .day-cell.week .day-header {
+        display: block;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    }
+
+    .day-cell.week .day-number {
+        font-size: 1rem;
+        width: auto;
+        height: auto;
+    }
+
+    /* 月視圖在手機上只顯示部分內容 */
+    .day-cell.month {
+        min-height: 60px;
+        padding: 4px;
+    }
+
+    .day-cell.month .leave-row {
+        font-size: 0.625rem;
+    }
+
+    .day-cell.month .leave-type {
+        display: none;
+    }
+
+    .day-cell.month.has-data::after {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 6px;
+        background: var(--color-primary);
+        border-radius: 50%;
+        margin-top: 4px;
+    }
+
+    .day-cell.month .day-content {
+        display: none;
+    }
+
+    .day-cell.month.has-data .day-content {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .leave-calendar-page .page-header h1 {
+        font-size: 1.125rem;
+    }
+
+    .view-btn {
+        padding: 8px 16px;
+        font-size: 0.8125rem;
+    }
+
+    .day-detail {
+        padding: 16px;
+    }
+
+    .day-detail-date {
+        font-size: 1.25rem;
+    }
+
+    .leave-detail-row {
+        padding: 12px;
+    }
+}
+
+/* ============================================
+   明亮模式
+   ============================================ */
+
+[data-theme="light"] .leave-calendar-page .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .calendar-toolbar {
+    background: rgba(248, 250, 252, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .nav-btn,
+[data-theme="light"] .today-btn {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+[data-theme="light"] .nav-btn:hover,
+[data-theme="light"] .today-btn:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .view-switcher {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .view-btn:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .calendar-grid {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .weekday-header {
+    background: rgba(241, 245, 249, 0.95);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .day-cell.month {
+    border-right: 1px solid rgba(100, 116, 139, 0.08);
+    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+}
+
+[data-theme="light"] .day-cell:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+[data-theme="light"] .day-cell.today {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .day-cell.week .leave-row,
+[data-theme="light"] .leave-detail-row {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .employee-chip {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .period-tag {
+    background: rgba(99, 102, 241, 0.2);
+    color: #4f46e5;
+}
+
+[data-theme="light"] .leave-calendar-page .error-banner {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: #dc2626;
+}
+
+[data-theme="light"] .leave-calendar-page .error-banner button {
+    background: rgba(220, 38, 38, 0.15);
+    color: #dc2626;
+}

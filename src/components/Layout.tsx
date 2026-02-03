@@ -82,40 +82,7 @@ function MenuItem({ menu, level = 0 }: { menu: Menu; level?: number }) {
     );
 }
 
-/**
- * 收合狀態選單項目組件
- * NOTE: 只顯示圖示，hover 時顯示選單名稱
- */
-function CollapsedMenuItem({ menu }: { menu: Menu }) {
-    const location = useLocation();
-    const hasChildren = menu.children && menu.children.length > 0;
-    const isActive = location.pathname === menu.menu_path;
-    const isParentActive = menu.children?.some(child => location.pathname === child.menu_path);
-
-    // 如果有子選單，取第一個有路徑的子項目作為連結
-    const targetPath = menu.menu_path || (hasChildren ? menu.children!.find(c => c.menu_path)?.menu_path : undefined);
-
-    if (targetPath) {
-        return (
-            <Link
-                to={targetPath}
-                className={`nav-item-collapsed ${isActive || isParentActive ? 'active' : ''}`}
-                title={menu.menu_name}
-            >
-                <span className="nav-icon">{menu.icon || '📄'}</span>
-            </Link>
-        );
-    }
-
-    return (
-        <div
-            className={`nav-item-collapsed ${isParentActive ? 'active' : ''}`}
-            title={menu.menu_name}
-        >
-            <span className="nav-icon">{menu.icon || '📄'}</span>
-        </div>
-    );
-}
+// NOTE: CollapsedMenuItem 組件已移除，未來若需要收合選單功能可重新實作
 
 /**
  * 路徑映射：資料庫路徑 -> 前端路由
@@ -157,8 +124,10 @@ export function Layout({ children }: LayoutProps) {
         { menu_id: 'MEMBER', menu_name: '員工管理', menu_path: '/', icon: '👥', sort_order: 1, is_active: true, children: [] },
         { menu_id: 'ATTENDANCE', menu_name: '請假維護', menu_path: '/attendance', icon: '📅', sort_order: 2, is_active: true, children: [] },
         { menu_id: 'ANNUAL', menu_name: '年度休假', menu_path: '/annual-leave', icon: '🗓️', sort_order: 3, is_active: true, children: [] },
-        { menu_id: 'PROJECT', menu_name: '專案管理', menu_path: '/projects', icon: '📊', sort_order: 4, is_active: true, children: [] },
-        { menu_id: 'CODETABLE', menu_name: '參數檔維護', menu_path: '/codetable', icon: '⚙️', sort_order: 5, is_active: true, children: [] },
+        { menu_id: 'LEAVE_CALENDAR', menu_name: '請假行事曆', menu_path: '/leave-calendar', icon: '📆', sort_order: 4, is_active: true, children: [] },
+        { menu_id: 'PROJECT', menu_name: '專案管理', menu_path: '/projects', icon: '📊', sort_order: 5, is_active: true, children: [] },
+        { menu_id: 'CODETABLE', menu_name: '參數檔維護', menu_path: '/codetable', icon: '⚙️', sort_order: 6, is_active: true, children: [] },
+        { menu_id: 'ASSISTANT', menu_name: 'i 助手', menu_path: '/assistant', icon: '🤖', sort_order: 10, is_active: true, children: [] },
         ...(hasRole('ADMIN') ? [{
             menu_id: 'SYSTEM',
             menu_name: '系統管理',

@@ -156,3 +156,41 @@ export async function getEmployeeOptions(): Promise<EmployeeOption[]> {
         name: m.name || m.emp_id,
     }));
 }
+
+// ============================================
+// 行事曆 API
+// ============================================
+
+/**
+ * 行事曆用請假記錄
+ */
+export interface CalendarLeaveRecord {
+    /** 請假日期 YYYYMMDD */
+    leave_date: string;
+    /** 假別代碼 */
+    leave_type: string;
+    /** 假別名稱 */
+    leave_type_name: string;
+    /** 時段 0:整天 1:上午 2:下午 */
+    day_period: string | null;
+    /** 員工中文姓名 */
+    chinese_name: string | null;
+    /** 員工編號 */
+    emp_id: string;
+}
+
+/**
+ * 取得行事曆用請假資料
+ * @param startDate 開始日期 YYYYMMDD
+ * @param endDate 結束日期 YYYYMMDD
+ * @returns 請假記錄陣列
+ */
+export async function getCalendarData(
+    startDate: string,
+    endDate: string
+): Promise<{ items: CalendarLeaveRecord[] }> {
+    return httpRequest<{ items: CalendarLeaveRecord[] }>(
+        `/attendance/calendar?start_date=${startDate}&end_date=${endDate}`
+    );
+}
+

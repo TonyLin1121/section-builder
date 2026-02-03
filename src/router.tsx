@@ -5,6 +5,7 @@ import App from './App';
 import { AttendancePage } from './pages/AttendancePage';
 import { CodeTablePage } from './pages/CodeTablePage';
 import { AnnualLeavePage } from './pages/AnnualLeavePage';
+import { LeaveCalendarPage } from './pages/LeaveCalendarPage';
 import { ProjectPage } from './pages/ProjectPage';
 import { ProjectStatsPage } from './pages/ProjectStatsPage';
 import { EmployeeStatsPage } from './pages/EmployeeStatsPage';
@@ -12,6 +13,7 @@ import { MenuMaintenancePage } from './pages/MenuMaintenancePage';
 import { SystemPage } from './pages/SystemPage';
 import { AnnouncementPage } from './pages/AnnouncementPage';
 import { LoginPage } from './pages/LoginPage';
+import { AssistantPage } from './pages/AssistantPage';
 
 /**
  * 路由配置
@@ -54,6 +56,14 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <Layout><AnnualLeavePage /></Layout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/leave-calendar',
+        element: (
+            <ProtectedRoute>
+                <Layout><LeaveCalendarPage /></Layout>
             </ProtectedRoute>
         ),
     },
@@ -136,6 +146,15 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute requiredRole="ADMIN">
                 <Layout><AnnouncementPage /></Layout>
+            </ProtectedRoute>
+        ),
+    },
+    // i 助手
+    {
+        path: '/assistant',
+        element: (
+            <ProtectedRoute>
+                <Layout><AssistantPage /></Layout>
             </ProtectedRoute>
         ),
     },

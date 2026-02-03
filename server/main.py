@@ -77,6 +77,14 @@ app.include_router(system_router)
 from routes import announcement_router
 app.include_router(announcement_router)
 
+# 註冊 i 助手路由
+from routes.assistant_routes import router as assistant_router
+app.include_router(assistant_router)
+
+# 註冊 Webhook 代理路由
+from routes.webhook_routes import router as webhook_router
+app.include_router(webhook_router)
+
 @app.get("/health")
 def health_check():
     """
@@ -635,6 +643,45 @@ def delete_attendance_record(emp_id: str, leave_date: str, leave_type: str):
         raise
     except Exception as e:
         logger.error(f"刪除請假記錄失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/attendance/calendar")
+def get_attendance_calendar(
+    start_date: str = Query(..., description="開始日期 YYYYMMDD"),
+    end_date: str = Query(..., description="結束日期 YYYYMMDD"),
+):
+    """
+    取得行事曆用請假資料
+    NOTE: 專為行事曆視圖設計，回傳指定日期範圍內的所有請假記錄
+    包含假別名稱和員工姓名
+    """
+    try:
+        with get_cursor() as cursor:
+            # 查詢請假記錄，JOIN 員工資料和假別名稱
+            sql = """
+                SELECT 
+                    a.leave_date,
+                    a.leave_type,
+                    COALESCE(c.code_subname, a.leave_type) as leave_type_name,
+                    a.day_period,
+                    m.chinese_name,
+                    a.emp_id
+                FROM member_attendance a
+                LEFT JOIN member m ON a.emp_id = m.emp_id
+                LEFT JOIN gen001_allcode c ON c.code_code = '0001' AND c.code_subcode = a.leave_type
+                WHERE a.leave_date >= %s AND a.leave_date <= %s
+                ORDER BY a.leave_date, a.leave_type, m.chinese_name
+            """
+            cursor.execute(sql, (start_date, end_date))
+            rows = cursor.fetchall()
+
+            return {
+                "items": [dict(row) for row in rows]
+            }
+
+    except Exception as e:
+        logger.error(f"取得行事曆請假資料失敗: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
