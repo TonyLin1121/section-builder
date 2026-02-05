@@ -116,7 +116,7 @@
     border-radius: 6px;
     border: none;
     background: transparent;
-    color: var(--color-text-secondary);
+    color: var(--btn-text);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
@@ -130,7 +130,7 @@
 
 .view-btn.active {
     background: linear-gradient(135deg, var(--color-primary), #6366f1);
-    color: white;
+    color: var(--btn-text-on-primary);
 }
 
 /* ============================================

@@ -14,6 +14,7 @@ import { SystemPage } from './pages/SystemPage';
 import { AnnouncementPage } from './pages/AnnouncementPage';
 import { LoginPage } from './pages/LoginPage';
 import { AssistantPage } from './pages/AssistantPage';
+import { LeaveStatsPage } from './pages/LeaveStatsPage';
 
 /**
  * 路由配置
@@ -64,6 +65,14 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <Layout><LeaveCalendarPage /></Layout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/leave-stats',
+        element: (
+            <ProtectedRoute>
+                <Layout><LeaveStatsPage /></Layout>
             </ProtectedRoute>
         ),
     },

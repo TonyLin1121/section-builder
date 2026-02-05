@@ -42,7 +42,7 @@
     padding: 0.625rem 1.25rem;
     border: none;
     background: transparent;
-    color: var(--text-secondary);
+    color: var(--btn-text);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;

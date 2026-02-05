@@ -1,0 +1,453 @@
+/* ============================================
+   休假統計頁面樣式
+   ============================================ */
+
+.leave-stats-page {
+    padding: 1.5rem;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* 頁面標題區 */
+.leave-stats-page .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.leave-stats-page .page-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.leave-stats-page .header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+/* 錯誤提示 */
+.leave-stats-page .error-banner {
+    background: var(--error-light);
+    border: 1px solid var(--error);
+    color: var(--error);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* 主內容區 */
+.leave-stats-page .page-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* 篩選區塊 */
+.leave-stats-page .filter-section {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.leave-stats-page .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* 模式切換 */
+.leave-stats-page .mode-toggle {
+    display: flex;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.leave-stats-page .mode-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--btn-text);
+    transition: all 0.2s ease;
+}
+
+.leave-stats-page .mode-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.leave-stats-page .mode-btn.active {
+    background: #2563eb;
+    color: var(--btn-text-on-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* 篩選群組 */
+.leave-stats-page .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.leave-stats-page .filter-group label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.leave-stats-page .filter-group select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    min-width: 100px;
+}
+
+/* 表格區塊 */
+.leave-stats-page .table-section {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.leave-stats-page .table-section h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.leave-stats-page .record-count {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+/* 表格容器 */
+.leave-stats-page .table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+/* 統計表格 */
+.leave-stats-page .leave-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    min-width: 800px;
+}
+
+.leave-stats-page .leave-stats-table th,
+.leave-stats-page .leave-stats-table td {
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.leave-stats-page .leave-stats-table thead th {
+    background: var(--bg-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* 可排序表頭 */
+.leave-stats-page .leave-stats-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
+}
+
+.leave-stats-page .leave-stats-table th.sortable:hover {
+    background: var(--bg-hover);
+}
+
+/* 固定欄位 */
+.leave-stats-page .sticky-col {
+    position: sticky;
+    left: 0;
+    background: var(--bg-card);
+    z-index: 5;
+    min-width: 80px;
+    text-align: left !important;
+}
+
+.leave-stats-page .sticky-col-2 {
+    position: sticky;
+    left: 80px;
+    background: var(--bg-card);
+    z-index: 5;
+    min-width: 100px;
+    text-align: left !important;
+}
+
+.leave-stats-page .sticky-col-3 {
+    position: sticky;
+    left: 180px;
+    background: var(--bg-card);
+    z-index: 5;
+    min-width: 80px;
+    text-align: left !important;
+}
+
+.leave-stats-page thead .sticky-col,
+.leave-stats-page thead .sticky-col-2,
+.leave-stats-page thead .sticky-col-3 {
+    background: var(--bg-secondary);
+    z-index: 15;
+}
+
+/* 假別主表頭 */
+.leave-stats-page .leave-type-header {
+    background: var(--primary-light) !important;
+    color: var(--primary-dark);
+    border-left: 1px solid var(--border);
+    text-align: center;
+}
+
+/* 子表頭（可休/已休/未休） */
+.leave-stats-page .sub-header th {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+}
+
+.leave-stats-page .leave-sub-header {
+    min-width: 50px;
+    text-align: center;
+    font-weight: 500;
+    border-left: 1px solid var(--border-light);
+}
+
+.leave-stats-page .leave-sub-header:first-of-type {
+    border-left: 1px solid var(--border);
+}
+
+/* 假別數據儲存格 */
+.leave-stats-page .leave-cell {
+    min-width: 50px;
+    text-align: center;
+    padding: 0.5rem 0.25rem;
+    border-left: 1px solid var(--border-light);
+}
+
+.leave-stats-page tbody tr td.leave-cell:nth-child(4n+4) {
+    border-left: 1px solid var(--border);
+}
+
+/* 行間隔色（斑馬紋） */
+.leave-stats-page .leave-stats-table tbody tr.row-alt td {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.leave-stats-page .leave-stats-table tbody tr.row-alt .sticky-col,
+.leave-stats-page .leave-stats-table tbody tr.row-alt .sticky-col-2,
+.leave-stats-page .leave-stats-table tbody tr.row-alt .sticky-col-3 {
+    background-color: #fafafa;
+}
+
+/* 假別欄位顏色區分 - 7 種柔和色調循環 */
+.leave-stats-page .leave-type-0 {
+    background-color: rgba(59, 130, 246, 0.08) !important;
+}
+
+/* 藍 */
+.leave-stats-page .leave-type-1 {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+}
+
+/* 綠 */
+.leave-stats-page .leave-type-2 {
+    background-color: rgba(245, 158, 11, 0.08) !important;
+}
+
+/* 橙 */
+.leave-stats-page .leave-type-3 {
+    background-color: rgba(139, 92, 246, 0.08) !important;
+}
+
+/* 紫 */
+.leave-stats-page .leave-type-4 {
+    background-color: rgba(236, 72, 153, 0.08) !important;
+}
+
+/* 粉 */
+.leave-stats-page .leave-type-5 {
+    background-color: rgba(20, 184, 166, 0.08) !important;
+}
+
+/* 青 */
+.leave-stats-page .leave-type-6 {
+    background-color: rgba(249, 115, 22, 0.08) !important;
+}
+
+/* 橘 */
+
+/* 表頭假別顏色加深 */
+.leave-stats-page th.leave-type-0 {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+.leave-stats-page th.leave-type-1 {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.leave-stats-page th.leave-type-2 {
+    background-color: rgba(245, 158, 11, 0.15) !important;
+}
+
+.leave-stats-page th.leave-type-3 {
+    background-color: rgba(139, 92, 246, 0.15) !important;
+}
+
+.leave-stats-page th.leave-type-4 {
+    background-color: rgba(236, 72, 153, 0.15) !important;
+}
+
+.leave-stats-page th.leave-type-5 {
+    background-color: rgba(20, 184, 166, 0.15) !important;
+}
+
+.leave-stats-page th.leave-type-6 {
+    background-color: rgba(249, 115, 22, 0.15) !important;
+}
+
+/* 斑馬紋行的顏色覆蓋 */
+.leave-stats-page tbody tr.row-alt .leave-type-0 {
+    background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+.leave-stats-page tbody tr.row-alt .leave-type-1 {
+    background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+.leave-stats-page tbody tr.row-alt .leave-type-2 {
+    background-color: rgba(245, 158, 11, 0.12) !important;
+}
+
+.leave-stats-page tbody tr.row-alt .leave-type-3 {
+    background-color: rgba(139, 92, 246, 0.12) !important;
+}
+
+.leave-stats-page tbody tr.row-alt .leave-type-4 {
+    background-color: rgba(236, 72, 153, 0.12) !important;
+}
+
+.leave-stats-page tbody tr.row-alt .leave-type-5 {
+    background-color: rgba(20, 184, 166, 0.12) !important;
+}
+
+.leave-stats-page tbody tr.row-alt .leave-type-6 {
+    background-color: rgba(249, 115, 22, 0.12) !important;
+}
+
+/* 藍色字型：已全部休完 */
+.leave-stats-page .leave-complete {
+    color: #1976d2 !important;
+    font-weight: 600;
+}
+
+/* 表格列懸停 */
+.leave-stats-page .leave-stats-table tbody tr:hover td {
+    background: var(--bg-hover);
+}
+
+.leave-stats-page .leave-stats-table tbody tr:hover .sticky-col,
+.leave-stats-page .leave-stats-table tbody tr:hover .sticky-col-2,
+.leave-stats-page .leave-stats-table tbody tr:hover .sticky-col-3 {
+    background: var(--bg-hover);
+}
+
+/* 載入與空狀態 */
+.leave-stats-page .loading,
+.leave-stats-page .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* RWD 響應式 */
+@media (max-width: 768px) {
+    .leave-stats-page {
+        padding: 1rem;
+    }
+
+    .leave-stats-page .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .leave-stats-page .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .leave-stats-page .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .leave-stats-page .mode-toggle {
+        width: 100%;
+    }
+
+    .leave-stats-page .mode-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .leave-stats-page .filter-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .leave-stats-page .filter-group select {
+        flex: 1;
+    }
+
+    /* 手機版固定欄位簡化 */
+    .leave-stats-page .sticky-col-2,
+    .leave-stats-page .sticky-col-3 {
+        position: static;
+    }
+}
+
+/* 暗色主題 */
+[data-theme="dark"] .leave-stats-page .mode-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-header {
+    background: rgba(var(--primary-rgb), 0.2) !important;
+    color: var(--primary-light);
+}
+
+[data-theme="dark"] .leave-stats-page .leave-complete,
+[data-theme="dark"] .leave-stats-page .leave-complete .cell-value {
+    color: #64b5f6 !important;
+}

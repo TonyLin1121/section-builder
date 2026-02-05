@@ -343,7 +343,7 @@
 .btn-secondary {
     background: var(--surface-color, #fff);
     border: 1px solid var(--border-color, #e0e0e0);
-    color: var(--text-color, #333);
+    color: var(--btn-text);
 }
 
 .btn-outline {
@@ -365,7 +365,7 @@
 .btn-edit {
     background: rgba(59, 130, 246, 0.15);
     border: 1px solid rgba(59, 130, 246, 0.3);
-    color: #3b82f6;
+    color: var(--btn-icon-edit);
 }
 
 .btn-edit:hover {

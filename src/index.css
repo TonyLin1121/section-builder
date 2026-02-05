@@ -96,6 +96,14 @@
   --color-bg: var(--color-bg-primary);
   --color-text: var(--color-text-primary);
   --color-text-muted: var(--color-text-secondary);
+
+  /* 按鈕文字顏色 - 明亮模式使用深色文字 */
+  --btn-text: #1e293b;
+  --btn-text-on-primary: #ffffff;
+  --btn-text-active: #1e293b;
+  --btn-icon-text: #475569;
+  --btn-icon-edit: #2563eb;
+  --btn-icon-delete: #dc2626;
 }
 
 /* 暗黑模式 */
@@ -140,6 +148,14 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* 按鈕文字顏色 - 暗黑模式使用淺色文字 */
+  --btn-text: #f1f5f9;
+  --btn-text-on-primary: #ffffff;
+  --btn-text-active: #ffffff;
+  --btn-icon-text: #cbd5e1;
+  --btn-icon-edit: #60a5fa;
+  --btn-icon-delete: #f87171;
 }
 
 /* 重置樣式 */
@@ -280,4 +296,35 @@ body {
 
 .access-denied-actions .btn-secondary:hover {
   background: var(--color-bg-secondary);
+}
+
+/* ============================================
+   全域按鍵文字顏色 - 確保明亮/暗黑模式可讀性
+   ============================================ */
+
+/* 圖示按鍵基礎樣式 */
+.btn-icon {
+  color: var(--btn-icon-text);
+}
+
+.btn-edit {
+  color: var(--btn-icon-edit);
+}
+
+.btn-delete {
+  color: var(--btn-icon-delete);
+}
+
+/* 次要按鍵 */
+.btn-secondary {
+  color: var(--btn-text);
+}
+
+/* 模式切換按鍵 */
+.mode-btn {
+  color: var(--btn-text);
+}
+
+.mode-btn.active {
+  color: var(--btn-text-on-primary);
 }

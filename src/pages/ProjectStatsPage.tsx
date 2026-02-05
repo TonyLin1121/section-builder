@@ -4,7 +4,7 @@
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
 import {
-    BarChart, Bar, PieChart, Pie, LineChart, Line,
+    BarChart, Bar, PieChart, Pie, LineChart, Line, Treemap,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend,
     ResponsiveContainer, Cell
 } from 'recharts';
@@ -16,7 +16,7 @@ type StatsDimension = 'status' | 'customer' | 'department';
 // 統計區間
 type StatsInterval = 'none' | 'monthly' | 'quarterly' | 'yearly';
 // 圖表類型
-type ChartType = 'bar' | 'pie' | 'line' | 'doughnut';
+type ChartType = 'bar' | 'pie' | 'line' | 'doughnut' | 'heatmap';
 
 // 統計資料結構
 interface StatsData {
@@ -60,6 +60,8 @@ export function ProjectStatsPage() {
     const [dimension, setDimension] = useState<StatsDimension>('status');
     const [interval, setInterval] = useState<StatsInterval>('none');
     const [chartType, setChartType] = useState<ChartType>('bar');
+    // 熱力圖色系：'light' 淺色系 或 'dark' 深色系
+    const [heatmapTheme, setHeatmapTheme] = useState<'light' | 'dark'>('light');
 
     // 選項資料
     const [statusOptions, setStatusOptions] = useState<FilterOption[]>([]);
@@ -289,6 +291,237 @@ export function ProjectStatsPage() {
                     </ResponsiveContainer>
                 );
 
+            case 'heatmap': {
+                // 淺色系配色 - 輕鬆活潑
+                const lightColors = [
+                    '#93c5fd', // 淺藍
+                    '#86efac', // 淺綠
+                    '#fdba74', // 淺橘
+                    '#fca5a5', // 淺紅
+                    '#c4b5fd', // 淺紫
+                    '#f9a8d4', // 淺粉
+                    '#67e8f9', // 淺青
+                    '#bef264', // 淺檖檬
+                    '#fed7aa', // 淺橙
+                    '#a5b4fc', // 淺靶
+                ];
+
+                // 深色系配色
+                const darkColors = [
+                    '#1d4ed8', // 深藍
+                    '#047857', // 深綠
+                    '#b45309', // 深橘
+                    '#b91c1c', // 深紅
+                    '#6d28d9', // 深紫
+                    '#be185d', // 深粉
+                    '#0e7490', // 深青
+                    '#4d7c0f', // 深檖檬
+                    '#c2410c', // 深橙
+                    '#4338ca', // 深靶
+                ];
+
+                // 根據色系選擇配色和文字顏色
+                const colors = heatmapTheme === 'light' ? lightColors : darkColors;
+                // 淺色系：純黑色文字；深色系：亮黃色文字，皆無陰影效果
+                const textColor = heatmapTheme === 'light' ? '#000000' : '#ffff00';
+                const strokeColor = heatmapTheme === 'light' ? '#e2e8f0' : '#0f172a';
+
+                // 準備 Treemap 資料格式
+                const treemapData = statsData.map((item, idx) => ({
+                    name: item.name,
+                    size: item.count,
+                    amount: item.amount,
+                    displayCount: item.count,
+                    displayAmount: formatAmount(item.amount),
+                    colorIndex: idx
+                }));
+
+                // 自定義 Treemap 內容渲染
+                const CustomizedContent = (props: {
+                    x: number;
+                    y: number;
+                    width: number;
+                    height: number;
+                    name: string;
+                    displayCount: number;
+                    displayAmount: string;
+                    colorIndex: number;
+                }) => {
+                    const { x, y, width, height, name, displayCount, displayAmount, colorIndex } = props;
+                    const bgColor = colors[colorIndex % colors.length];
+
+                    // 判斷格子夠不夠大顯示文字
+                    const showFullInfo = width > 80 && height > 60;
+                    const showMinInfo = width > 50 && height > 40;
+
+                    // 純色文字樣式：無陰影、無濾鏡、無漸層
+                    const textStyle: React.CSSProperties = {
+                        textShadow: 'none',
+                        filter: 'none',
+                        opacity: 1
+                    };
+
+                    return (
+                        <g>
+                            <rect
+                                x={x}
+                                y={y}
+                                width={width}
+                                height={height}
+                                fill={bgColor}
+                                stroke={strokeColor}
+                                strokeWidth={2}
+                                rx={4}
+                                ry={4}
+                            />
+                            {showFullInfo && (
+                                <>
+                                    <text
+                                        x={x + width / 2}
+                                        y={y + height / 2 - 16}
+                                        textAnchor="middle"
+                                        fill={textColor}
+                                        stroke="none"
+                                        fontSize={Math.min(16, width / 8)}
+                                        fontWeight="bold"
+                                        style={textStyle}
+                                    >
+                                        {name}
+                                    </text>
+                                    <text
+                                        x={x + width / 2}
+                                        y={y + height / 2 + 4}
+                                        textAnchor="middle"
+                                        fill={textColor}
+                                        stroke="none"
+                                        fontSize={Math.min(14, width / 10)}
+                                        fontWeight="600"
+                                        style={textStyle}
+                                    >
+                                        {displayCount} 個專案
+                                    </text>
+                                    <text
+                                        x={x + width / 2}
+                                        y={y + height / 2 + 22}
+                                        textAnchor="middle"
+                                        fill={textColor}
+                                        stroke="none"
+                                        fontSize={Math.min(12, width / 12)}
+                                        fontWeight="500"
+                                        style={textStyle}
+                                    >
+                                        {displayAmount}
+                                    </text>
+                                </>
+                            )}
+                            {!showFullInfo && showMinInfo && (
+                                <>
+                                    <text
+                                        x={x + width / 2}
+                                        y={y + height / 2 - 6}
+                                        textAnchor="middle"
+                                        fill={textColor}
+                                        stroke="none"
+                                        fontSize={Math.min(12, width / 6)}
+                                        fontWeight="bold"
+                                        style={textStyle}
+                                    >
+                                        {name}
+                                    </text>
+                                    <text
+                                        x={x + width / 2}
+                                        y={y + height / 2 + 10}
+                                        textAnchor="middle"
+                                        fill={textColor}
+                                        stroke="none"
+                                        fontSize={Math.min(10, width / 8)}
+                                        fontWeight="600"
+                                        style={textStyle}
+                                    >
+                                        {displayCount}
+                                    </text>
+                                </>
+                            )}
+                            {!showMinInfo && width > 30 && height > 20 && (
+                                <text
+                                    x={x + width / 2}
+                                    y={y + height / 2 + 4}
+                                    textAnchor="middle"
+                                    fill={textColor}
+                                    stroke="none"
+                                    fontSize={10}
+                                    fontWeight="bold"
+                                    style={textStyle}
+                                >
+                                    {displayCount}
+                                </text>
+                            )}
+                        </g>
+                    );
+                };
+
+                return (
+                    <div className="treemap-container">
+                        {/* 色系切換按鈕 */}
+                        <div className="heatmap-theme-toggle" style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
+                            <button
+                                className={`theme-btn ${heatmapTheme === 'light' ? 'active' : ''}`}
+                                onClick={() => setHeatmapTheme('light')}
+                                style={{
+                                    padding: '8px 16px',
+                                    borderRadius: '6px',
+                                    border: heatmapTheme === 'light' ? '2px solid #3b82f6' : '1px solid #cbd5e1',
+                                    background: heatmapTheme === 'light' ? 'linear-gradient(135deg, #93c5fd, #86efac, #fdba74)' : '#f1f5f9',
+                                    color: '#1e293b',
+                                    fontWeight: heatmapTheme === 'light' ? 'bold' : 'normal',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease'
+                                }}
+                            >
+                                ☀️ 淺色系
+                            </button>
+                            <button
+                                className={`theme-btn ${heatmapTheme === 'dark' ? 'active' : ''}`}
+                                onClick={() => setHeatmapTheme('dark')}
+                                style={{
+                                    padding: '8px 16px',
+                                    borderRadius: '6px',
+                                    border: heatmapTheme === 'dark' ? '2px solid #fef08a' : '1px solid #cbd5e1',
+                                    background: heatmapTheme === 'dark' ? 'linear-gradient(135deg, #1d4ed8, #047857, #b45309)' : '#f1f5f9',
+                                    color: heatmapTheme === 'dark' ? '#fef08a' : '#64748b',
+                                    fontWeight: heatmapTheme === 'dark' ? 'bold' : 'normal',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease'
+                                }}
+                            >
+                                🌙 深色系
+                            </button>
+                        </div>
+                        <ResponsiveContainer width="100%" height={400}>
+                            <Treemap
+                                data={treemapData}
+                                dataKey="size"
+                                aspectRatio={4 / 3}
+                                stroke={strokeColor}
+                                fill="#3b82f6"
+                                content={<CustomizedContent x={0} y={0} width={0} height={0} name="" displayCount={0} displayAmount="" colorIndex={0} />}
+                            />
+                        </ResponsiveContainer>
+                        {/* 圖例 */}
+                        <div className="treemap-legend" style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px' }}>
+                            {statsData.map((item, idx) => (
+                                <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <div style={{ width: '16px', height: '16px', backgroundColor: colors[idx % colors.length], borderRadius: '4px' }} />
+                                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
+                                        {item.name} ({item.count}個, {formatAmount(item.amount)})
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            }
+
             default:
                 return null;
         }
@@ -386,6 +619,7 @@ export function ProjectStatsPage() {
                         <button className={chartType === 'pie' ? 'active' : ''} onClick={() => setChartType('pie')} title="圓餅圖">🥧</button>
                         <button className={chartType === 'doughnut' ? 'active' : ''} onClick={() => setChartType('doughnut')} title="環形圖">🍩</button>
                         <button className={chartType === 'line' ? 'active' : ''} onClick={() => setChartType('line')} title="折線圖">📈</button>
+                        <button className={chartType === 'heatmap' ? 'active' : ''} onClick={() => setChartType('heatmap')} title="熱力圖">🗺️</button>
                     </div>
                 </div>
             </div>

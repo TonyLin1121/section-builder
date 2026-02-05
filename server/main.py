@@ -1120,6 +1120,183 @@ def delete_annual_leave_record(emp_id: str, year: str, leave_type: str):
         logger.error(f"刪除年度休假記錄失敗: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+# ============================================
+# LeaveStats (休假統計) API 端點
+# ============================================
+
+@app.get("/api/leave-stats")
+def get_leave_stats(
+    mode: str = Query("year", description="統計模式: year/month"),
+    year: str = Query(..., description="年度 YYYY"),
+    month: Optional[str] = Query(None, description="月份 MM (mode=month 時必填)"),
+    sort_by: str = Query("english_name", description="排序欄位: emp_id/english_name/chinese_name"),
+    sort_order: str = Query("asc", description="排序方向 asc/desc"),
+):
+    """
+    取得休假統計資料
+    NOTE: 支援年度統計（整年累計）與月份統計（單月累計）
+    回傳每位員工各假別的可休、已休、未休天數
+    """
+    try:
+        with get_cursor() as cursor:
+            # 決定已休天數的日期範圍
+            if mode == "month":
+                if not month:
+                    raise HTTPException(status_code=400, detail="月份統計模式需要提供 month 參數")
+                # 月份統計：該月的日期範圍
+                start_date = f"{year}{month.zfill(2)}01"
+                # 計算該月最後一天
+                month_int = int(month)
+                if month_int == 12:
+                    end_date = f"{year}1231"
+                else:
+                    import calendar
+                    last_day = calendar.monthrange(int(year), month_int)[1]
+                    end_date = f"{year}{month.zfill(2)}{str(last_day).zfill(2)}"
+            else:
+                # 年度統計：整年日期範圍
+                start_date = f"{year}0101"
+                end_date = f"{year}1231"
+
+            # 取得假別順序（用於排序欄位）
+            # NOTE: 依照優先順序：特休、補休、凌群假、婚假、喪假...
+            cursor.execute("""
+                SELECT code_subcode, code_subname
+                FROM gen001_allcode
+                WHERE code_code = '0001' AND used_mark = '1'
+                ORDER BY 
+                    CASE code_subname
+                        WHEN '特休' THEN 1
+                        WHEN '補休' THEN 2
+                        WHEN '凌群假' THEN 3
+                        WHEN '婚假' THEN 4
+                        WHEN '喪假' THEN 5
+                        ELSE 100
+                    END,
+                    code_subcode
+            """)
+            leave_type_rows = cursor.fetchall()
+            leave_type_order = {row['code_subcode']: idx for idx, row in enumerate(leave_type_rows)}
+            leave_type_names = {row['code_subcode']: row['code_subname'] for row in leave_type_rows}
+
+            # 取得所有有資料的假別（可休或已休）
+            cursor.execute("""
+                SELECT DISTINCT leave_type FROM (
+                    SELECT leave_type FROM member_annual_leave WHERE year = %s
+                    UNION
+                    SELECT leave_type FROM member_attendance 
+                    WHERE leave_date >= %s AND leave_date <= %s
+                ) AS combined_types
+            """, (year, start_date, end_date))
+            active_leave_types = sorted(
+                [row['leave_type'] for row in cursor.fetchall()],
+                key=lambda x: leave_type_order.get(x, 999)
+            )
+
+            # 取得可休天數（從 member_annual_leave）
+            cursor.execute("""
+                SELECT emp_id, leave_type, COALESCE(days_of_leave, 0) as days_of_leave
+                FROM member_annual_leave
+                WHERE year = %s
+            """, (year,))
+            annual_leave_rows = cursor.fetchall()
+            
+            # 建立可休天數字典: {emp_id: {leave_type: days}}
+            available_days = {}
+            for row in annual_leave_rows:
+                emp_id = row['emp_id']
+                if emp_id not in available_days:
+                    available_days[emp_id] = {}
+                available_days[emp_id][row['leave_type']] = float(row['days_of_leave'])
+
+            # 取得已休天數（從 member_attendance）
+            cursor.execute("""
+                SELECT emp_id, leave_type, COALESCE(SUM(duration_days), 0) as used_days
+                FROM member_attendance
+                WHERE leave_date >= %s AND leave_date <= %s
+                GROUP BY emp_id, leave_type
+            """, (start_date, end_date))
+            attendance_rows = cursor.fetchall()
+            
+            # 建立已休天數字典: {emp_id: {leave_type: days}}
+            used_days = {}
+            for row in attendance_rows:
+                emp_id = row['emp_id']
+                if emp_id not in used_days:
+                    used_days[emp_id] = {}
+                used_days[emp_id][row['leave_type']] = float(row['used_days'])
+
+            # 合併所有有資料的員工
+            all_emp_ids = set(available_days.keys()) | set(used_days.keys())
+
+            # 取得員工資訊
+            if all_emp_ids:
+                placeholders = ', '.join(['%s'] * len(all_emp_ids))
+                cursor.execute(f"""
+                    SELECT emp_id, name as english_name, chinese_name
+                    FROM member
+                    WHERE emp_id IN ({placeholders})
+                """, tuple(all_emp_ids))
+                member_rows = cursor.fetchall()
+                members = {row['emp_id']: row for row in member_rows}
+            else:
+                members = {}
+
+            # 組合結果
+            items = []
+            for emp_id in all_emp_ids:
+                member_info = members.get(emp_id, {})
+                record = {
+                    'emp_id': emp_id,
+                    'english_name': member_info.get('english_name', ''),
+                    'chinese_name': member_info.get('chinese_name', ''),
+                    'leave_stats': {}
+                }
+
+                for leave_type in active_leave_types:
+                    avail = available_days.get(emp_id, {}).get(leave_type, 0)
+                    used = used_days.get(emp_id, {}).get(leave_type, 0)
+                    remaining = avail - used
+
+                    # 只顯示有資料的假別（可休或已休 > 0）
+                    if avail > 0 or used > 0:
+                        record['leave_stats'][leave_type] = {
+                            'leave_type_name': leave_type_names.get(leave_type, leave_type),
+                            'available': avail,
+                            'used': used,
+                            'remaining': remaining
+                        }
+
+                items.append(record)
+
+            # 排序
+            sort_key = sort_by if sort_by in ['emp_id', 'english_name', 'chinese_name'] else 'english_name'
+            reverse = sort_order == 'desc'
+            items.sort(key=lambda x: (x.get(sort_key) or '').lower(), reverse=reverse)
+
+            # 回傳假別欄位順序資訊
+            leave_types_info = [
+                {'code': lt, 'name': leave_type_names.get(lt, lt)}
+                for lt in active_leave_types
+            ]
+
+            return {
+                'items': items,
+                'leave_types': leave_types_info,
+                'mode': mode,
+                'year': year,
+                'month': month,
+                'total': len(items)
+            }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"取得休假統計失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ============================================
 # ProjectInfo (專案資訊) API
 # ============================================

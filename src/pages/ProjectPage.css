@@ -154,7 +154,7 @@
 
 .btn-secondary {
     background: rgba(100, 116, 139, 0.2);
-    color: var(--color-text-secondary);
+    color: var(--btn-text);
 }
 
 .btn-secondary:hover {

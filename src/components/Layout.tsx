@@ -125,8 +125,9 @@ export function Layout({ children }: LayoutProps) {
         { menu_id: 'ATTENDANCE', menu_name: '請假維護', menu_path: '/attendance', icon: '📅', sort_order: 2, is_active: true, children: [] },
         { menu_id: 'ANNUAL', menu_name: '年度休假', menu_path: '/annual-leave', icon: '🗓️', sort_order: 3, is_active: true, children: [] },
         { menu_id: 'LEAVE_CALENDAR', menu_name: '請假行事曆', menu_path: '/leave-calendar', icon: '📆', sort_order: 4, is_active: true, children: [] },
-        { menu_id: 'PROJECT', menu_name: '專案管理', menu_path: '/projects', icon: '📊', sort_order: 5, is_active: true, children: [] },
-        { menu_id: 'CODETABLE', menu_name: '參數檔維護', menu_path: '/codetable', icon: '⚙️', sort_order: 6, is_active: true, children: [] },
+        { menu_id: 'LEAVE_STATS', menu_name: '休假統計', menu_path: '/leave-stats', icon: '📊', sort_order: 5, is_active: true, children: [] },
+        { menu_id: 'PROJECT', menu_name: '專案管理', menu_path: '/projects', icon: '📁', sort_order: 6, is_active: true, children: [] },
+        { menu_id: 'CODETABLE', menu_name: '參數檔維護', menu_path: '/codetable', icon: '⚙️', sort_order: 7, is_active: true, children: [] },
         { menu_id: 'ASSISTANT', menu_name: 'i 助手', menu_path: '/assistant', icon: '🤖', sort_order: 10, is_active: true, children: [] },
         ...(hasRole('ADMIN') ? [{
             menu_id: 'SYSTEM',
