@@ -353,3 +353,40 @@ class Announcement(AnnouncementBase):
 
     class Config:
         from_attributes = True
+
+
+# ============================================
+# Holiday (假日檔) 模型
+# ============================================
+
+class HolidayBase(BaseModel):
+    """
+    假日檔基礎資料模型
+    """
+    is_holiday: Optional[bool] = Field(True, description="true=例假日, false=補班日")
+    description: Optional[str] = Field(None, max_length=100, description="描述說明")
+
+
+class HolidayCreate(HolidayBase):
+    """
+    新增假日時使用的模型
+    """
+    date: str = Field(..., min_length=8, max_length=8, description="日期 YYYYMMDD")
+    is_holiday: bool = Field(True, description="true=例假日, false=補班日")
+
+
+class HolidayUpdate(HolidayBase):
+    """
+    更新假日時使用的模型
+    """
+    pass
+
+
+class Holiday(HolidayBase):
+    """
+    完整假日資料模型（包含主鍵）
+    """
+    date: str = Field(..., max_length=8, description="日期 YYYYMMDD")
+
+    class Config:
+        from_attributes = True

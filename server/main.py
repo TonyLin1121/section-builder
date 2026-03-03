@@ -85,6 +85,10 @@ app.include_router(assistant_router)
 from routes.webhook_routes import router as webhook_router
 app.include_router(webhook_router)
 
+# 註冊假日檔路由
+from routes.holiday_routes import router as holiday_router
+app.include_router(holiday_router)
+
 @app.get("/health")
 def health_check():
     """

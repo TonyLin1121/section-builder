@@ -4,6 +4,7 @@
  */
 import { useMemo } from 'react';
 import { useLeaveCalendar, formatDate, type CalendarView } from '../hooks/useLeaveCalendar';
+import type { HolidayMap, HolidayRecord } from '../services/holidayApi';
 import './LeaveCalendarPage.css';
 
 /** 星期名稱 */
@@ -91,6 +92,7 @@ function DayCell({
     isToday,
     isCurrentMonth,
     view,
+    holidayInfo,
 }: {
     date: Date;
     leaveData:
@@ -104,8 +106,17 @@ function DayCell({
     isToday: boolean;
     isCurrentMonth: boolean;
     view: CalendarView;
+    /** 假日/補班日資訊，undefined 代表普通工作日 */
+    holidayInfo?: HolidayRecord;
 }) {
     const dayNum = date.getDate();
+
+    // NOTE: 判定假日或補班日的 CSS class
+    const holidayClass = holidayInfo
+        ? holidayInfo.is_holiday
+            ? 'is-holiday'
+            : 'is-makeup'
+        : '';
 
     // 將請假資料格式化為顯示內容
     const content = useMemo(() => {
@@ -130,12 +141,17 @@ function DayCell({
     return (
         <div
             className={`day-cell ${view} ${isToday ? 'today' : ''} ${!isCurrentMonth ? 'other-month' : ''
-                } ${hasData ? 'has-data' : ''}`}
+                } ${hasData ? 'has-data' : ''} ${holidayClass}`}
         >
             <div className="day-header">
                 <span className={`day-number ${isToday ? 'today-badge' : ''}`}>
                     {dayNum}
                 </span>
+                {holidayInfo && (
+                    <span className={`holiday-tag ${holidayInfo.is_holiday ? 'holiday' : 'makeup'}`}>
+                        {holidayInfo.is_holiday ? '(假日)' : '(補班日)'}
+                    </span>
+                )}
             </div>
             <div className="day-content">{content}</div>
         </div>
@@ -149,10 +165,12 @@ function MonthView({
     dates,
     groupedData,
     currentDate,
+    holidays,
 }: {
     dates: Date[];
     groupedData: ReturnType<typeof useLeaveCalendar>['groupedData'];
     currentDate: Date;
+    holidays: HolidayMap;
 }) {
     const today = new Date();
     const todayStr = formatDate(today);
@@ -210,6 +228,7 @@ function MonthView({
                             isToday={isToday}
                             isCurrentMonth={isCurrentMonth}
                             view="month"
+                            holidayInfo={holidays[dateStr]}
                         />
                     );
                 })}
@@ -224,9 +243,11 @@ function MonthView({
 function WeekView({
     dates,
     groupedData,
+    holidays,
 }: {
     dates: Date[];
     groupedData: ReturnType<typeof useLeaveCalendar>['groupedData'];
+    holidays: HolidayMap;
 }) {
     const today = new Date();
     const todayStr = formatDate(today);
@@ -265,6 +286,7 @@ function WeekView({
                             isToday={isToday}
                             isCurrentMonth={true}
                             view="week"
+                            holidayInfo={holidays[dateStr]}
                         />
                     );
                 })}
@@ -279,20 +301,30 @@ function WeekView({
 function DayView({
     dates,
     groupedData,
+    holidays,
 }: {
     dates: Date[];
     groupedData: ReturnType<typeof useLeaveCalendar>['groupedData'];
+    holidays: HolidayMap;
 }) {
     const date = dates[0];
     const dateStr = formatDate(date);
     const leaveData = groupedData[dateStr];
+    const holidayInfo = holidays[dateStr];
     const today = new Date();
     const isToday = formatDate(today) === dateStr;
 
     const hasData = leaveData && Object.keys(leaveData).length > 0;
 
+    // NOTE: 日視圖的假日 CSS class
+    const holidayClass = holidayInfo
+        ? holidayInfo.is_holiday
+            ? 'is-holiday'
+            : 'is-makeup'
+        : '';
+
     return (
-        <div className="calendar-grid day">
+        <div className={`calendar-grid day ${holidayClass}`}>
             <div className={`day-detail ${isToday ? 'today' : ''}`}>
                 <div className="day-detail-header">
                     <span className="day-detail-date">
@@ -302,6 +334,11 @@ function DayView({
                         星期{WEEKDAYS[(date.getDay() + 6) % 7]}
                     </span>
                     {isToday && <span className="today-tag">今天</span>}
+                    {holidayInfo && (
+                        <span className={`holiday-tag ${holidayInfo.is_holiday ? 'holiday' : 'makeup'}`}>
+                            {holidayInfo.is_holiday ? '(假日)' : '(補班日)'}
+                        </span>
+                    )}
                 </div>
                 <div className="day-detail-content">
                     {hasData ? (
@@ -340,6 +377,7 @@ export function LeaveCalendarPage() {
         currentDate,
         dates,
         groupedData,
+        holidays,
         isLoading,
         error,
         title,
@@ -395,13 +433,14 @@ export function LeaveCalendarPage() {
                                 dates={dates}
                                 groupedData={groupedData}
                                 currentDate={currentDate}
+                                holidays={holidays}
                             />
                         )}
                         {view === 'week' && (
-                            <WeekView dates={dates} groupedData={groupedData} />
+                            <WeekView dates={dates} groupedData={groupedData} holidays={holidays} />
                         )}
                         {view === 'day' && (
-                            <DayView dates={dates} groupedData={groupedData} />
+                            <DayView dates={dates} groupedData={groupedData} holidays={holidays} />
                         )}
                     </>
                 )}

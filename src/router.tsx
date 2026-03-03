@@ -6,6 +6,7 @@ import { AttendancePage } from './pages/AttendancePage';
 import { CodeTablePage } from './pages/CodeTablePage';
 import { AnnualLeavePage } from './pages/AnnualLeavePage';
 import { LeaveCalendarPage } from './pages/LeaveCalendarPage';
+import { HolidayPage } from './pages/HolidayPage';
 import { ProjectPage } from './pages/ProjectPage';
 import { ProjectStatsPage } from './pages/ProjectStatsPage';
 import { EmployeeStatsPage } from './pages/EmployeeStatsPage';
@@ -65,6 +66,14 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <Layout><LeaveCalendarPage /></Layout>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/holidays',
+        element: (
+            <ProtectedRoute>
+                <Layout><HolidayPage /></Layout>
             </ProtectedRoute>
         ),
     },

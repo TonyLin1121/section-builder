@@ -1,0 +1,186 @@
+/**
+ * 假日維護頁面樣式
+ * NOTE: 遵循 AttendancePage.css 的設計系統
+ */
+
+.holiday-page {
+    min-height: 100vh;
+}
+
+/* 複用 .page-header, .page-content, .form-section, .filter-section, .table-section
+   這些共用 class 已由 AttendancePage.css 定義 */
+
+/* 表單 */
+.holiday-form {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.holiday-form h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* 表格 */
+.holiday-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    min-width: 500px;
+}
+
+.holiday-table thead {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.holiday-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    white-space: nowrap;
+}
+
+.holiday-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    color: var(--color-text-primary);
+}
+
+.holiday-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+/* 類型標籤 */
+.badge-holiday {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+}
+
+.badge-makeup {
+    background: rgba(34, 197, 94, 0.15);
+    color: #86efac;
+}
+
+/* ============================================
+   響應式設計
+   ============================================ */
+
+@media (max-width: 768px) {
+    .holiday-table {
+        min-width: unset;
+    }
+
+    .holiday-table thead {
+        display: none;
+    }
+
+    .holiday-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .holiday-table tbody tr {
+        display: flex;
+        flex-direction: column;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        gap: 8px;
+    }
+
+    .holiday-table tbody tr:hover {
+        background: rgba(30, 41, 59, 0.95);
+    }
+
+    .holiday-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        border-bottom: none;
+    }
+
+    .holiday-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+    }
+
+    .holiday-table td:last-child {
+        border-top: 1px solid rgba(148, 163, 184, 0.1);
+        padding-top: 12px;
+        margin-top: 8px;
+        justify-content: flex-end;
+    }
+
+    .holiday-table td:last-child::before {
+        display: none;
+    }
+}
+
+/* ============================================
+   明亮模式
+   ============================================ */
+
+[data-theme="light"] .holiday-form {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .holiday-table thead {
+    background: rgba(241, 245, 249, 0.95);
+}
+
+[data-theme="light"] .holiday-table th {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+[data-theme="light"] .holiday-table td {
+    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+}
+
+[data-theme="light"] .holiday-table tbody tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+[data-theme="light"] .badge-holiday {
+    background: rgba(220, 38, 38, 0.12);
+    color: #dc2626;
+}
+
+[data-theme="light"] .badge-makeup {
+    background: rgba(22, 163, 74, 0.12);
+    color: #16a34a;
+}
+
+/* 手機版卡片 - 明亮模式 */
+@media (max-width: 768px) {
+    [data-theme="light"] .holiday-table tbody tr {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(100, 116, 139, 0.15);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="light"] .holiday-table tbody tr:hover {
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="light"] .holiday-table td:last-child {
+        border-top: 1px solid rgba(100, 116, 139, 0.12);
+    }
+}

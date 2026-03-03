@@ -4,6 +4,7 @@
  */
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { getCalendarData, type CalendarLeaveRecord } from '../services/attendanceApi';
+import { getHolidays, toHolidayMap, type HolidayMap } from '../services/holidayApi';
 
 /** 視圖類型 */
 export type CalendarView = 'month' | 'week' | 'day';
@@ -79,6 +80,7 @@ export function useLeaveCalendar() {
     const [view, setView] = useState<CalendarView>('week');
     const [currentDate, setCurrentDate] = useState(new Date());
     const [records, setRecords] = useState<CalendarLeaveRecord[]>([]);
+    const [holidays, setHolidays] = useState<HolidayMap>({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -160,8 +162,15 @@ export function useLeaveCalendar() {
         try {
             const startStr = formatDate(dateRange.start);
             const endStr = formatDate(dateRange.end);
-            const response = await getCalendarData(startStr, endStr);
-            setRecords(response.items);
+
+            // NOTE: 同時拉取請假記錄和假日資料以減少等待時間
+            const [calendarRes, holidayRes] = await Promise.all([
+                getCalendarData(startStr, endStr),
+                getHolidays(startStr, endStr),
+            ]);
+
+            setRecords(calendarRes.items);
+            setHolidays(toHolidayMap(holidayRes.items));
         } catch (err) {
             setError(err instanceof Error ? err.message : '載入失敗');
             setRecords([]);
@@ -259,6 +268,7 @@ export function useLeaveCalendar() {
         currentDate,
         dates,
         groupedData,
+        holidays,
         isLoading,
         error,
         title,
