@@ -34,9 +34,15 @@ uvicorn main:app --reload --port 8000
 # Docker 全套
 docker compose up -d --build
 ./init_admin.sh      # 首次建立 ADMIN（預設密碼 Admin123）
+
+# 推 image 到 Docker Hub（部署目標為 NAS / x86_64 伺服器，固定建 amd64）
+docker buildx build --platform linux/amd64 -t tonyhowwhy/section-builder:frontend -f Dockerfile --push .
+docker buildx build --platform linux/amd64 -t tonyhowwhy/section-builder:backend  -f server/Dockerfile --push server
 ```
 
 > 完成 UI 變更後請至少執行 `npm run build` 一次以驗證型別；後端變更請啟動 uvicorn 並打 `/health` 驗證可載入。
+>
+> **Docker image 平台**：部署環境是 NAS（amd64），開發機若是 Apple Silicon（arm64）**不能用 `docker build` 直接 push**（會推成 arm64，NAS pull 後跑不起來）。一律用 `docker buildx build --platform linux/amd64 ... --push` 跨平台建置。
 
 ---
 

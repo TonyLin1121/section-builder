@@ -228,6 +228,29 @@ docker compose build
 docker compose build --no-cache
 ```
 
+> [!IMPORTANT]
+> **若是要推 Docker Hub 給 NAS / x86_64 伺服器使用**，**不能用** `docker build`（在 Apple Silicon Mac 上會推成 arm64，NAS 跑不起來）。請改用 `docker buildx` 跨平台建置：
+>
+> ```bash
+> # 前端（amd64，給 NAS / x86_64 用）
+> docker buildx build --platform linux/amd64 \
+>   -t tonyhowwhy/section-builder:frontend \
+>   -f Dockerfile --push .
+>
+> # 後端（amd64）
+> docker buildx build --platform linux/amd64 \
+>   -t tonyhowwhy/section-builder:backend \
+>   -f server/Dockerfile --push server
+> ```
+>
+> 確認推上去的架構：
+> ```bash
+> docker manifest inspect tonyhowwhy/section-builder:frontend | grep architecture
+> # 應該看到 "architecture": "amd64"
+> ```
+>
+> 如需同時支援 amd64 + arm64（Apple Silicon dev 機也能用），在 `--platform` 改為 `linux/amd64,linux/arm64`，建置時間會加倍。
+
 ### 步驟四：啟動服務
 
 ```bash
