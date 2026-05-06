@@ -1,5 +1,8 @@
 /* ============================================
-   登入頁面樣式
+   登入頁面
+   風格：InfoReach Smart FIXGate
+   - 淺色商務感、扁平化、企業藍
+   - 深色模式：交易終端深藍灰
    ============================================ */
 
 .login-page {
@@ -7,166 +10,175 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    background: var(--fg-bg-page);
     padding: 20px;
+}
+
+/* 深色模式：低光度交易終端背景 */
+[data-theme="dark"] .login-page {
+    background: linear-gradient(180deg, #0a1220 0%, #0d1421 100%);
 }
 
 .login-container {
     width: 100%;
-    max-width: 420px;
+    max-width: 380px;
 }
 
 .login-card {
-    background: rgba(30, 41, 59, 0.9);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 24px;
-    padding: 40px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-lg);
+    padding: 28px 28px 20px;
+    box-shadow: var(--fg-shadow-lg);
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--fg-border-subtle);
 }
 
 .login-header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
 }
 
 .login-header p {
-    color: var(--color-text-secondary);
+    color: var(--fg-text-secondary);
     margin: 0;
+    font-size: var(--fg-font-size-sm);
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
 }
 
 .login-form .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
 .login-form label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
+    font-size: var(--fg-font-size-xs);
+    font-weight: 600;
+    color: var(--fg-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .login-form input {
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: 1rem;
-    color: var(--color-text-primary);
-    transition: all 0.2s ease;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 8px 12px;
+    font-size: var(--fg-font-size-md);
+    line-height: 1.4;
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
     outline: none;
 }
 
+.login-form input:hover:not(:disabled) {
+    border-color: var(--fg-border-strong);
+}
+
 .login-form input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
 .login-form input:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background: var(--fg-bg-subtle);
 }
 
 .login-form input::placeholder {
-    color: rgba(148, 163, 184, 0.5);
+    color: var(--fg-text-muted);
+}
+
+/* 帳號 / 密碼可使用等寬讓字符對齊 */
+.login-form input[name="user_id"],
+.login-form input[type="password"] {
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
 }
 
 .login-button {
-    background: linear-gradient(135deg, var(--color-primary), #6366f1);
-    border: none;
-    border-radius: 12px;
-    padding: 16px;
-    font-size: 1rem;
+    background: var(--fg-accent, #0b5cab);
+    border: 1px solid var(--fg-accent, #0b5cab);
+    border-radius: var(--fg-radius-md);
+    padding: 9px 16px;
+    font-size: var(--fg-font-size-md);
     font-weight: 600;
-    color: white;
+    color: var(--fg-text-on-accent, #ffffff);
     cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 8px;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
+    margin-top: 6px;
+    font-family: var(--fg-font-ui);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .login-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35);
+    background: var(--fg-accent-hover, #094a8a);
+    border-color: var(--fg-accent-hover, #094a8a);
+}
+
+.login-button:active:not(:disabled) {
+    background: var(--fg-accent-active, #073a6e);
 }
 
 .login-button:disabled {
-    opacity: 0.6;
+    opacity: 0.55;
     cursor: not-allowed;
-    transform: none;
 }
 
 .login-error {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: #fca5a5;
-    font-size: 0.875rem;
+    background: var(--fg-danger-soft);
+    border: 1px solid var(--fg-danger);
+    border-radius: var(--fg-radius-md);
+    padding: 8px 12px;
+    color: var(--fg-danger);
+    font-size: var(--fg-font-size-sm);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    line-height: 1.4;
 }
 
 .login-footer {
     text-align: center;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--fg-border-subtle);
 }
 
 .login-footer p {
-    color: var(--color-text-tertiary);
-    font-size: 0.75rem;
+    color: var(--fg-text-muted);
+    font-size: var(--fg-font-size-xs);
     margin: 0;
+    font-family: var(--fg-font-mono);
+    letter-spacing: 0.02em;
 }
 
-/* ============================================
-   明亮模式
-   ============================================ */
-
-[data-theme="light"] .login-page {
-    background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 50%, #e0e7ff 100%);
-}
-
-[data-theme="light"] .login-card {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.15);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] .login-form input {
-    background: rgba(248, 250, 252, 1);
-    border: 1px solid rgba(100, 116, 139, 0.25);
-}
-
-[data-theme="light"] .login-error {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #dc2626;
-}
-
-/* 響應式 */
+/* ----- 響應式 ----- */
 @media (max-width: 480px) {
     .login-card {
-        padding: 32px 24px;
-        border-radius: 20px;
+        padding: 22px 20px 16px;
+        border-radius: var(--fg-radius-md);
     }
 
     .login-header h1 {
-        font-size: 1.75rem;
+        font-size: 1.25rem;
     }
 }

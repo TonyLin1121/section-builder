@@ -1,11 +1,19 @@
+/* ============================================
+   搜尋列 + 篩選器
+   風格：InfoReach Smart FIXGate（緊湊、平面化）
+   ============================================ */
+
 .search-bar {
     display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .search-input-wrapper {
     flex: 1;
+    min-width: 240px;
     position: relative;
     display: flex;
     align-items: center;
@@ -13,116 +21,115 @@
 
 .search-icon {
     position: absolute;
-    left: 16px;
-    font-size: 1rem;
+    left: 10px;
+    font-size: 12px;
+    color: var(--fg-text-muted);
     pointer-events: none;
 }
 
 .search-input {
     width: 100%;
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 12px;
-    padding: 14px 44px 14px 48px;
-    font-size: 0.9375rem;
-    color: var(--color-text-primary);
-    transition: all 0.2s ease;
+    height: var(--fg-input-height);
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 0 32px 0 30px;
+    font-size: var(--fg-font-size-sm);
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
     outline: none;
 }
 
 .search-input::placeholder {
-    color: rgba(148, 163, 184, 0.5);
+    color: var(--fg-text-muted);
+}
+
+.search-input:hover {
+    border-color: var(--fg-border-strong);
 }
 
 .search-input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
 .clear-btn {
     position: absolute;
-    right: 12px;
-    width: 24px;
-    height: 24px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
     border: none;
-    background: rgba(148, 163, 184, 0.2);
+    background: var(--fg-bg-subtle);
     border-radius: 50%;
-    color: var(--color-text-secondary);
+    color: var(--fg-text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    transition: all 0.2s ease;
+    font-size: 10px;
+    transition: background var(--fg-transition), color var(--fg-transition);
 }
 
 .clear-btn:hover {
-    background: rgba(148, 163, 184, 0.3);
-    color: var(--color-text-primary);
+    background: var(--fg-border-strong);
+    color: var(--fg-text-primary);
+}
+
+/* 下拉篩選器（部門、在職狀態） */
+.department-filter,
+.employed-filter {
+    height: var(--fg-input-height);
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 0 28px 0 10px;
+    font-size: var(--fg-font-size-sm);
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
+    cursor: pointer;
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a6b7a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
 }
 
 .department-filter {
-    min-width: 160px;
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 12px;
-    padding: 14px 40px 14px 16px;
-    font-size: 0.9375rem;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    outline: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
+    min-width: 140px;
 }
 
-.department-filter:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
-
-.department-filter option {
-    background: #1e293b;
-    color: var(--color-text-primary);
-}
-
-/* 在職狀態篩選 - 與部門篩選樣式一致 */
 .employed-filter {
-    min-width: 130px;
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 12px;
-    padding: 14px 40px 14px 16px;
-    font-size: 0.9375rem;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    outline: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
+    min-width: 110px;
 }
 
+.department-filter:hover,
+.employed-filter:hover {
+    border-color: var(--fg-border-strong);
+}
+
+.department-filter:focus,
 .employed-filter:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
+.department-filter option,
 .employed-filter option {
-    background: #1e293b;
-    color: var(--color-text-primary);
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
 }
 
-/* 員工類型多選 checkbox 群組 */
+[data-theme="dark"] .department-filter,
+[data-theme="dark"] .employed-filter {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa7b4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* 員工類型多選 chip */
 .member-type-filter-group {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     align-items: center;
     flex-wrap: wrap;
 }
@@ -130,34 +137,36 @@
 .type-checkbox {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 8px 12px;
-    background: rgba(30, 41, 59, 0.8);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 8px;
+    gap: 5px;
+    height: var(--fg-input-height);
+    padding: 0 10px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
+    transition: background var(--fg-transition), border-color var(--fg-transition), color var(--fg-transition);
+    font-size: var(--fg-font-size-sm);
+    color: var(--fg-text-secondary);
     user-select: none;
 }
 
 .type-checkbox:hover {
-    border-color: rgba(148, 163, 184, 0.3);
-    background: rgba(30, 41, 59, 0.9);
+    border-color: var(--fg-border-strong);
+    background: var(--fg-bg-hover);
 }
 
 .type-checkbox:has(input:checked) {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: var(--color-primary);
-    color: var(--color-text-primary);
+    background: var(--fg-accent-soft);
+    border-color: var(--fg-accent);
+    color: var(--fg-accent);
+    font-weight: 500;
 }
 
 .type-checkbox input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+    width: 13px;
+    height: 13px;
     margin: 0;
-    accent-color: var(--color-primary);
+    accent-color: var(--fg-accent);
     cursor: pointer;
 }
 
@@ -166,10 +175,6 @@
 }
 
 @media (max-width: 768px) {
-    .search-bar {
-        flex-wrap: wrap;
-    }
-
     .member-type-filter-group {
         width: 100%;
         order: 3;
@@ -179,72 +184,12 @@
 @media (max-width: 640px) {
     .search-bar {
         flex-direction: column;
+        align-items: stretch;
     }
 
-    .department-filter {
+    .search-input-wrapper,
+    .department-filter,
+    .employed-filter {
         min-width: 100%;
     }
-}
-
-/* ============================================
-   明亮模式樣式覆蓋
-   ============================================ */
-[data-theme="light"] .search-input {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .search-input::placeholder {
-    color: rgba(100, 116, 139, 0.6);
-}
-
-[data-theme="light"] .search-input:focus {
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-[data-theme="light"] .clear-btn {
-    background: rgba(100, 116, 139, 0.15);
-}
-
-[data-theme="light"] .clear-btn:hover {
-    background: rgba(100, 116, 139, 0.25);
-}
-
-[data-theme="light"] .department-filter,
-[data-theme="light"] .employed-filter {
-    background-color: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-}
-
-[data-theme="light"] .department-filter:focus,
-[data-theme="light"] .employed-filter:focus {
-    background-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-[data-theme="light"] .department-filter option,
-[data-theme="light"] .employed-filter option {
-    background: #ffffff;
-    color: var(--color-text-primary);
-}
-
-[data-theme="light"] .type-checkbox {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-[data-theme="light"] .type-checkbox:hover {
-    border-color: rgba(100, 116, 139, 0.35);
-    background: rgba(255, 255, 255, 1);
-}
-
-[data-theme="light"] .type-checkbox:has(input:checked) {
-    background: rgba(37, 99, 235, 0.1);
-    border-color: var(--color-primary);
 }

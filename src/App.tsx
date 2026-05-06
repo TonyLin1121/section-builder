@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useEmployees } from './hooks/useEmployees';
 import { useExport, type ExportConfig } from './hooks/useExport';
 import { EmployeeForm } from './components/EmployeeForm';
@@ -95,6 +95,32 @@ function App() {
     ],
   }), []);
 
+  // 控制員工表單 Modal 開關
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // 點選表格中的「編輯」時，editingEmployee 會被設定，連帶開啟 Modal
+  useEffect(() => {
+    if (editingEmployee) {
+      setIsFormOpen(true);
+    }
+  }, [editingEmployee]);
+
+  /**
+   * 開啟新增 Modal（清空編輯狀態）
+   */
+  const handleOpenAdd = useCallback(() => {
+    cancelEdit();
+    setIsFormOpen(true);
+  }, [cancelEdit]);
+
+  /**
+   * 關閉 Modal 並清空編輯狀態
+   */
+  const handleCloseForm = useCallback(() => {
+    setIsFormOpen(false);
+    cancelEdit();
+  }, [cancelEdit]);
+
   /**
    * 處理表單提交
    */
@@ -105,6 +131,7 @@ function App() {
       } else {
         await addEmployee(data);
       }
+      handleCloseForm();
     } catch (e) {
       // 錯誤已在 hook 中處理
       console.error('表單提交失敗:', e);
@@ -164,6 +191,12 @@ function App() {
               isGenerating={isGenerating}
               disabled={allEmployees.length === 0}
             />
+            <button
+              className="btn btn-primary"
+              onClick={handleOpenAdd}
+            >
+              ＋ 新增員工
+            </button>
           </div>
         </div>
       </header>
@@ -179,16 +212,6 @@ function App() {
       {/* 主要內容 */}
       <main className="app-main">
         <div className="container">
-          {/* 員工表單 */}
-          <section className="section">
-            <EmployeeForm
-              editingEmployee={editingEmployee}
-              divisions={divisions}
-              onSubmit={handleFormSubmit}
-              onCancel={cancelEdit}
-            />
-          </section>
-
           {/* 搜尋與篩選 */}
           <section className="section">
             <div className="section-header">
@@ -238,6 +261,43 @@ function App() {
       <footer className="app-footer">
         <p>© 2026 部門人員管理系統 · 使用 React + TypeScript + FastAPI 構建</p>
       </footer>
+
+      {/* 員工表單 Modal（新增/編輯） */}
+      {isFormOpen && (
+        <div
+          className="emp-form-modal-overlay"
+          onClick={handleCloseForm}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="emp-form-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="emp-form-modal-header">
+              <h2 className="emp-form-modal-title">
+                {editingEmployee ? '編輯員工資料' : '新增員工'}
+              </h2>
+              <button
+                type="button"
+                className="emp-form-modal-close"
+                onClick={handleCloseForm}
+                aria-label="關閉"
+              >
+                ×
+              </button>
+            </div>
+            <div className="emp-form-modal-body">
+              <EmployeeForm
+                editingEmployee={editingEmployee}
+                divisions={divisions}
+                onSubmit={handleFormSubmit}
+                onCancel={handleCloseForm}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* PDF 預覽模態框 */}
       <PdfPreview

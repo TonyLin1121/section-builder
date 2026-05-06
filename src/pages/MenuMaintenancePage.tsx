@@ -166,9 +166,33 @@ export function MenuMaintenancePage() {
     };
 
     /**
-     * 渲染表單
+     * 渲染表單（包在 Modal 中）
      */
     const renderForm = () => (
+        <div
+            className="mnu-form-modal-overlay"
+            onClick={handleCancel}
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                className="mnu-form-modal-content"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="mnu-form-modal-header">
+                    <h2 className="mnu-form-modal-title">
+                        {isCreating ? '新增選單' : '編輯選單'}
+                    </h2>
+                    <button
+                        type="button"
+                        className="mnu-form-modal-close"
+                        onClick={handleCancel}
+                        aria-label="關閉"
+                    >
+                        ×
+                    </button>
+                </div>
+                <div className="mnu-form-modal-body">
         <div className="form-container">
             <h3>{isCreating ? '新增選單' : '編輯選單'}</h3>
             <div className="form-grid">
@@ -249,6 +273,9 @@ export function MenuMaintenancePage() {
                 <button className="btn-primary" onClick={handleSave}>
                     {isCreating ? '新增' : '儲存'}
                 </button>
+            </div>
+        </div>
+                </div>
             </div>
         </div>
     );

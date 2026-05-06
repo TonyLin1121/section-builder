@@ -76,8 +76,11 @@ export function ProjectPage() {
     // 匯入對話框
     const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
-    // 表單狀態
-    const [formData, setFormData] = useState<ProjectFormData>({
+    // 表單 Modal 開關
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    // 空白表單預設值
+    const emptyFormData: ProjectFormData = {
         project_id: '',
         so_no: '',
         project_name: '',
@@ -87,9 +90,30 @@ export function ProjectPage() {
         project_plan_sdate: '',
         project_plan_edate: '',
         project_amt: 0,
-    });
+    };
+
+    // 表單狀態
+    const [formData, setFormData] = useState<ProjectFormData>(emptyFormData);
 
     const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+    /** 開啟新增 Modal */
+    const handleOpenAdd = useCallback(() => {
+        cancelEdit();
+        setFormData(emptyFormData);
+        setFormErrors({});
+        setIsFormOpen(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
+
+    /** 關閉 Modal 並清空編輯狀態 */
+    const handleCloseForm = useCallback(() => {
+        setIsFormOpen(false);
+        cancelEdit();
+        setFormData(emptyFormData);
+        setFormErrors({});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
 
     /**
      * 匯出配置
@@ -173,19 +197,7 @@ export function ProjectPage() {
             } else {
                 await addRecord(formData);
             }
-            // 重置表單
-            setFormData({
-                project_id: '',
-                so_no: '',
-                project_name: '',
-                customer_name: '',
-                project_manager: '',
-                project_status: '',
-                project_plan_sdate: '',
-                project_plan_edate: '',
-                project_amt: 0,
-            });
-            setFormErrors({});
+            handleCloseForm();
         } catch {
             // 錯誤已被 Hook 處理
         }
@@ -205,7 +217,7 @@ export function ProjectPage() {
     };
 
     /**
-     * 開始編輯
+     * 開始編輯（從表格觸發 → 帶資料並開啟 Modal）
      */
     const handleStartEdit = (record: any) => {
         setFormData({
@@ -221,25 +233,7 @@ export function ProjectPage() {
         });
         setFormErrors({});
         startEdit(record);
-    };
-
-    /**
-     * 取消編輯
-     */
-    const handleCancelEdit = () => {
-        setFormData({
-            project_id: '',
-            so_no: '',
-            project_name: '',
-            customer_name: '',
-            project_manager: '',
-            project_status: '',
-            project_plan_sdate: '',
-            project_plan_edate: '',
-            project_amt: 0,
-        });
-        setFormErrors({});
-        cancelEdit();
+        setIsFormOpen(true);
     };
 
     /**
@@ -274,6 +268,13 @@ export function ProjectPage() {
                         isGenerating={isGenerating}
                         disabled={records.length === 0}
                     />
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleOpenAdd}
+                    >
+                        ＋ 新增專案
+                    </button>
                 </div>
             </header>
 
@@ -284,136 +285,6 @@ export function ProjectPage() {
             )}
 
             <div className="page-content">
-                {/* 表單 */}
-                <section className="form-section">
-                    <form className="project-form" onSubmit={handleSubmit}>
-                        <h2>{editingRecord ? '編輯專案' : '新增專案'}</h2>
-
-                        <div className="form-grid">
-                            <div className="form-group">
-                                <label>專案代號 *</label>
-                                <input
-                                    type="text"
-                                    maxLength={7}
-                                    placeholder="例: P001001"
-                                    value={formData.project_id}
-                                    onChange={(e) => setFormData({ ...formData, project_id: e.target.value })}
-                                    disabled={!!editingRecord}
-                                    required
-                                />
-                                {formErrors.project_id && (
-                                    <span className="form-error">{formErrors.project_id}</span>
-                                )}
-                            </div>
-
-                            <div className="form-group">
-                                <label>合約代號</label>
-                                <input
-                                    type="text"
-                                    maxLength={7}
-                                    placeholder="例: C001001"
-                                    value={formData.so_no || ''}
-                                    onChange={(e) => setFormData({ ...formData, so_no: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="form-group form-group-wide">
-                                <label>專案名稱 *</label>
-                                <input
-                                    type="text"
-                                    maxLength={100}
-                                    placeholder="輸入專案名稱"
-                                    value={formData.project_name || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
-                                    required
-                                />
-                                {formErrors.project_name && (
-                                    <span className="form-error">{formErrors.project_name}</span>
-                                )}
-                            </div>
-
-                            <div className="form-group">
-                                <label>客戶名稱</label>
-                                <input
-                                    type="text"
-                                    maxLength={100}
-                                    placeholder="輸入客戶名稱"
-                                    value={formData.customer_name || ''}
-                                    onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>專案負責人</label>
-                                <input
-                                    type="text"
-                                    maxLength={20}
-                                    placeholder="輸入負責人"
-                                    value={formData.project_manager || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_manager: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>專案狀態</label>
-                                <select
-                                    value={formData.project_status || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_status: e.target.value })}
-                                >
-                                    <option value="">請選擇</option>
-                                    <option value="開發中">開發中</option>
-                                    <option value="保固中">保固中</option>
-                                    <option value="已結案">已結案</option>
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label>專案金額</label>
-                                <input
-                                    type="number"
-                                    min={0}
-                                    placeholder="輸入金額"
-                                    value={formData.project_amt || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_amt: Number(e.target.value) || 0 })}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>計畫開始日</label>
-                                <input
-                                    type="text"
-                                    maxLength={10}
-                                    placeholder="YYYY/MM/DD"
-                                    value={formData.project_plan_sdate || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_plan_sdate: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>計畫結束日</label>
-                                <input
-                                    type="text"
-                                    maxLength={10}
-                                    placeholder="YYYY/MM/DD"
-                                    value={formData.project_plan_edate || ''}
-                                    onChange={(e) => setFormData({ ...formData, project_plan_edate: e.target.value })}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-actions">
-                            {editingRecord && (
-                                <button type="button" className="btn btn-secondary" onClick={handleCancelEdit}>
-                                    取消
-                                </button>
-                            )}
-                            <button type="submit" className="btn btn-primary">
-                                {editingRecord ? '更新' : '新增'}
-                            </button>
-                        </div>
-                    </form>
-                </section>
-
                 {/* 篩選 */}
                 <section className="filter-section">
                     <div className="filters">
@@ -583,6 +454,161 @@ export function ProjectPage() {
                     )}
                 </section>
             </div>
+
+            {/* 專案表單 Modal（新增/編輯） */}
+            {isFormOpen && (
+                <div
+                    className="prj-form-modal-overlay"
+                    onClick={handleCloseForm}
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div
+                        className="prj-form-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="prj-form-modal-header">
+                            <h2 className="prj-form-modal-title">
+                                {editingRecord ? '編輯專案' : '新增專案'}
+                            </h2>
+                            <button
+                                type="button"
+                                className="prj-form-modal-close"
+                                onClick={handleCloseForm}
+                                aria-label="關閉"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="prj-form-modal-body">
+                            <form className="project-form" onSubmit={handleSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>專案代號 *</label>
+                                        <input
+                                            type="text"
+                                            name="project_id"
+                                            maxLength={7}
+                                            placeholder="例: P001001"
+                                            value={formData.project_id}
+                                            onChange={(e) => setFormData({ ...formData, project_id: e.target.value })}
+                                            disabled={!!editingRecord}
+                                            required
+                                        />
+                                        {formErrors.project_id && (
+                                            <span className="form-error">{formErrors.project_id}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>合約代號</label>
+                                        <input
+                                            type="text"
+                                            name="so_no"
+                                            maxLength={7}
+                                            placeholder="例: C001001"
+                                            value={formData.so_no || ''}
+                                            onChange={(e) => setFormData({ ...formData, so_no: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="form-group form-group-wide">
+                                        <label>專案名稱 *</label>
+                                        <input
+                                            type="text"
+                                            maxLength={100}
+                                            placeholder="輸入專案名稱"
+                                            value={formData.project_name || ''}
+                                            onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
+                                            required
+                                        />
+                                        {formErrors.project_name && (
+                                            <span className="form-error">{formErrors.project_name}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>客戶名稱</label>
+                                        <input
+                                            type="text"
+                                            maxLength={100}
+                                            placeholder="輸入客戶名稱"
+                                            value={formData.customer_name || ''}
+                                            onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>專案負責人</label>
+                                        <input
+                                            type="text"
+                                            maxLength={20}
+                                            placeholder="輸入負責人"
+                                            value={formData.project_manager || ''}
+                                            onChange={(e) => setFormData({ ...formData, project_manager: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>專案狀態</label>
+                                        <select
+                                            value={formData.project_status || ''}
+                                            onChange={(e) => setFormData({ ...formData, project_status: e.target.value })}
+                                        >
+                                            <option value="">請選擇</option>
+                                            <option value="開發中">開發中</option>
+                                            <option value="保固中">保固中</option>
+                                            <option value="已結案">已結案</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>專案金額</label>
+                                        <input
+                                            type="number"
+                                            min={0}
+                                            placeholder="輸入金額"
+                                            value={formData.project_amt || ''}
+                                            onChange={(e) => setFormData({ ...formData, project_amt: Number(e.target.value) || 0 })}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>計畫開始日</label>
+                                        <input
+                                            type="text"
+                                            maxLength={10}
+                                            placeholder="YYYY/MM/DD"
+                                            value={formData.project_plan_sdate || ''}
+                                            onChange={(e) => setFormData({ ...formData, project_plan_sdate: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>計畫結束日</label>
+                                        <input
+                                            type="text"
+                                            maxLength={10}
+                                            placeholder="YYYY/MM/DD"
+                                            value={formData.project_plan_edate || ''}
+                                            onChange={(e) => setFormData({ ...formData, project_plan_edate: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-actions">
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseForm}>
+                                        取消
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {editingRecord ? '更新' : '新增'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* PDF 預覽 */}
             <PdfPreview

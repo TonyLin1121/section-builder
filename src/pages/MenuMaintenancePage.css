@@ -1,327 +1,679 @@
-/**
- * 選單維護頁面樣式
- */
+/* ============================================
+   選單維護頁
+   風格：InfoReach Smart FIXGate
+   - 開發者導向，欄位密度高、表格直接顯示資料庫欄位
+   ============================================ */
 
 .menu-maintenance-page {
-    padding: 24px;
-    max-width: 1600px;
-    margin: 0 auto;
+    min-height: 100vh;
 }
 
+/* ============================================
+   選單表單 Modal（mnu-form-modal-*）
+   ============================================ */
+.mnu-form-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 25, 40, 0.45);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3vh 16px 16px;
+    z-index: 1000;
+    overflow-y: auto;
+    animation: mnuFormFadeIn 0.15s ease;
+}
+
+[data-theme="dark"] .mnu-form-modal-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes mnuFormFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.mnu-form-modal-content {
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    width: 100%;
+    max-width: 880px;
+    box-shadow: var(--fg-shadow-lg);
+    animation: mnuFormSlideUp 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 6vh);
+}
+
+@keyframes mnuFormSlideUp {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.mnu-form-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    background: var(--fg-bg-thead);
+    border-radius: var(--fg-radius-md) var(--fg-radius-md) 0 0;
+    flex-shrink: 0;
+}
+
+.mnu-form-modal-title {
+    font-size: var(--fg-font-size-md);
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mnu-form-modal-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--fg-accent);
+    border-radius: var(--fg-radius-sm);
+}
+
+.mnu-form-modal-close {
+    width: 28px;
+    height: 28px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--fg-text-secondary);
+    border-radius: var(--fg-radius-sm);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--fg-transition), color var(--fg-transition);
+}
+
+.mnu-form-modal-close:hover {
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border);
+    color: var(--fg-text-primary);
+}
+
+.mnu-form-modal-body {
+    padding: 10px 14px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.mnu-form-modal-body .form-container {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+.mnu-form-modal-body .form-container > h3 {
+    display: none;
+}
+
+/* ============================================
+   頁首
+   ============================================ */
 .menu-maintenance-page .page-header {
-    background: rgba(30, 41, 59, 0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-    padding: 20px 32px;
-    margin: -24px -24px 24px -24px;
+    background: var(--fg-bg-card);
+    border-bottom: 1px solid var(--fg-border);
+    padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
 }
 
 .menu-maintenance-page .page-header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
     margin: 0;
+    font-size: var(--fg-font-size-xl);
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    letter-spacing: -0.01em;
 }
 
-/* 工具列 */
+/* ============================================
+   工具列（搜尋 + 操作按鈕）
+   ============================================ */
 .menu-maintenance-page .toolbar {
     display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px 0;
+    max-width: 1600px;
+    margin: 0 auto;
     flex-wrap: wrap;
 }
 
 .menu-maintenance-page .search-box {
     flex: 1;
-    min-width: 200px;
+    min-width: 240px;
 }
 
 .menu-maintenance-page .search-box input {
     width: 100%;
-    padding: 10px 16px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    background: var(--color-surface);
-    color: var(--color-text);
-    font-size: 0.875rem;
+    padding: 5px 10px;
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    font-family: var(--fg-font-ui);
+    outline: none;
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
 }
 
-.menu-maintenance-page .btn-primary,
-.menu-maintenance-page .btn-secondary {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+.menu-maintenance-page .search-box input:hover {
+    border-color: var(--fg-border-strong);
 }
 
-.menu-maintenance-page .btn-primary {
-    background: var(--color-primary);
-    color: white;
-    border: none;
+.menu-maintenance-page .search-box input:focus {
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
-.menu-maintenance-page .btn-primary:hover {
-    background: #2563eb;
-}
-
-.menu-maintenance-page .btn-secondary {
-    background: var(--color-surface);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-}
-
-.menu-maintenance-page .btn-secondary:hover {
-    background: var(--color-bg);
-}
-
-/* 訊息 */
+/* ============================================
+   訊息
+   ============================================ */
 .menu-maintenance-page .message {
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
+    padding: 8px 14px;
+    margin: 12px 20px 0;
+    max-width: 1600px;
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
 }
 
 .menu-maintenance-page .message.error {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #dc2626;
+    background: var(--fg-danger-soft);
+    border: 1px solid var(--fg-danger);
+    color: var(--fg-danger);
 }
 
 .menu-maintenance-page .message.success {
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    color: #16a34a;
+    background: var(--fg-success-soft);
+    border: 1px solid var(--fg-success);
+    color: var(--fg-success);
 }
 
-/* 表單容器 */
+/* ============================================
+   表單容器
+   ============================================ */
 .menu-maintenance-page .form-container {
-    background: var(--color-surface);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 14px 16px;
+    margin: 12px 20px;
+    max-width: 1600px;
 }
 
 .menu-maintenance-page .form-container h3 {
-    font-size: 1.125rem;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    font-size: var(--fg-font-size-md);
     font-weight: 600;
-    margin: 0 0 16px 0;
-    color: var(--color-text);
+    color: var(--fg-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.menu-maintenance-page .form-container h3::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--fg-accent);
+    border-radius: var(--fg-radius-sm);
 }
 
 .menu-maintenance-page .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px 12px;
+    margin-bottom: 8px;
 }
 
 .menu-maintenance-page .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 2px;
 }
 
 .menu-maintenance-page .form-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text);
+    font-size: var(--fg-font-size-xs);
+    font-weight: 600;
+    color: var(--fg-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
-.menu-maintenance-page .form-group input,
+.menu-maintenance-page .form-group input[type="text"],
+.menu-maintenance-page .form-group input[type="number"],
 .menu-maintenance-page .form-group select {
-    padding: 10px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-size: 0.875rem;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 5px 10px;
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.menu-maintenance-page .form-group input:disabled {
-    background: #f3f4f6;
-    color: #9ca3af;
+/* menu_id / menu_path 用等寬字體（識別碼/路由） */
+.menu-maintenance-page .form-group input[placeholder*="MENU_"],
+.menu-maintenance-page .form-group input[placeholder*="/"] {
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.menu-maintenance-page .form-group input:hover:not(:disabled),
+.menu-maintenance-page .form-group select:hover:not(:disabled) {
+    border-color: var(--fg-border-strong);
+}
+
+.menu-maintenance-page .form-group input:focus,
+.menu-maintenance-page .form-group select:focus {
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
+}
+
+.menu-maintenance-page .form-group input:disabled,
+.menu-maintenance-page .form-group select:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--fg-bg-subtle);
+}
+
+.menu-maintenance-page .form-group input::placeholder {
+    color: var(--fg-text-muted);
 }
 
 .menu-maintenance-page .form-group small {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
+    font-size: 10px;
+    color: var(--fg-text-muted);
+    margin-top: 2px;
+}
+
+/* checkbox 群組 */
+.menu-maintenance-page .form-group.checkbox {
+    justify-content: flex-end;
 }
 
 .menu-maintenance-page .form-group.checkbox label {
-    flex-direction: row;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    padding: 5px 10px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    cursor: pointer;
+    color: var(--fg-text-primary);
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
+}
+
+.menu-maintenance-page .form-group.checkbox label:hover {
+    border-color: var(--fg-border-strong);
+    background: var(--fg-bg-hover);
+}
+
+.menu-maintenance-page .form-group.checkbox label:has(input:checked) {
+    background: var(--fg-accent-soft);
+    border-color: var(--fg-accent);
+    color: var(--fg-accent);
+    font-weight: 500;
+}
+
+.menu-maintenance-page .form-group.checkbox input[type="checkbox"] {
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    accent-color: var(--fg-accent);
     cursor: pointer;
 }
 
-.menu-maintenance-page .form-group.checkbox input {
-    width: 18px;
-    height: 18px;
-}
-
+/* 表單操作 */
 .menu-maintenance-page .form-actions {
     display: flex;
-    gap: 12px;
     justify-content: flex-end;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--color-border);
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--fg-border-subtle);
 }
 
-/* 表格容器 */
+/* ============================================
+   表格
+   ============================================ */
 .menu-maintenance-page .table-container {
-    background: var(--color-surface);
-    border-radius: 12px;
+    margin: 12px 20px;
+    max-width: 1600px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.menu-maintenance-page .loading {
-    padding: 40px;
-    text-align: center;
-    color: var(--color-text-muted);
+    overflow-x: auto;
 }
 
 .menu-maintenance-page .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: var(--fg-font-size-base);
+    min-width: 900px;
+}
+
+.menu-maintenance-page .data-table thead {
+    background: var(--fg-bg-thead);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .menu-maintenance-page .data-table th {
-    background: var(--color-bg);
-    padding: 12px 16px;
+    padding: 6px 10px;
     text-align: left;
     font-weight: 600;
-    color: var(--color-text);
-    border-bottom: 1px solid var(--color-border);
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--fg-border);
     white-space: nowrap;
+    height: 30px;
+    font-family: var(--fg-font-mono);
 }
 
 .menu-maintenance-page .data-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-text);
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    color: var(--fg-text-primary);
+    height: var(--fg-row-height);
+    line-height: 1.3;
 }
 
-.menu-maintenance-page .data-table tr:hover {
-    background: var(--color-bg);
+.menu-maintenance-page .data-table tbody tr {
+    transition: background var(--fg-transition);
 }
 
-.menu-maintenance-page .data-table tr.editing {
-    background: #eff6ff;
+.menu-maintenance-page .data-table tbody tr:hover {
+    background: var(--fg-bg-hover);
 }
 
-.menu-maintenance-page .data-table .empty {
-    text-align: center;
-    color: var(--color-text-muted);
-    padding: 40px;
+.menu-maintenance-page .data-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
+/* 編輯中的列高亮 */
+.menu-maintenance-page .data-table tbody tr.editing,
+.menu-maintenance-page .data-table tbody tr.editing:hover {
+    background: var(--fg-accent-soft);
+}
+
+/* 特殊 cell 樣式 */
 .menu-maintenance-page .id-cell {
-    font-family: monospace;
-    font-size: 0.8rem;
-    color: #4f46e5;
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--fg-accent);
 }
 
 .menu-maintenance-page .path-cell {
-    font-family: monospace;
-    font-size: 0.8rem;
-    color: #059669;
+    font-family: var(--fg-font-mono);
+    font-size: var(--fg-font-size-xs);
+    color: var(--fg-text-secondary);
 }
 
-.menu-maintenance-page .nullable .null {
-    color: #9ca3af;
+.menu-maintenance-page .nullable {
+    color: var(--fg-text-muted);
+}
+
+.menu-maintenance-page .null {
+    color: var(--fg-text-muted);
     font-style: italic;
+    font-family: var(--fg-font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 1px 4px;
+    background: var(--fg-bg-subtle);
+    border-radius: var(--fg-radius-sm);
 }
 
 .menu-maintenance-page .icon-cell {
-    font-size: 1.25rem;
+    text-align: center;
+    font-size: 16px;
+    width: 60px;
 }
 
 .menu-maintenance-page .number-cell {
-    text-align: center;
+    text-align: right;
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+    width: 80px;
 }
 
 .menu-maintenance-page .status-cell {
     text-align: center;
-    font-weight: 600;
+    width: 70px;
+    font-weight: 700;
+    font-family: var(--fg-font-mono);
 }
 
 .menu-maintenance-page .status-cell.active {
-    color: #16a34a;
+    color: var(--fg-success);
 }
 
 .menu-maintenance-page .status-cell.inactive {
-    color: #dc2626;
+    color: var(--fg-danger);
 }
 
+/* 操作按鈕 */
 .menu-maintenance-page .actions-cell {
     white-space: nowrap;
+    width: 110px;
 }
 
 .menu-maintenance-page .actions-cell button {
-    background: none;
-    border: none;
+    width: 24px;
+    height: 24px;
+    margin-right: 2px;
+    padding: 0;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: var(--fg-radius-sm);
     cursor: pointer;
-    font-size: 1rem;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: background 0.2s;
+    font-size: 12px;
+    line-height: 1;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
 }
 
 .menu-maintenance-page .actions-cell button:hover {
-    background: var(--color-bg);
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border);
 }
 
-/* 統計列 */
-.menu-maintenance-page .stats-bar {
-    display: flex;
-    gap: 24px;
-    margin-top: 16px;
-    padding: 12px 16px;
-    background: var(--color-surface);
-    border-radius: 8px;
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
+/* 載入 / 空狀態 */
+.menu-maintenance-page .loading,
+.menu-maintenance-page .empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-sm);
 }
 
 /* ============================================
-   明亮模式樣式覆蓋
+   統計列
    ============================================ */
-[data-theme="light"] .menu-maintenance-page .page-header {
-    background: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+.menu-maintenance-page .stats-bar {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 8px 16px;
+    margin: 12px 20px 20px;
+    max-width: 1600px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-xs);
+    color: var(--fg-text-secondary);
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-[data-theme="light"] .menu-maintenance-page .page-header h1 {
-    color: #1e293b;
+.menu-maintenance-page .stats-bar span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-[data-theme="light"] .menu-maintenance-page .form-container {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.15);
+/* ============================================
+   按鈕
+   ============================================ */
+.menu-maintenance-page .btn-primary,
+.menu-maintenance-page .btn-secondary,
+.mnu-form-modal-content .btn-primary,
+.mnu-form-modal-content .btn-secondary {
+    padding: 5px 14px;
+    border: 1px solid transparent;
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-sm);
+    font-weight: 500;
+    line-height: 1.4;
+    font-family: var(--fg-font-ui);
+    cursor: pointer;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
 }
 
-[data-theme="light"] .menu-maintenance-page .table-container {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.15);
+.menu-maintenance-page .btn-primary,
+.mnu-form-modal-content .btn-primary {
+    background: var(--fg-accent);
+    color: var(--fg-text-on-accent);
+    border-color: var(--fg-accent);
 }
 
-[data-theme="light"] .menu-maintenance-page .data-table th {
-    background: rgba(241, 245, 249, 0.95);
+.menu-maintenance-page .btn-primary:hover:not(:disabled),
+.mnu-form-modal-content .btn-primary:hover:not(:disabled) {
+    background: var(--fg-accent-hover);
+    border-color: var(--fg-accent-hover);
 }
 
-[data-theme="light"] .menu-maintenance-page .data-table tr:hover {
-    background: rgba(241, 245, 249, 0.6);
+.menu-maintenance-page .btn-secondary,
+.mnu-form-modal-content .btn-secondary {
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    border: 1px solid var(--fg-border);
 }
 
-[data-theme="light"] .menu-maintenance-page .stats-bar {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.15);
+.menu-maintenance-page .btn-secondary:hover:not(:disabled),
+.mnu-form-modal-content .btn-secondary:hover:not(:disabled) {
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border-strong);
+}
+
+/* ============================================
+   響應式
+   ============================================ */
+@media (max-width: 1024px) {
+    .menu-maintenance-page .page-header,
+    .menu-maintenance-page .toolbar,
+    .menu-maintenance-page .form-container,
+    .menu-maintenance-page .table-container,
+    .menu-maintenance-page .stats-bar,
+    .menu-maintenance-page .message {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .menu-maintenance-page .page-header {
+        margin: 0;
+        padding: 10px 16px;
+    }
+
+    .menu-maintenance-page .toolbar {
+        margin: 0;
+        padding: 12px 16px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-maintenance-page .page-header {
+        padding: 10px 12px;
+    }
+
+    .menu-maintenance-page .page-header h1 {
+        font-size: var(--fg-font-size-lg);
+    }
+
+    .menu-maintenance-page .toolbar,
+    .menu-maintenance-page .form-container,
+    .menu-maintenance-page .table-container,
+    .menu-maintenance-page .stats-bar,
+    .menu-maintenance-page .message {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+
+    .menu-maintenance-page .toolbar {
+        padding: 12px 12px 0;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .menu-maintenance-page .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-maintenance-page .form-actions {
+        flex-direction: column;
+    }
+
+    .menu-maintenance-page .form-actions .btn-primary,
+    .menu-maintenance-page .form-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .menu-maintenance-page .stats-bar {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-maintenance-page .form-group input,
+    .menu-maintenance-page .form-group select,
+    .menu-maintenance-page .search-box input {
+        font-size: 16px;
+    }
 }

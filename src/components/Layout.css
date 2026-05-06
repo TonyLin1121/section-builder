@@ -1,19 +1,20 @@
 /* ============================================
-   Wrike 風格佈局樣式
+   Layout 側邊欄 + 主內容
+   風格：InfoReach Smart FIXGate
+   - 側邊欄固定深藍灰（兩主題皆深色），與淺色內容區形成對比
+   - 寬度收窄至 200px，提高內容區可用空間
    ============================================ */
 
 .app-layout {
     display: flex;
     min-height: 100vh;
-    background: var(--color-bg-primary);
+    background: var(--fg-bg-page);
 }
 
-/* ============================================
-   側邊選單 - 深藍綠色主題
-   ============================================ */
+/* ----- 側邊欄 ----- */
 .sidebar {
-    width: 220px;
-    background: var(--color-sidebar-bg);
+    width: var(--fg-sidebar-width);
+    background: var(--fg-sidebar-bg);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -21,14 +22,12 @@
     top: 0;
     bottom: 0;
     z-index: 100;
-    transition: width 0.2s ease;
-    border-right: 1px solid var(--color-border);
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    transition: width 0.18s ease;
+    border-right: 1px solid var(--fg-sidebar-border);
 }
 
-/* 側邊欄收合狀態 */
 .sidebar.collapsed {
-    width: 50px;
+    width: var(--fg-sidebar-width-collapsed);
 }
 
 .sidebar.collapsed .sidebar-header {
@@ -39,133 +38,119 @@
     justify-content: center;
 }
 
-/* Logo/品牌區 */
+/* Logo / 品牌 */
 .sidebar-header {
-    padding: 12px;
+    height: var(--fg-header-height);
+    padding: 0 12px;
     display: flex;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--fg-sidebar-border);
+    flex-shrink: 0;
 }
 
 .sidebar-logo {
-    width: 26px;
-    height: 26px;
-    background: var(--color-sidebar-accent);
-    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    background: var(--fg-sidebar-accent);
+    border-radius: var(--fg-radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: #fff;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11px;
     flex-shrink: 0;
 }
 
 .sidebar-header h2 {
     margin: 0;
-    font-size: 0.875rem;
+    font-size: var(--fg-font-size-md);
     font-weight: 600;
-    color: var(--color-sidebar-text-active);
-    letter-spacing: -0.02em;
+    color: var(--fg-sidebar-text-active);
+    letter-spacing: -0.01em;
     white-space: nowrap;
     overflow: hidden;
 }
 
 /* 收合按鈕 */
-.sidebar-toggle {
+.sidebar-toggle,
+.sidebar-collapse-btn {
     margin-left: auto;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--color-sidebar-text);
+    background: transparent;
+    color: var(--fg-sidebar-text);
     cursor: pointer;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: var(--fg-radius-sm);
+    font-size: 11px;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: background var(--fg-transition);
     flex-shrink: 0;
 }
 
-.sidebar-toggle:hover {
-    background: var(--color-sidebar-hover);
-    color: var(--color-sidebar-text-active);
+.sidebar-toggle:hover,
+.sidebar-collapse-btn:hover {
+    background: var(--fg-sidebar-hover);
+    color: var(--fg-sidebar-text-active);
 }
 
 .sidebar.collapsed .sidebar-toggle {
     margin-left: 0;
 }
 
-.sidebar-collapse-btn {
-    margin-left: auto;
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: transparent;
-    color: var(--color-sidebar-text);
-    cursor: pointer;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.sidebar-collapse-btn:hover {
-    background: var(--color-sidebar-hover);
-}
-
 /* 導航區 */
 .sidebar-nav {
     flex: 1;
-    padding: 12px 8px;
+    padding: 8px 6px;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
     overflow-y: auto;
 }
 
-/* 選單分組標題 */
 .nav-section-title {
-    padding: 8px 12px 4px;
-    font-size: 0.6875rem;
+    padding: 10px 10px 4px;
+    font-size: 10px;
     font-weight: 600;
-    color: rgba(148, 163, 184, 0.6);
+    color: var(--fg-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
 }
 
 /* 導航項目 */
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    color: var(--color-sidebar-text);
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: var(--fg-radius-sm);
+    color: var(--fg-sidebar-text);
     text-decoration: none;
-    transition: all 0.15s ease;
-    font-size: 0.875rem;
-    font-weight: 500;
+    transition: background var(--fg-transition), color var(--fg-transition);
+    font-size: var(--fg-font-size-sm);
+    font-weight: 400;
     border: none;
     background: transparent;
     width: 100%;
     text-align: left;
     cursor: pointer;
+    line-height: 1.4;
 }
 
 .nav-item:hover {
-    background: var(--color-sidebar-hover);
-    color: var(--color-sidebar-text-active);
+    background: var(--fg-sidebar-hover);
+    color: var(--fg-sidebar-text-active);
 }
 
 .nav-item.active {
-    background: var(--color-sidebar-active);
-    color: var(--color-sidebar-text-active);
+    background: var(--fg-sidebar-active);
+    color: var(--fg-sidebar-text-active);
+    font-weight: 500;
 }
 
 .nav-item.active::before {
@@ -174,10 +159,10 @@
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 3px;
-    height: 20px;
-    background: var(--color-sidebar-accent);
-    border-radius: 0 3px 3px 0;
+    width: 2px;
+    height: 16px;
+    background: var(--fg-sidebar-accent);
+    border-radius: 0 2px 2px 0;
 }
 
 .menu-item-wrapper {
@@ -185,10 +170,11 @@
 }
 
 .nav-icon {
-    font-size: 1.125rem;
-    width: 20px;
+    font-size: 14px;
+    width: 18px;
     text-align: center;
     flex-shrink: 0;
+    opacity: 0.85;
 }
 
 .nav-label {
@@ -199,9 +185,9 @@
 }
 
 .nav-arrow {
-    font-size: 0.625rem;
-    opacity: 0.5;
-    transition: transform 0.2s ease;
+    font-size: 9px;
+    opacity: 0.6;
+    transition: transform 0.15s ease;
 }
 
 .nav-arrow.expanded {
@@ -209,7 +195,7 @@
 }
 
 .nav-item.parent-active {
-    color: var(--color-sidebar-text-active);
+    color: var(--fg-sidebar-text-active);
 }
 
 /* 子選單 */
@@ -217,50 +203,52 @@
     display: flex;
     flex-direction: column;
     gap: 1px;
-    margin-top: 2px;
+    margin-top: 1px;
 }
 
 .submenu .nav-item {
-    padding: 7px 12px 7px 42px;
-    font-size: 0.8125rem;
+    padding: 5px 10px 5px 32px;
+    font-size: var(--fg-font-size-xs);
 }
 
 .submenu .nav-icon {
-    font-size: 1rem;
+    font-size: 12px;
 }
 
 .menu-loading {
-    padding: 16px;
+    padding: 12px;
     text-align: center;
-    color: var(--color-sidebar-text);
-    font-size: 0.8125rem;
+    color: var(--fg-sidebar-text);
+    font-size: var(--fg-font-size-xs);
 }
 
 /* 側邊欄底部 */
 .sidebar-footer {
-    padding: 12px 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px 6px;
+    border-top: 1px solid var(--fg-sidebar-border);
+    flex-shrink: 0;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px;
-    margin-bottom: 8px;
+    gap: 8px;
+    padding: 6px;
+    margin-bottom: 6px;
 }
 
 .user-avatar {
-    width: 32px;
-    height: 32px;
-    background: var(--color-sidebar-accent);
+    width: 26px;
+    height: 26px;
+    background: var(--fg-sidebar-accent);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: #fff;
     font-weight: 600;
-    font-size: 0.8125rem;
+    font-size: 11px;
+    font-family: var(--fg-font-mono);
 }
 
 .user-details {
@@ -269,9 +257,9 @@
 }
 
 .user-name {
-    font-size: 0.8125rem;
+    font-size: var(--fg-font-size-sm);
     font-weight: 500;
-    color: var(--color-sidebar-text-active);
+    color: var(--fg-sidebar-text-active);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -279,20 +267,23 @@
 
 .user-role-tag {
     display: inline-block;
-    padding: 1px 6px;
-    background: rgba(5, 205, 153, 0.2);
-    color: var(--color-sidebar-accent);
-    border-radius: 3px;
-    font-size: 0.625rem;
-    font-weight: 500;
+    padding: 1px 5px;
+    background: rgba(74, 144, 226, 0.18);
+    color: var(--fg-sidebar-accent);
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    border-radius: var(--fg-radius-sm);
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--fg-font-mono);
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
+    margin-top: 2px;
 }
 
 .sidebar-actions {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .change-password-btn,
@@ -301,69 +292,60 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.8125rem;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    border-radius: var(--fg-radius-sm);
+    font-size: var(--fg-font-size-xs);
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
     width: 100%;
-}
-
-.change-password-btn {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--btn-icon-edit);
+    background: transparent;
+    color: var(--fg-sidebar-text);
 }
 
 .change-password-btn:hover {
-    background: rgba(59, 130, 246, 0.2);
-}
-
-.logout-btn {
-    background: transparent;
-    color: var(--color-sidebar-text);
+    background: var(--fg-sidebar-hover);
+    color: var(--fg-sidebar-accent);
+    border-color: rgba(74, 144, 226, 0.4);
 }
 
 .logout-btn:hover {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
 }
 
-/* ============================================
-   主要內容區
-   ============================================ */
+/* ----- 主內容區 ----- */
 .main-content {
     flex: 1;
-    margin-left: 220px;
-    background: var(--color-bg-primary);
+    margin-left: var(--fg-sidebar-width);
+    background: var(--fg-bg-page);
     min-height: 100vh;
-    transition: margin-left 0.2s ease;
+    transition: margin-left 0.18s ease;
 }
 
-/* 側邊欄收合時調整主內容區的margin */
 .sidebar.collapsed+.main-content {
-    margin-left: 50px;
+    margin-left: var(--fg-sidebar-width-collapsed);
 }
 
-/* 全域頁面標題樣式 */
+/* 全域頁面標題 */
 .main-content .page-header {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .main-content .page-header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
+    font-size: var(--fg-font-size-xl);
+    font-weight: 600;
+    color: var(--fg-text-primary);
     margin: 0;
+    letter-spacing: -0.01em;
 }
 
-/* ============================================
-   響應式設計
-   ============================================ */
+/* ----- 響應式 ----- */
 @media (max-width: 1024px) {
     .sidebar {
-        width: 60px;
+        width: 56px;
     }
 
     .sidebar-header h2,
@@ -383,11 +365,11 @@
 
     .nav-item {
         justify-content: center;
-        padding: 10px;
+        padding: 8px;
     }
 
     .submenu .nav-item {
-        padding-left: 10px;
+        padding-left: 8px;
     }
 
     .user-info {
@@ -400,7 +382,7 @@
     }
 
     .main-content {
-        margin-left: 60px;
+        margin-left: 56px;
     }
 }
 

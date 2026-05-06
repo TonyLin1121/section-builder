@@ -1,80 +1,120 @@
+/* ============================================
+   分頁
+   風格：InfoReach Smart FIXGate
+   ============================================ */
+
 .pagination {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 16px 0;
+    gap: 12px;
+    padding: 12px 0;
     flex-wrap: wrap;
 }
 
 .pagination-info {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
+    font-size: var(--fg-font-size-sm);
+    color: var(--fg-text-secondary);
+    font-variant-numeric: tabular-nums;
 }
 
 .pagination-controls {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
 }
 
 .pagination-btn {
-    min-width: 36px;
-    height: 36px;
+    min-width: 28px;
+    height: 28px;
     padding: 0 8px;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    background: rgba(30, 41, 59, 0.8);
-    color: var(--color-text-primary);
-    border-radius: 8px;
-    font-size: 0.875rem;
+    border: 1px solid var(--fg-border);
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    border-radius: var(--fg-radius-sm);
+    font-size: var(--fg-font-size-sm);
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background var(--fg-transition), border-color var(--fg-transition), color var(--fg-transition);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .pagination-btn:hover:not(:disabled) {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: var(--color-primary);
+    background: var(--fg-accent-soft);
+    border-color: var(--fg-accent);
+    color: var(--fg-accent);
 }
 
 .pagination-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
 .pagination-btn.active {
-    background: linear-gradient(135deg, var(--color-primary), #6366f1);
-    border-color: transparent;
-    color: white;
+    background: var(--fg-accent);
+    border-color: var(--fg-accent);
+    color: var(--fg-text-on-accent);
+    font-weight: 600;
+}
+
+.pagination-btn.active:hover {
+    background: var(--fg-accent-hover);
+    border-color: var(--fg-accent-hover);
+    color: var(--fg-text-on-accent);
 }
 
 .pagination-ellipsis {
-    padding: 0 8px;
-    color: var(--color-text-secondary);
+    padding: 0 4px;
+    color: var(--fg-text-muted);
+    font-size: var(--fg-font-size-sm);
+}
+
+.pagination-size {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fg-font-size-sm);
+    color: var(--fg-text-secondary);
 }
 
 .pagination-size select {
-    background: rgba(30, 41, 59, 0.8);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 0.875rem;
-    color: var(--color-text-primary);
+    height: 28px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-sm);
+    padding: 0 24px 0 8px;
+    font-size: var(--fg-font-size-sm);
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
     cursor: pointer;
     outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235a6b7a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
+}
+
+.pagination-size select:hover {
+    border-color: var(--fg-border-strong);
 }
 
 .pagination-size select:focus {
-    border-color: var(--color-primary);
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
-/* RWD */
+[data-theme="dark"] .pagination-size select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%239aa7b4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
 @media (max-width: 768px) {
     .pagination {
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
     }
 
     .pagination-info {
@@ -89,34 +129,4 @@
     .pagination-size {
         order: 1;
     }
-
-    .pagination-btn {
-        min-width: 32px;
-        height: 32px;
-        font-size: 0.75rem;
-    }
-}
-
-/* ============================================
-   明亮模式樣式覆蓋
-   ============================================ */
-[data-theme="light"] .pagination-btn {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-[data-theme="light"] .pagination-btn:hover:not(:disabled) {
-    background: rgba(37, 99, 235, 0.1);
-}
-
-[data-theme="light"] .pagination-size select {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-/* NOTE: 明亮模式下當前頁碼需要保持深色背景以突出顯示 */
-[data-theme="light"] .pagination-btn.active {
-    background: linear-gradient(135deg, var(--color-primary), #6366f1);
-    border-color: transparent;
-    color: white;
 }

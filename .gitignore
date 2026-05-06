@@ -35,3 +35,6 @@ __pycache__/
 .Python
 venv/
 .venv/
+
+# Claude Code local state
+.claude/

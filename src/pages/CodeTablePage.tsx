@@ -99,7 +99,11 @@ export function CodeTablePage() {
         }
     }, [records, codeTableExportConfig, previewPdf, downloadPdf, downloadCsv, downloadXlsx]);
 
-    const [formData, setFormData] = useState<CodeTableFormData>({
+    // 表單 Modal 開關
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    // 空白表單預設值
+    const emptyFormData: CodeTableFormData = {
         code_code: '',
         code_subcode: '',
         code_subname: '',
@@ -107,14 +111,33 @@ export function CodeTablePage() {
         sysmark: '0',
         used_mark: '1',
         remark: '',
-    });
+    };
 
-    // 編輯模式下填充表單
+    const [formData, setFormData] = useState<CodeTableFormData>(emptyFormData);
+
+    // 編輯模式下填充表單，並自動開啟 Modal
     useEffect(() => {
         if (editingRecord) {
             setFormData(editingRecord);
+            setIsFormOpen(true);
         }
     }, [editingRecord]);
+
+    /** 開啟新增 Modal */
+    const handleOpenAdd = useCallback(() => {
+        cancelEdit();
+        setFormData(emptyFormData);
+        setIsFormOpen(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
+
+    /** 關閉 Modal 並清空編輯狀態 */
+    const handleCloseForm = useCallback(() => {
+        setIsFormOpen(false);
+        cancelEdit();
+        setFormData(emptyFormData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -128,16 +151,7 @@ export function CodeTablePage() {
             } else {
                 await addRecord(formData);
             }
-            // 重置表單
-            setFormData({
-                code_code: '',
-                code_subcode: '',
-                code_subname: '',
-                code_content: '',
-                sysmark: '0',
-                used_mark: '1',
-                remark: '',
-            });
+            handleCloseForm();
         } catch (e) {
             console.error('提交失敗:', e);
         }
@@ -163,6 +177,13 @@ export function CodeTablePage() {
                         isGenerating={isGenerating}
                         disabled={records.length === 0}
                     />
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleOpenAdd}
+                    >
+                        ＋ 新增參數
+                    </button>
                 </div>
             </header>
 
@@ -173,97 +194,6 @@ export function CodeTablePage() {
             )}
 
             <div className="page-content">
-                {/* 表單 */}
-                <section className="form-section">
-                    <form className="codetable-form" onSubmit={handleSubmit}>
-                        <h2>{editingRecord ? '編輯參數' : '新增參數'}</h2>
-
-                        <div className="form-grid">
-                            <div className="form-group">
-                                <label>主分類代碼 *</label>
-                                <input
-                                    type="text"
-                                    value={formData.code_code}
-                                    onChange={(e) => setFormData({ ...formData, code_code: e.target.value })}
-                                    disabled={!!editingRecord}
-                                    maxLength={4}
-                                    placeholder="例: 0001"
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>子分類代碼 *</label>
-                                <input
-                                    type="text"
-                                    value={formData.code_subcode}
-                                    onChange={(e) => setFormData({ ...formData, code_subcode: e.target.value })}
-                                    disabled={!!editingRecord}
-                                    maxLength={4}
-                                    placeholder="例: 01"
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>子分類名稱 *</label>
-                                <input
-                                    type="text"
-                                    value={formData.code_subname || ''}
-                                    onChange={(e) => setFormData({ ...formData, code_subname: e.target.value })}
-                                    maxLength={20}
-                                    placeholder="例: 特休"
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>使用狀態</label>
-                                <select
-                                    value={formData.used_mark || '1'}
-                                    onChange={(e) => setFormData({ ...formData, used_mark: e.target.value })}
-                                >
-                                    {USED_MARK_OPTIONS.map(opt => (
-                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="form-group form-group-full">
-                                <label>內容說明</label>
-                                <input
-                                    type="text"
-                                    value={formData.code_content || ''}
-                                    onChange={(e) => setFormData({ ...formData, code_content: e.target.value })}
-                                    maxLength={100}
-                                    placeholder="詳細說明"
-                                />
-                            </div>
-
-                            <div className="form-group form-group-full">
-                                <label>備註</label>
-                                <textarea
-                                    value={formData.remark || ''}
-                                    onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
-                                    rows={2}
-                                    maxLength={30}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-actions">
-                            {editingRecord && (
-                                <button type="button" className="btn btn-secondary" onClick={cancelEdit}>
-                                    取消
-                                </button>
-                            )}
-                            <button type="submit" className="btn btn-primary">
-                                {editingRecord ? '更新' : '新增'}
-                            </button>
-                        </div>
-                    </form>
-                </section>
-
                 {/* 篩選 */}
                 <section className="filter-section">
                     <div className="filters">
@@ -392,6 +322,120 @@ export function CodeTablePage() {
                     )}
                 </section>
             </div>
+
+            {/* 參數表單 Modal（新增/編輯） */}
+            {isFormOpen && (
+                <div
+                    className="cdt-form-modal-overlay"
+                    onClick={handleCloseForm}
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div
+                        className="cdt-form-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="cdt-form-modal-header">
+                            <h2 className="cdt-form-modal-title">
+                                {editingRecord ? '編輯參數' : '新增參數'}
+                            </h2>
+                            <button
+                                type="button"
+                                className="cdt-form-modal-close"
+                                onClick={handleCloseForm}
+                                aria-label="關閉"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="cdt-form-modal-body">
+                            <form className="codetable-form" onSubmit={handleSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>主分類代碼 *</label>
+                                        <input
+                                            type="text"
+                                            value={formData.code_code}
+                                            onChange={(e) => setFormData({ ...formData, code_code: e.target.value })}
+                                            disabled={!!editingRecord}
+                                            maxLength={4}
+                                            placeholder="例: 0001"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>子分類代碼 *</label>
+                                        <input
+                                            type="text"
+                                            value={formData.code_subcode}
+                                            onChange={(e) => setFormData({ ...formData, code_subcode: e.target.value })}
+                                            disabled={!!editingRecord}
+                                            maxLength={4}
+                                            placeholder="例: 01"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>子分類名稱 *</label>
+                                        <input
+                                            type="text"
+                                            value={formData.code_subname || ''}
+                                            onChange={(e) => setFormData({ ...formData, code_subname: e.target.value })}
+                                            maxLength={20}
+                                            placeholder="例: 特休"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>使用狀態</label>
+                                        <select
+                                            value={formData.used_mark || '1'}
+                                            onChange={(e) => setFormData({ ...formData, used_mark: e.target.value })}
+                                        >
+                                            {USED_MARK_OPTIONS.map(opt => (
+                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group form-group-full">
+                                        <label>內容說明</label>
+                                        <input
+                                            type="text"
+                                            value={formData.code_content || ''}
+                                            onChange={(e) => setFormData({ ...formData, code_content: e.target.value })}
+                                            maxLength={100}
+                                            placeholder="詳細說明"
+                                        />
+                                    </div>
+
+                                    <div className="form-group form-group-full">
+                                        <label>備註</label>
+                                        <textarea
+                                            value={formData.remark || ''}
+                                            onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                                            rows={2}
+                                            maxLength={30}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-actions">
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseForm}>
+                                        取消
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {editingRecord ? '更新' : '新增'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* PDF 預覽模態框 */}
             <PdfPreview

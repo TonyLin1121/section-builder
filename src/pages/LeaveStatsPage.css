@@ -1,203 +1,249 @@
 /* ============================================
-   休假統計頁面樣式
+   休假統計頁
+   風格：InfoReach Smart FIXGate
    ============================================ */
 
 .leave-stats-page {
-    padding: 1.5rem;
-    max-width: 100%;
-    overflow-x: hidden;
+    min-height: 100vh;
 }
 
-/* 頁面標題區 */
+/* ----- 頁面標題 ----- */
 .leave-stats-page .page-header {
+    background: var(--fg-bg-card);
+    border-bottom: 1px solid var(--fg-border);
+    padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    gap: 16px;
     flex-wrap: wrap;
-    gap: 1rem;
 }
 
 .leave-stats-page .page-header h1 {
     margin: 0;
-    font-size: 1.75rem;
+    font-size: var(--fg-font-size-xl);
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--fg-text-primary);
+    letter-spacing: -0.01em;
 }
 
 .leave-stats-page .header-actions {
     display: flex;
-    gap: 0.75rem;
+    gap: 8px;
     align-items: center;
 }
 
-/* 錯誤提示 */
-.leave-stats-page .error-banner {
-    background: var(--error-light);
-    border: 1px solid var(--error);
-    color: var(--error);
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-/* 主內容區 */
+/* ----- 主內容區 ----- */
 .leave-stats-page .page-content {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 12px;
+    padding: 16px 20px;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
-/* 篩選區塊 */
+/* ----- 錯誤橫幅 ----- */
+.leave-stats-page .error-banner {
+    background: var(--fg-danger-soft);
+    border: 1px solid var(--fg-danger);
+    color: var(--fg-danger);
+    padding: 8px 12px;
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-sm);
+}
+
+/* ----- 篩選區塊 ----- */
 .leave-stats-page .filter-section {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 1.25rem;
-    box-shadow: var(--shadow-sm);
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 10px 14px;
 }
 
 .leave-stats-page .filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 10px;
     align-items: center;
 }
 
-/* 模式切換 */
+/* 模式切換（月/年） */
 .leave-stats-page .mode-toggle {
     display: flex;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    padding: 4px;
-    gap: 4px;
+    background: var(--fg-bg-subtle);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 2px;
+    gap: 2px;
 }
 
 .leave-stats-page .mode-btn {
-    padding: 0.5rem 1rem;
+    padding: 4px 14px;
     border: none;
     background: transparent;
-    border-radius: 6px;
+    border-radius: var(--fg-radius-sm);
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: var(--fg-font-size-sm);
     font-weight: 500;
-    color: var(--btn-text);
-    transition: all 0.2s ease;
+    color: var(--fg-text-secondary);
+    line-height: 1.4;
+    font-family: var(--fg-font-ui);
+    transition: background var(--fg-transition), color var(--fg-transition);
 }
 
 .leave-stats-page .mode-btn:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
+    background: var(--fg-bg-hover);
+    color: var(--fg-text-primary);
 }
 
 .leave-stats-page .mode-btn.active {
-    background: #2563eb;
-    color: var(--btn-text-on-primary);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    background: var(--fg-accent);
+    color: var(--fg-text-on-accent);
 }
 
 /* 篩選群組 */
 .leave-stats-page .filter-group {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 6px;
 }
 
 .leave-stats-page .filter-group label {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+    font-size: var(--fg-font-size-xs);
+    font-weight: 600;
+    color: var(--fg-text-secondary);
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .leave-stats-page .filter-group select {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg-input);
-    color: var(--text-primary);
-    font-size: 0.875rem;
+    padding: 5px 10px;
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    font-family: var(--fg-font-ui);
     min-width: 100px;
+    outline: none;
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
 }
 
-/* 表格區塊 */
+.leave-stats-page .filter-group select:hover {
+    border-color: var(--fg-border-strong);
+}
+
+.leave-stats-page .filter-group select:focus {
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
+}
+
+/* ----- 表格區塊 ----- */
 .leave-stats-page .table-section {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 1.25rem;
-    box-shadow: var(--shadow-sm);
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    overflow: hidden;
 }
 
 .leave-stats-page .table-section h2 {
-    font-size: 1.125rem;
+    font-size: var(--fg-font-size-md);
     font-weight: 600;
-    margin: 0 0 1rem 0;
-    color: var(--text-primary);
+    margin: 0;
+    padding: 8px 14px;
+    color: var(--fg-text-primary);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--fg-bg-thead);
+    border-bottom: 1px solid var(--fg-border-subtle);
+}
+
+.leave-stats-page .table-section h2::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--fg-accent);
+    border-radius: var(--fg-radius-sm);
 }
 
 .leave-stats-page .record-count {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: var(--text-secondary);
+    font-size: var(--fg-font-size-xs);
+    font-weight: 600;
+    color: var(--fg-text-secondary);
+    margin-left: auto;
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
-/* 表格容器 */
+/* ----- 表格容器 ----- */
 .leave-stats-page .table-container {
     overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid var(--border);
 }
 
 /* 統計表格 */
 .leave-stats-page .leave-stats-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: var(--fg-font-size-base);
     min-width: 800px;
 }
 
 .leave-stats-page .leave-stats-table th,
 .leave-stats-page .leave-stats-table td {
-    padding: 0.75rem 0.5rem;
+    padding: 6px 8px;
     text-align: center;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--fg-border-subtle);
+    line-height: 1.3;
 }
 
 .leave-stats-page .leave-stats-table thead th {
-    background: var(--bg-secondary);
+    background: var(--fg-bg-thead);
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     position: sticky;
     top: 0;
     z-index: 10;
+    height: 30px;
 }
 
 /* 可排序表頭 */
 .leave-stats-page .leave-stats-table th.sortable {
     cursor: pointer;
     user-select: none;
-    transition: background 0.15s ease;
+    transition: background var(--fg-transition);
 }
 
 .leave-stats-page .leave-stats-table th.sortable:hover {
-    background: var(--bg-hover);
+    background: var(--fg-bg-hover);
 }
 
 /* 固定欄位 */
 .leave-stats-page .sticky-col {
     position: sticky;
     left: 0;
-    background: var(--bg-card);
+    background: var(--fg-bg-card);
     z-index: 5;
     min-width: 80px;
     text-align: left !important;
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
 }
 
 .leave-stats-page .sticky-col-2 {
     position: sticky;
     left: 80px;
-    background: var(--bg-card);
+    background: var(--fg-bg-card);
     z-index: 5;
     min-width: 100px;
     text-align: left !important;
@@ -206,7 +252,7 @@
 .leave-stats-page .sticky-col-3 {
     position: sticky;
     left: 180px;
-    background: var(--bg-card);
+    background: var(--fg-bg-card);
     z-index: 5;
     min-width: 80px;
     text-align: left !important;
@@ -215,48 +261,53 @@
 .leave-stats-page thead .sticky-col,
 .leave-stats-page thead .sticky-col-2,
 .leave-stats-page thead .sticky-col-3 {
-    background: var(--bg-secondary);
+    background: var(--fg-bg-thead);
     z-index: 15;
 }
 
 /* 假別主表頭 */
 .leave-stats-page .leave-type-header {
-    background: var(--primary-light) !important;
-    color: var(--primary-dark);
-    border-left: 1px solid var(--border);
+    background: var(--fg-accent-soft) !important;
+    color: var(--fg-accent);
+    border-left: 1px solid var(--fg-border);
     text-align: center;
+    font-weight: 700;
 }
 
 /* 子表頭（可休/已休/未休） */
 .leave-stats-page .sub-header th {
-    padding: 0.35rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    background: var(--bg-tertiary);
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--fg-text-secondary);
+    background: var(--fg-bg-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .leave-stats-page .leave-sub-header {
     min-width: 50px;
     text-align: center;
-    font-weight: 500;
-    border-left: 1px solid var(--border-light);
+    font-weight: 600;
+    border-left: 1px solid var(--fg-border-subtle);
 }
 
 .leave-stats-page .leave-sub-header:first-of-type {
-    border-left: 1px solid var(--border);
+    border-left: 1px solid var(--fg-border);
 }
 
 /* 假別數據儲存格 */
 .leave-stats-page .leave-cell {
     min-width: 50px;
     text-align: center;
-    padding: 0.5rem 0.25rem;
-    border-left: 1px solid var(--border-light);
+    padding: 5px 4px;
+    border-left: 1px solid var(--fg-border-subtle);
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
 }
 
 .leave-stats-page tbody tr td.leave-cell:nth-child(4n+4) {
-    border-left: 1px solid var(--border);
+    border-left: 1px solid var(--fg-border);
 }
 
 /* 行間隔色（斑馬紋） */
@@ -264,146 +315,224 @@
     background-color: rgba(0, 0, 0, 0.02);
 }
 
+[data-theme="dark"] .leave-stats-page .leave-stats-table tbody tr.row-alt td {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
 .leave-stats-page .leave-stats-table tbody tr.row-alt .sticky-col,
 .leave-stats-page .leave-stats-table tbody tr.row-alt .sticky-col-2,
 .leave-stats-page .leave-stats-table tbody tr.row-alt .sticky-col-3 {
-    background-color: #fafafa;
+    background-color: var(--fg-bg-subtle);
 }
 
-/* 假別欄位顏色區分 - 7 種柔和色調循環 */
+/* ============================================
+   假別欄位顏色區分（7 種柔和色，FIXGate 偏淡）
+   ============================================ */
 .leave-stats-page .leave-type-0 {
-    background-color: rgba(59, 130, 246, 0.08) !important;
+    background-color: rgba(11, 92, 171, 0.06) !important;
 }
 
-/* 藍 */
 .leave-stats-page .leave-type-1 {
-    background-color: rgba(16, 185, 129, 0.08) !important;
+    background-color: rgba(46, 125, 50, 0.06) !important;
 }
 
-/* 綠 */
 .leave-stats-page .leave-type-2 {
-    background-color: rgba(245, 158, 11, 0.08) !important;
+    background-color: rgba(183, 110, 0, 0.06) !important;
 }
 
-/* 橙 */
 .leave-stats-page .leave-type-3 {
-    background-color: rgba(139, 92, 246, 0.08) !important;
+    background-color: rgba(123, 31, 162, 0.06) !important;
 }
 
-/* 紫 */
 .leave-stats-page .leave-type-4 {
-    background-color: rgba(236, 72, 153, 0.08) !important;
+    background-color: rgba(194, 24, 91, 0.06) !important;
 }
 
-/* 粉 */
 .leave-stats-page .leave-type-5 {
-    background-color: rgba(20, 184, 166, 0.08) !important;
+    background-color: rgba(0, 121, 107, 0.06) !important;
 }
 
-/* 青 */
 .leave-stats-page .leave-type-6 {
-    background-color: rgba(249, 115, 22, 0.08) !important;
+    background-color: rgba(230, 81, 0, 0.06) !important;
 }
-
-/* 橘 */
 
 /* 表頭假別顏色加深 */
 .leave-stats-page th.leave-type-0 {
-    background-color: rgba(59, 130, 246, 0.15) !important;
+    background-color: rgba(11, 92, 171, 0.12) !important;
 }
 
 .leave-stats-page th.leave-type-1 {
-    background-color: rgba(16, 185, 129, 0.15) !important;
+    background-color: rgba(46, 125, 50, 0.12) !important;
 }
 
 .leave-stats-page th.leave-type-2 {
-    background-color: rgba(245, 158, 11, 0.15) !important;
+    background-color: rgba(183, 110, 0, 0.12) !important;
 }
 
 .leave-stats-page th.leave-type-3 {
-    background-color: rgba(139, 92, 246, 0.15) !important;
+    background-color: rgba(123, 31, 162, 0.12) !important;
 }
 
 .leave-stats-page th.leave-type-4 {
-    background-color: rgba(236, 72, 153, 0.15) !important;
+    background-color: rgba(194, 24, 91, 0.12) !important;
 }
 
 .leave-stats-page th.leave-type-5 {
-    background-color: rgba(20, 184, 166, 0.15) !important;
+    background-color: rgba(0, 121, 107, 0.12) !important;
 }
 
 .leave-stats-page th.leave-type-6 {
-    background-color: rgba(249, 115, 22, 0.15) !important;
+    background-color: rgba(230, 81, 0, 0.12) !important;
 }
 
 /* 斑馬紋行的顏色覆蓋 */
 .leave-stats-page tbody tr.row-alt .leave-type-0 {
-    background-color: rgba(59, 130, 246, 0.12) !important;
+    background-color: rgba(11, 92, 171, 0.10) !important;
 }
 
 .leave-stats-page tbody tr.row-alt .leave-type-1 {
-    background-color: rgba(16, 185, 129, 0.12) !important;
+    background-color: rgba(46, 125, 50, 0.10) !important;
 }
 
 .leave-stats-page tbody tr.row-alt .leave-type-2 {
-    background-color: rgba(245, 158, 11, 0.12) !important;
+    background-color: rgba(183, 110, 0, 0.10) !important;
 }
 
 .leave-stats-page tbody tr.row-alt .leave-type-3 {
-    background-color: rgba(139, 92, 246, 0.12) !important;
+    background-color: rgba(123, 31, 162, 0.10) !important;
 }
 
 .leave-stats-page tbody tr.row-alt .leave-type-4 {
-    background-color: rgba(236, 72, 153, 0.12) !important;
+    background-color: rgba(194, 24, 91, 0.10) !important;
 }
 
 .leave-stats-page tbody tr.row-alt .leave-type-5 {
-    background-color: rgba(20, 184, 166, 0.12) !important;
+    background-color: rgba(0, 121, 107, 0.10) !important;
 }
 
 .leave-stats-page tbody tr.row-alt .leave-type-6 {
-    background-color: rgba(249, 115, 22, 0.12) !important;
+    background-color: rgba(230, 81, 0, 0.10) !important;
 }
 
-/* 藍色字型：已全部休完 */
+/* 深色模式：色塊提高一點透明度以便辨識 */
+[data-theme="dark"] .leave-stats-page .leave-type-0 {
+    background-color: rgba(59, 130, 246, 0.10) !important;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-1 {
+    background-color: rgba(74, 222, 128, 0.10) !important;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-2 {
+    background-color: rgba(251, 191, 36, 0.10) !important;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-3 {
+    background-color: rgba(167, 139, 250, 0.10) !important;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-4 {
+    background-color: rgba(244, 114, 182, 0.10) !important;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-5 {
+    background-color: rgba(45, 212, 191, 0.10) !important;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-6 {
+    background-color: rgba(251, 146, 60, 0.10) !important;
+}
+
+[data-theme="dark"] .leave-stats-page th.leave-type-0 {
+    background-color: rgba(59, 130, 246, 0.18) !important;
+}
+
+[data-theme="dark"] .leave-stats-page th.leave-type-1 {
+    background-color: rgba(74, 222, 128, 0.18) !important;
+}
+
+[data-theme="dark"] .leave-stats-page th.leave-type-2 {
+    background-color: rgba(251, 191, 36, 0.18) !important;
+}
+
+[data-theme="dark"] .leave-stats-page th.leave-type-3 {
+    background-color: rgba(167, 139, 250, 0.18) !important;
+}
+
+[data-theme="dark"] .leave-stats-page th.leave-type-4 {
+    background-color: rgba(244, 114, 182, 0.18) !important;
+}
+
+[data-theme="dark"] .leave-stats-page th.leave-type-5 {
+    background-color: rgba(45, 212, 191, 0.18) !important;
+}
+
+[data-theme="dark"] .leave-stats-page th.leave-type-6 {
+    background-color: rgba(251, 146, 60, 0.18) !important;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-type-header {
+    background: rgba(59, 130, 246, 0.18) !important;
+    color: var(--fg-accent-hover);
+}
+
+/* 全部休完：藍色字 */
 .leave-stats-page .leave-complete {
-    color: #1976d2 !important;
-    font-weight: 600;
+    color: var(--fg-accent) !important;
+    font-weight: 700;
+}
+
+[data-theme="dark"] .leave-stats-page .leave-complete,
+[data-theme="dark"] .leave-stats-page .leave-complete .cell-value {
+    color: var(--fg-accent-hover) !important;
 }
 
 /* 表格列懸停 */
 .leave-stats-page .leave-stats-table tbody tr:hover td {
-    background: var(--bg-hover);
+    background: var(--fg-bg-hover);
 }
 
 .leave-stats-page .leave-stats-table tbody tr:hover .sticky-col,
 .leave-stats-page .leave-stats-table tbody tr:hover .sticky-col-2,
 .leave-stats-page .leave-stats-table tbody tr:hover .sticky-col-3 {
-    background: var(--bg-hover);
+    background: var(--fg-bg-hover);
 }
 
-/* 載入與空狀態 */
+/* ----- 載入 / 空狀態 ----- */
 .leave-stats-page .loading,
 .leave-stats-page .empty {
     text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text-secondary);
-    font-size: 1rem;
+    padding: 32px 16px;
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-sm);
 }
 
-/* RWD 響應式 */
-@media (max-width: 768px) {
-    .leave-stats-page {
-        padding: 1rem;
+/* ============================================
+   響應式
+   ============================================ */
+@media (max-width: 1024px) {
+    .leave-stats-page .page-header {
+        padding: 10px 16px;
     }
 
+    .leave-stats-page .page-content {
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 768px) {
     .leave-stats-page .page-header {
+        padding: 10px 12px;
         flex-direction: column;
         align-items: flex-start;
     }
 
     .leave-stats-page .page-header h1 {
-        font-size: 1.5rem;
+        font-size: var(--fg-font-size-lg);
+    }
+
+    .leave-stats-page .page-content {
+        padding: 12px;
     }
 
     .leave-stats-page .filters {
@@ -434,20 +563,4 @@
     .leave-stats-page .sticky-col-3 {
         position: static;
     }
-}
-
-/* 暗色主題 */
-[data-theme="dark"] .leave-stats-page .mode-btn.active {
-    background: var(--primary);
-    color: white;
-}
-
-[data-theme="dark"] .leave-stats-page .leave-type-header {
-    background: rgba(var(--primary-rgb), 0.2) !important;
-    color: var(--primary-light);
-}
-
-[data-theme="dark"] .leave-stats-page .leave-complete,
-[data-theme="dark"] .leave-stats-page .leave-complete .cell-value {
-    color: #64b5f6 !important;
 }

@@ -124,12 +124,45 @@ export function AttendancePage() {
         remark: '',
     });
 
-    // 編輯模式下填充表單
+    // 控制請假表單 Modal 開關
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    // 編輯模式下填充表單，並自動開啟 Modal
     useEffect(() => {
         if (editingRecord) {
             setFormData(editingRecord);
+            setIsFormOpen(true);
         }
     }, [editingRecord]);
+
+    /** 預設空白表單值 */
+    const emptyFormData: AttendanceFormData = {
+        emp_id: '',
+        leave_date: '',
+        leave_type: '',
+        day_period: '0',
+        duration_days: 1,
+        job_logged: '0',
+        mynote_logged: '0',
+        substitute: '',
+        remark: '',
+    };
+
+    /** 開啟新增 Modal（清空編輯狀態與表單） */
+    const handleOpenAdd = useCallback(() => {
+        cancelEdit();
+        setFormData(emptyFormData);
+        setIsFormOpen(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
+
+    /** 關閉 Modal 並清空編輯狀態 */
+    const handleCloseForm = useCallback(() => {
+        setIsFormOpen(false);
+        cancelEdit();
+        setFormData(emptyFormData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -144,18 +177,7 @@ export function AttendancePage() {
             } else {
                 await addRecord(formData);
             }
-            // 重置表單
-            setFormData({
-                emp_id: '',
-                leave_date: '',
-                leave_type: '',
-                day_period: '0',
-                duration_days: 1,
-                job_logged: '0',
-                mynote_logged: '0',
-                substitute: '',
-                remark: '',
-            });
+            handleCloseForm();
         } catch (e) {
             console.error('提交失敗:', e);
         }
@@ -181,6 +203,13 @@ export function AttendancePage() {
                         isGenerating={isGenerating}
                         disabled={records.length === 0}
                     />
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleOpenAdd}
+                    >
+                        ＋ 新增請假記錄
+                    </button>
                 </div>
             </header>
 
@@ -191,106 +220,6 @@ export function AttendancePage() {
             )}
 
             <div className="page-content">
-                {/* 表單 */}
-                <section className="form-section">
-                    <form className="attendance-form" onSubmit={handleSubmit}>
-                        <h2>{editingRecord ? '編輯請假記錄' : '新增請假記錄'}</h2>
-
-                        <div className="form-grid">
-                            <div className="form-group">
-                                <label>員工 *</label>
-                                <EmployeeSelect
-                                    employees={employees}
-                                    value={formData.emp_id}
-                                    onChange={(empId) => setFormData({ ...formData, emp_id: empId })}
-                                    disabled={!!editingRecord}
-                                    required
-                                    placeholder="輸入英文名搜尋或選擇員工"
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>請假日期 *</label>
-                                <input
-                                    type="date"
-                                    value={formData.leave_date?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') || ''}
-                                    onChange={(e) => setFormData({ ...formData, leave_date: e.target.value.replace(/-/g, '') })}
-                                    disabled={!!editingRecord}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>假別 *</label>
-                                <select
-                                    value={formData.leave_type}
-                                    onChange={(e) => setFormData({ ...formData, leave_type: e.target.value })}
-                                    disabled={!!editingRecord}
-                                    required
-                                >
-                                    <option value="">請選擇</option>
-                                    {leaveTypes.map(type => (
-                                        <option key={type.code_subcode} value={type.code_subcode}>
-                                            {type.code_subname}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label>時段</label>
-                                <select
-                                    value={formData.day_period || '0'}
-                                    onChange={(e) => setFormData({ ...formData, day_period: e.target.value })}
-                                >
-                                    {DAY_PERIOD_OPTIONS.map(opt => (
-                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label>請假天數</label>
-                                <input
-                                    type="number"
-                                    step="0.5"
-                                    value={formData.duration_days || ''}
-                                    onChange={(e) => setFormData({ ...formData, duration_days: parseFloat(e.target.value) })}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>代理人</label>
-                                <input
-                                    type="text"
-                                    value={formData.substitute || ''}
-                                    onChange={(e) => setFormData({ ...formData, substitute: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="form-group form-group-full">
-                                <label>備註</label>
-                                <textarea
-                                    value={formData.remark || ''}
-                                    onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
-                                    rows={2}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-actions">
-                            {editingRecord && (
-                                <button type="button" className="btn btn-secondary" onClick={cancelEdit}>
-                                    取消
-                                </button>
-                            )}
-                            <button type="submit" className="btn btn-primary">
-                                {editingRecord ? '更新' : '新增'}
-                            </button>
-                        </div>
-                    </form>
-                </section>
-
                 {/* 篩選 */}
                 <section className="filter-section">
                     <div className="filters">
@@ -422,6 +351,129 @@ export function AttendancePage() {
                     )}
                 </section>
             </div>
+
+            {/* 請假表單 Modal（新增/編輯） */}
+            {isFormOpen && (
+                <div
+                    className="atd-form-modal-overlay"
+                    onClick={handleCloseForm}
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div
+                        className="atd-form-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="atd-form-modal-header">
+                            <h2 className="atd-form-modal-title">
+                                {editingRecord ? '編輯請假記錄' : '新增請假記錄'}
+                            </h2>
+                            <button
+                                type="button"
+                                className="atd-form-modal-close"
+                                onClick={handleCloseForm}
+                                aria-label="關閉"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="atd-form-modal-body">
+                            <form className="attendance-form" onSubmit={handleSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>員工 *</label>
+                                        <EmployeeSelect
+                                            employees={employees}
+                                            value={formData.emp_id}
+                                            onChange={(empId) => setFormData({ ...formData, emp_id: empId })}
+                                            disabled={!!editingRecord}
+                                            required
+                                            placeholder="輸入英文名搜尋或選擇員工"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>請假日期 *</label>
+                                        <input
+                                            type="date"
+                                            value={formData.leave_date?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') || ''}
+                                            onChange={(e) => setFormData({ ...formData, leave_date: e.target.value.replace(/-/g, '') })}
+                                            disabled={!!editingRecord}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>假別 *</label>
+                                        <select
+                                            value={formData.leave_type}
+                                            onChange={(e) => setFormData({ ...formData, leave_type: e.target.value })}
+                                            disabled={!!editingRecord}
+                                            required
+                                        >
+                                            <option value="">請選擇</option>
+                                            {leaveTypes.map(type => (
+                                                <option key={type.code_subcode} value={type.code_subcode}>
+                                                    {type.code_subname}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>時段</label>
+                                        <select
+                                            value={formData.day_period || '0'}
+                                            onChange={(e) => setFormData({ ...formData, day_period: e.target.value })}
+                                        >
+                                            {DAY_PERIOD_OPTIONS.map(opt => (
+                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>請假天數</label>
+                                        <input
+                                            type="number"
+                                            step="0.5"
+                                            value={formData.duration_days || ''}
+                                            onChange={(e) => setFormData({ ...formData, duration_days: parseFloat(e.target.value) })}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>代理人</label>
+                                        <input
+                                            type="text"
+                                            value={formData.substitute || ''}
+                                            onChange={(e) => setFormData({ ...formData, substitute: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="form-group form-group-full">
+                                        <label>備註</label>
+                                        <textarea
+                                            value={formData.remark || ''}
+                                            onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                                            rows={2}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-actions">
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseForm}>
+                                        取消
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {editingRecord ? '更新' : '新增'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* PDF 預覽模態框 */}
             <PdfPreview

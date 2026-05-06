@@ -162,7 +162,10 @@ export function AnnualLeavePage() {
         }
     }, [leaveTypes, formData.leave_type, editingRecord]);
 
-    // 編輯模式下填充表單
+    // 控制表單 Modal 開關
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    // 編輯模式下填充表單，並自動開啟 Modal
     useEffect(() => {
         if (editingRecord) {
             setFormData({
@@ -173,8 +176,39 @@ export function AnnualLeavePage() {
                 remark: editingRecord.remark || '',
             });
             setFormErrors({});
+            setIsFormOpen(true);
         }
     }, [editingRecord]);
+
+    /** 取得空白表單預設值（嘗試將假別預設為「特休」） */
+    const getEmptyFormData = useCallback((): AnnualLeaveFormData => {
+        const annualLeave = leaveTypes.find(lt =>
+            lt.code_subname?.trim() === '特休' || lt.code_content?.includes('特休')
+        );
+        return {
+            emp_id: '',
+            year: String(currentYear),
+            leave_type: annualLeave?.code_subcode || '',
+            days_of_leave: 0,
+            remark: '',
+        };
+    }, [leaveTypes, currentYear]);
+
+    /** 開啟新增 Modal */
+    const handleOpenAdd = useCallback(() => {
+        cancelEdit();
+        setFormData(getEmptyFormData());
+        setFormErrors({});
+        setIsFormOpen(true);
+    }, [cancelEdit, getEmptyFormData]);
+
+    /** 關閉 Modal 並清空編輯狀態 */
+    const handleCloseForm = useCallback(() => {
+        setIsFormOpen(false);
+        cancelEdit();
+        setFormData(getEmptyFormData());
+        setFormErrors({});
+    }, [cancelEdit, getEmptyFormData]);
 
     /**
      * 表單驗證
@@ -225,18 +259,7 @@ export function AnnualLeavePage() {
             } else {
                 await addRecord(formData);
             }
-            // 重置表單
-            const annualLeave = leaveTypes.find(lt =>
-                lt.code_subname?.trim() === '特休' || lt.code_content?.includes('特休')
-            );
-            setFormData({
-                emp_id: '',
-                year: String(currentYear),
-                leave_type: annualLeave?.code_subcode || '',
-                days_of_leave: 0,
-                remark: '',
-            });
-            setFormErrors({});
+            handleCloseForm();
         } catch (e) {
             console.error('提交失敗:', e);
         }
@@ -275,6 +298,13 @@ export function AnnualLeavePage() {
                         isGenerating={isGenerating}
                         disabled={records.length === 0}
                     />
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleOpenAdd}
+                    >
+                        ＋ 新增年度休假
+                    </button>
                 </div>
             </header>
 
@@ -285,103 +315,6 @@ export function AnnualLeavePage() {
             )}
 
             <div className="page-content">
-                {/* 表單 */}
-                <section className="form-section">
-                    <form className="annual-leave-form" onSubmit={handleSubmit}>
-                        <h2>{editingRecord ? '編輯年度休假' : '新增年度休假'}</h2>
-
-                        <div className="form-grid">
-                            <div className="form-group">
-                                <label>員工 *</label>
-                                <EmployeeSelect
-                                    employees={employees}
-                                    value={formData.emp_id}
-                                    onChange={(empId) => setFormData({ ...formData, emp_id: empId })}
-                                    disabled={!!editingRecord}
-                                    required
-                                    placeholder="輸入英文名搜尋或選擇員工"
-                                />
-                                {formErrors.emp_id && (
-                                    <span className="form-error">{formErrors.emp_id}</span>
-                                )}
-                            </div>
-
-                            <div className="form-group">
-                                <label>給假年度 *</label>
-                                <select
-                                    value={formData.year}
-                                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                                    disabled={!!editingRecord}
-                                    required
-                                >
-                                    {yearOptions.map(year => (
-                                        <option key={year} value={year}>{year}</option>
-                                    ))}
-                                </select>
-                                {formErrors.year && (
-                                    <span className="form-error">{formErrors.year}</span>
-                                )}
-                            </div>
-
-                            <div className="form-group">
-                                <label>假別 *</label>
-                                <select
-                                    value={formData.leave_type}
-                                    onChange={(e) => setFormData({ ...formData, leave_type: e.target.value })}
-                                    disabled={!!editingRecord}
-                                    required
-                                >
-                                    <option value="">請選擇</option>
-                                    {leaveTypes.map(type => (
-                                        <option key={type.code_subcode} value={type.code_subcode}>
-                                            {type.code_subname}
-                                        </option>
-                                    ))}
-                                </select>
-                                {formErrors.leave_type && (
-                                    <span className="form-error">{formErrors.leave_type}</span>
-                                )}
-                            </div>
-
-                            <div className="form-group">
-                                <label>可休天數 *</label>
-                                <input
-                                    type="number"
-                                    step="0.5"
-                                    min="0"
-                                    max="365"
-                                    value={formData.days_of_leave || ''}
-                                    onChange={handleDaysChange}
-                                    required
-                                />
-                                {formErrors.days_of_leave && (
-                                    <span className="form-error">{formErrors.days_of_leave}</span>
-                                )}
-                            </div>
-
-                            <div className="form-group form-group-full">
-                                <label>備註</label>
-                                <textarea
-                                    value={formData.remark || ''}
-                                    onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
-                                    rows={2}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-actions">
-                            {editingRecord && (
-                                <button type="button" className="btn btn-secondary" onClick={cancelEdit}>
-                                    取消
-                                </button>
-                            )}
-                            <button type="submit" className="btn btn-primary">
-                                {editingRecord ? '更新' : '新增'}
-                            </button>
-                        </div>
-                    </form>
-                </section>
-
                 {/* 篩選 */}
                 <section className="filter-section">
                     <div className="filters">
@@ -506,6 +439,126 @@ export function AnnualLeavePage() {
                     )}
                 </section>
             </div>
+
+            {/* 年度休假表單 Modal（新增/編輯） */}
+            {isFormOpen && (
+                <div
+                    className="aly-form-modal-overlay"
+                    onClick={handleCloseForm}
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div
+                        className="aly-form-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="aly-form-modal-header">
+                            <h2 className="aly-form-modal-title">
+                                {editingRecord ? '編輯年度休假' : '新增年度休假'}
+                            </h2>
+                            <button
+                                type="button"
+                                className="aly-form-modal-close"
+                                onClick={handleCloseForm}
+                                aria-label="關閉"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="aly-form-modal-body">
+                            <form className="annual-leave-form" onSubmit={handleSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>員工 *</label>
+                                        <EmployeeSelect
+                                            employees={employees}
+                                            value={formData.emp_id}
+                                            onChange={(empId) => setFormData({ ...formData, emp_id: empId })}
+                                            disabled={!!editingRecord}
+                                            required
+                                            placeholder="輸入英文名搜尋或選擇員工"
+                                        />
+                                        {formErrors.emp_id && (
+                                            <span className="form-error">{formErrors.emp_id}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>給假年度 *</label>
+                                        <select
+                                            value={formData.year}
+                                            onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                                            disabled={!!editingRecord}
+                                            required
+                                        >
+                                            {yearOptions.map(year => (
+                                                <option key={year} value={year}>{year}</option>
+                                            ))}
+                                        </select>
+                                        {formErrors.year && (
+                                            <span className="form-error">{formErrors.year}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>假別 *</label>
+                                        <select
+                                            value={formData.leave_type}
+                                            onChange={(e) => setFormData({ ...formData, leave_type: e.target.value })}
+                                            disabled={!!editingRecord}
+                                            required
+                                        >
+                                            <option value="">請選擇</option>
+                                            {leaveTypes.map(type => (
+                                                <option key={type.code_subcode} value={type.code_subcode}>
+                                                    {type.code_subname}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {formErrors.leave_type && (
+                                            <span className="form-error">{formErrors.leave_type}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>可休天數 *</label>
+                                        <input
+                                            type="number"
+                                            step="0.5"
+                                            min="0"
+                                            max="365"
+                                            value={formData.days_of_leave || ''}
+                                            onChange={handleDaysChange}
+                                            required
+                                        />
+                                        {formErrors.days_of_leave && (
+                                            <span className="form-error">{formErrors.days_of_leave}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="form-group form-group-full">
+                                        <label>備註</label>
+                                        <textarea
+                                            value={formData.remark || ''}
+                                            onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+                                            rows={2}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-actions">
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseForm}>
+                                        取消
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {editingRecord ? '更新' : '新增'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* PDF 預覽模態框 */}
             <PdfPreview

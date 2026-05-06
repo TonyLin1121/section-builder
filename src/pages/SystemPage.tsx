@@ -108,7 +108,10 @@ function UsersTab() {
     const [resetPassword, setResetPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    // 編輯模式下填充表單
+    // Modal 開關
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    // 編輯模式下填充表單，並自動開啟 Modal
     useEffect(() => {
         if (editingUser) {
             setFormData({
@@ -119,6 +122,7 @@ function UsersTab() {
                 role_ids: editingUser.roles,
             });
             setResetPassword('');
+            setIsFormOpen(true);
         }
     }, [editingUser]);
 
@@ -126,6 +130,32 @@ function UsersTab() {
     useEffect(() => {
         searchAvailableMembers('');
     }, [searchAvailableMembers]);
+
+    const handleOpenAdd = () => {
+        cancelEdit();
+        setFormData({
+            user_id: '',
+            password: '',
+            is_active: true,
+            expire_date: '',
+            role_ids: [],
+        });
+        setResetPassword('');
+        setIsFormOpen(true);
+    };
+
+    const handleCloseForm = () => {
+        setIsFormOpen(false);
+        cancelEdit();
+        setFormData({
+            user_id: '',
+            password: '',
+            is_active: true,
+            expire_date: '',
+            role_ids: [],
+        });
+        setResetPassword('');
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -143,23 +173,11 @@ function UsersTab() {
             } else {
                 await addUser(formData);
             }
-            resetForm();
+            handleCloseForm();
         } catch (e) {
             console.error('提交失敗:', e);
             alert(e instanceof Error ? e.message : '操作失敗');
         }
-    };
-
-    const resetForm = () => {
-        setFormData({
-            user_id: '',
-            password: '',
-            is_active: true,
-            expire_date: '',
-            role_ids: [],
-        });
-        setResetPassword('');
-        cancelEdit();
     };
 
     const handleDelete = async (userId: string) => {
@@ -189,138 +207,8 @@ function UsersTab() {
                 </div>
             )}
 
-            {/* 表單 */}
-            <section className="form-section">
-                <form className="system-form" onSubmit={handleSubmit}>
-                    <h2>{editingUser ? '編輯使用者' : '新增使用者'}</h2>
-
-                    <div className="form-grid">
-                        {/* 欄位 1：使用者帳號 */}
-                        <div className="form-group">
-                            <label>使用者帳號 *</label>
-                            {editingUser ? (
-                                <input type="text" value={editingUser.user_id} disabled />
-                            ) : (
-                                <div className="user-id-with-picker">
-                                    <input
-                                        type="text"
-                                        placeholder=""
-                                        value={formData.user_id}
-                                        onChange={(e) => setFormData({ ...formData, user_id: e.target.value })}
-                                        required
-                                    />
-                                    <div className="employee-picker">
-                                        <button
-                                            type="button"
-                                            className="picker-btn"
-                                            title="選擇員工"
-                                        >
-                                            👤
-                                        </button>
-                                        <div className="picker-dropdown">
-                                            {availableMembers.length === 0 ? (
-                                                <div className="picker-empty">無可選擇的員工</div>
-                                            ) : (
-                                                availableMembers.map(m => (
-                                                    <button
-                                                        key={m.emp_id}
-                                                        type="button"
-                                                        className="picker-item"
-                                                        onClick={() => setFormData({ ...formData, user_id: m.emp_id })}
-                                                    >
-                                                        <span className="picker-id">{m.emp_id}</span>
-                                                        <span className="picker-name">{m.chinese_name || '(無姓名)'}</span>
-                                                    </button>
-                                                ))
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* 欄位 2：密碼 */}
-                        <div className="form-group">
-                            <label>{editingUser ? '重設密碼' : '初始密碼 *'}</label>
-                            <div className="password-input-wrapper">
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    value={editingUser ? resetPassword : formData.password}
-                                    onChange={(e) => editingUser
-                                        ? setResetPassword(e.target.value)
-                                        : setFormData({ ...formData, password: e.target.value })
-                                    }
-                                    required={!editingUser}
-                                    placeholder={editingUser ? '留空則不變更' : ''}
-                                />
-                                <button
-                                    type="button"
-                                    className="password-toggle-btn"
-                                    onMouseDown={() => setShowPassword(true)}
-                                    onMouseUp={() => setShowPassword(false)}
-                                    onMouseLeave={() => setShowPassword(false)}
-                                    title={showPassword ? '隱藏密碼' : '顯示密碼'}
-                                >
-                                    {showPassword ? '👁️' : '👁️‍🗨️'}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* 欄位 3：帳號狀態 */}
-                        <div className="form-group">
-                            <label>帳號狀態</label>
-                            <select
-                                value={formData.is_active ? '1' : '0'}
-                                onChange={(e) => setFormData({ ...formData, is_active: e.target.value === '1' })}
-                            >
-                                <option value="1">啟用</option>
-                                <option value="0">停用</option>
-                            </select>
-                        </div>
-
-                        {/* 欄位 4：到期日 */}
-                        <div className="form-group">
-                            <label>帳號到期日</label>
-                            <input
-                                type="date"
-                                value={formData.expire_date}
-                                onChange={(e) => setFormData({ ...formData, expire_date: e.target.value })}
-                            />
-                        </div>
-
-                        {/* 欄位 5：指派角色 */}
-                        <div className="form-group form-group-full">
-                            <label>指派角色</label>
-                            <div className="checkbox-group">
-                                {roles.map(role => (
-                                    <label key={role.role_id} className="checkbox-item">
-                                        <input
-                                            type="checkbox"
-                                            checked={(formData.role_ids || []).includes(role.role_id)}
-                                            onChange={(e) => handleRoleChange(role.role_id, e.target.checked)}
-                                        />
-                                        <span>{role.role_name}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-actions">
-                        {editingUser && (
-                            <button type="button" className="btn btn-secondary" onClick={resetForm}>
-                                取消
-                            </button>
-                        )}
-                        <button type="submit" className="btn btn-primary">
-                            {editingUser ? '更新' : '新增'}
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            {/* 搜尋 */}
-            <section className="filter-section">
+            {/* 搜尋 + 新增 */}
+            <section className="filter-section" style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
                 <input
                     type="text"
                     className="search-input"
@@ -328,7 +216,163 @@ function UsersTab() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                <button type="button" className="btn btn-primary" onClick={handleOpenAdd}>
+                    ＋ 新增使用者
+                </button>
             </section>
+
+            {/* 使用者表單 Modal（新增/編輯） */}
+            {isFormOpen && (
+                <div
+                    className="sys-form-modal-overlay"
+                    onClick={handleCloseForm}
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div
+                        className="sys-form-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="sys-form-modal-header">
+                            <h2 className="sys-form-modal-title">
+                                {editingUser ? '編輯使用者' : '新增使用者'}
+                            </h2>
+                            <button
+                                type="button"
+                                className="sys-form-modal-close"
+                                onClick={handleCloseForm}
+                                aria-label="關閉"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="sys-form-modal-body">
+                            <form className="system-form" onSubmit={handleSubmit}>
+                                <div className="form-grid">
+                                    {/* 欄位 1：使用者帳號 */}
+                                    <div className="form-group">
+                                        <label>使用者帳號 *</label>
+                                        {editingUser ? (
+                                            <input type="text" value={editingUser.user_id} disabled />
+                                        ) : (
+                                            <div className="user-id-with-picker">
+                                                <input
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={formData.user_id}
+                                                    onChange={(e) => setFormData({ ...formData, user_id: e.target.value })}
+                                                    required
+                                                />
+                                                <div className="employee-picker">
+                                                    <button
+                                                        type="button"
+                                                        className="picker-btn"
+                                                        title="選擇員工"
+                                                    >
+                                                        👤
+                                                    </button>
+                                                    <div className="picker-dropdown">
+                                                        {availableMembers.length === 0 ? (
+                                                            <div className="picker-empty">無可選擇的員工</div>
+                                                        ) : (
+                                                            availableMembers.map(m => (
+                                                                <button
+                                                                    key={m.emp_id}
+                                                                    type="button"
+                                                                    className="picker-item"
+                                                                    onClick={() => setFormData({ ...formData, user_id: m.emp_id })}
+                                                                >
+                                                                    <span className="picker-id">{m.emp_id}</span>
+                                                                    <span className="picker-name">{m.chinese_name || '(無姓名)'}</span>
+                                                                </button>
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* 欄位 2：密碼 */}
+                                    <div className="form-group">
+                                        <label>{editingUser ? '重設密碼' : '初始密碼 *'}</label>
+                                        <div className="password-input-wrapper">
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                value={editingUser ? resetPassword : formData.password}
+                                                onChange={(e) => editingUser
+                                                    ? setResetPassword(e.target.value)
+                                                    : setFormData({ ...formData, password: e.target.value })
+                                                }
+                                                required={!editingUser}
+                                                placeholder={editingUser ? '留空則不變更' : ''}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="password-toggle-btn"
+                                                onMouseDown={() => setShowPassword(true)}
+                                                onMouseUp={() => setShowPassword(false)}
+                                                onMouseLeave={() => setShowPassword(false)}
+                                                title={showPassword ? '隱藏密碼' : '顯示密碼'}
+                                            >
+                                                {showPassword ? '👁️' : '👁️‍🗨️'}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* 欄位 3：帳號狀態 */}
+                                    <div className="form-group">
+                                        <label>帳號狀態</label>
+                                        <select
+                                            value={formData.is_active ? '1' : '0'}
+                                            onChange={(e) => setFormData({ ...formData, is_active: e.target.value === '1' })}
+                                        >
+                                            <option value="1">啟用</option>
+                                            <option value="0">停用</option>
+                                        </select>
+                                    </div>
+
+                                    {/* 欄位 4：到期日 */}
+                                    <div className="form-group">
+                                        <label>帳號到期日</label>
+                                        <input
+                                            type="date"
+                                            value={formData.expire_date}
+                                            onChange={(e) => setFormData({ ...formData, expire_date: e.target.value })}
+                                        />
+                                    </div>
+
+                                    {/* 欄位 5：指派角色 */}
+                                    <div className="form-group form-group-full">
+                                        <label>指派角色</label>
+                                        <div className="checkbox-group">
+                                            {roles.map(role => (
+                                                <label key={role.role_id} className="checkbox-item">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={(formData.role_ids || []).includes(role.role_id)}
+                                                        onChange={(e) => handleRoleChange(role.role_id, e.target.checked)}
+                                                    />
+                                                    <span>{role.role_name}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form-actions">
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseForm}>
+                                        取消
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {editingUser ? '更新' : '新增'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* 列表 */}
             <section className="table-section">
@@ -431,6 +475,9 @@ function RolesTab() {
     });
 
     // 編輯模式下填充表單
+    // Modal 開關
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
     useEffect(() => {
         if (editingRole) {
             setFormData({
@@ -440,8 +487,33 @@ function RolesTab() {
                 is_active: editingRole.is_active,
                 function_ids: editingRole.functions,
             });
+            setIsFormOpen(true);
         }
     }, [editingRole]);
+
+    const handleOpenAdd = () => {
+        cancelEdit();
+        setFormData({
+            role_id: '',
+            role_name: '',
+            description: '',
+            is_active: true,
+            function_ids: [],
+        });
+        setIsFormOpen(true);
+    };
+
+    const handleCloseForm = () => {
+        setIsFormOpen(false);
+        cancelEdit();
+        setFormData({
+            role_id: '',
+            role_name: '',
+            description: '',
+            is_active: true,
+            function_ids: [],
+        });
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -451,22 +523,11 @@ function RolesTab() {
             } else {
                 await addRole(formData);
             }
-            resetForm();
+            handleCloseForm();
         } catch (e) {
             console.error('提交失敗:', e);
             alert(e instanceof Error ? e.message : '操作失敗');
         }
-    };
-
-    const resetForm = () => {
-        setFormData({
-            role_id: '',
-            role_name: '',
-            description: '',
-            is_active: true,
-            function_ids: [],
-        });
-        cancelEdit();
     };
 
     const handleDelete = async (roleId: string) => {
@@ -500,122 +561,152 @@ function RolesTab() {
                 </div>
             )}
 
-            {/* 表單 */}
-            <section className="form-section">
-                <form className="system-form" onSubmit={handleSubmit}>
-                    <h2>{editingRole ? '編輯角色' : '新增角色'}</h2>
+            {/* 工具列：新增按鈕 */}
+            <section className="filter-section" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button type="button" className="btn btn-primary" onClick={handleOpenAdd}>
+                    ＋ 新增角色
+                </button>
+            </section>
 
-                    <div className="form-grid">
-                        <div className="form-group">
-                            <label>角色代碼 *</label>
-                            <input
-                                type="text"
-                                value={formData.role_id}
-                                onChange={(e) => setFormData({ ...formData, role_id: e.target.value.toUpperCase() })}
-                                disabled={!!editingRole}
-                                maxLength={20}
-                                placeholder="例: MANAGER"
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label>角色名稱 *</label>
-                            <input
-                                type="text"
-                                value={formData.role_name}
-                                onChange={(e) => setFormData({ ...formData, role_name: e.target.value })}
-                                maxLength={50}
-                                placeholder="例: 經理"
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label>狀態</label>
-                            <select
-                                value={formData.is_active ? '1' : '0'}
-                                onChange={(e) => setFormData({ ...formData, is_active: e.target.value === '1' })}
+            {/* 角色表單 Modal（新增/編輯） */}
+            {isFormOpen && (
+                <div
+                    className="sys-form-modal-overlay"
+                    onClick={handleCloseForm}
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div
+                        className="sys-form-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="sys-form-modal-header">
+                            <h2 className="sys-form-modal-title">
+                                {editingRole ? '編輯角色' : '新增角色'}
+                            </h2>
+                            <button
+                                type="button"
+                                className="sys-form-modal-close"
+                                onClick={handleCloseForm}
+                                aria-label="關閉"
                             >
-                                <option value="1">啟用</option>
-                                <option value="0">停用</option>
-                            </select>
+                                ×
+                            </button>
                         </div>
+                        <div className="sys-form-modal-body">
+                            <form className="system-form" onSubmit={handleSubmit}>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>角色代碼 *</label>
+                                        <input
+                                            type="text"
+                                            value={formData.role_id}
+                                            onChange={(e) => setFormData({ ...formData, role_id: e.target.value.toUpperCase() })}
+                                            disabled={!!editingRole}
+                                            maxLength={20}
+                                            placeholder="例: MANAGER"
+                                            required
+                                        />
+                                    </div>
 
-                        <div className="form-group form-group-full">
-                            <label>說明</label>
-                            <textarea
-                                value={formData.description}
-                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                rows={2}
-                                placeholder="角色說明"
-                            />
-                        </div>
+                                    <div className="form-group">
+                                        <label>角色名稱 *</label>
+                                        <input
+                                            type="text"
+                                            value={formData.role_name}
+                                            onChange={(e) => setFormData({ ...formData, role_name: e.target.value })}
+                                            maxLength={50}
+                                            placeholder="例: 經理"
+                                            required
+                                        />
+                                    </div>
 
-                        {functionGroups.length > 0 && (
-                            <div className="form-group form-group-full">
-                                <label>功能權限</label>
-                                <div className="permission-tree">
-                                    {functionGroups.map(group => (
-                                        <div key={group.menu_id} className="permission-group">
-                                            <div className="permission-group-header">
-                                                <span className="permission-group-icon">{group.icon || '📁'}</span>
-                                                <span className="permission-group-name">{group.menu_name}</span>
-                                                <button
-                                                    type="button"
-                                                    className="btn-select-all"
-                                                    onClick={() => {
-                                                        const allFuncIds = group.functions.map(f => f.function_id);
-                                                        const currentIds = formData.function_ids || [];
-                                                        const allSelected = allFuncIds.every(id => currentIds.includes(id));
-                                                        if (allSelected) {
-                                                            setFormData({
-                                                                ...formData,
-                                                                function_ids: currentIds.filter(id => !allFuncIds.includes(id))
-                                                            });
-                                                        } else {
-                                                            const newIds = [...new Set([...currentIds, ...allFuncIds])];
-                                                            setFormData({ ...formData, function_ids: newIds });
-                                                        }
-                                                    }}
-                                                >
-                                                    {group.functions.every(f =>
-                                                        (formData.function_ids || []).includes(f.function_id)
-                                                    ) ? '取消全選' : '全選'}
-                                                </button>
-                                            </div>
-                                            <div className="permission-group-items">
-                                                {group.functions.map(func => (
-                                                    <label key={func.function_id} className="permission-item">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={(formData.function_ids || []).includes(func.function_id)}
-                                                            onChange={(e) => handleFunctionChange(func.function_id, e.target.checked)}
-                                                        />
-                                                        <span className="permission-item-name">{func.function_name}</span>
-                                                        <code className="permission-item-type">{func.function_type}</code>
-                                                    </label>
+                                    <div className="form-group">
+                                        <label>狀態</label>
+                                        <select
+                                            value={formData.is_active ? '1' : '0'}
+                                            onChange={(e) => setFormData({ ...formData, is_active: e.target.value === '1' })}
+                                        >
+                                            <option value="1">啟用</option>
+                                            <option value="0">停用</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group form-group-full">
+                                        <label>說明</label>
+                                        <textarea
+                                            value={formData.description}
+                                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                            rows={2}
+                                            placeholder="角色說明"
+                                        />
+                                    </div>
+
+                                    {functionGroups.length > 0 && (
+                                        <div className="form-group form-group-full">
+                                            <label>功能權限</label>
+                                            <div className="permission-tree">
+                                                {functionGroups.map(group => (
+                                                    <div key={group.menu_id} className="permission-group">
+                                                        <div className="permission-group-header">
+                                                            <span className="permission-group-icon">{group.icon || '📁'}</span>
+                                                            <span className="permission-group-name">{group.menu_name}</span>
+                                                            <button
+                                                                type="button"
+                                                                className="btn-select-all"
+                                                                onClick={() => {
+                                                                    const allFuncIds = group.functions.map(f => f.function_id);
+                                                                    const currentIds = formData.function_ids || [];
+                                                                    const allSelected = allFuncIds.every(id => currentIds.includes(id));
+                                                                    if (allSelected) {
+                                                                        setFormData({
+                                                                            ...formData,
+                                                                            function_ids: currentIds.filter(id => !allFuncIds.includes(id))
+                                                                        });
+                                                                    } else {
+                                                                        const newIds = [...new Set([...currentIds, ...allFuncIds])];
+                                                                        setFormData({ ...formData, function_ids: newIds });
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {group.functions.every(f =>
+                                                                    (formData.function_ids || []).includes(f.function_id)
+                                                                ) ? '取消全選' : '全選'}
+                                                            </button>
+                                                        </div>
+                                                        <div className="permission-group-items">
+                                                            {group.functions.map(func => (
+                                                                <label key={func.function_id} className="permission-item">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={(formData.function_ids || []).includes(func.function_id)}
+                                                                        onChange={(e) => handleFunctionChange(func.function_id, e.target.checked)}
+                                                                    />
+                                                                    <span className="permission-item-name">{func.function_name}</span>
+                                                                    <code className="permission-item-type">{func.function_type}</code>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
-                            </div>
-                        )}
-                    </div>
 
-                    <div className="form-actions">
-                        {editingRole && (
-                            <button type="button" className="btn btn-secondary" onClick={resetForm}>
-                                取消
-                            </button>
-                        )}
-                        <button type="submit" className="btn btn-primary">
-                            {editingRole ? '更新' : '新增'}
-                        </button>
+                                <div className="form-actions">
+                                    <button type="button" className="btn btn-secondary" onClick={handleCloseForm}>
+                                        取消
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {editingRole ? '更新' : '新增'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </form>
-            </section>
+                </div>
+            )}
 
             {/* 列表 */}
             <section className="table-section">

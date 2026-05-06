@@ -2,7 +2,7 @@
  * 公告設定頁面
  * NOTE: 提供管理員管理公告的介面
  */
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAnnouncements } from '../hooks/useAnnouncements';
 import {
     uploadAttachment,
@@ -42,8 +42,11 @@ export function AnnouncementPage() {
         refresh,
     } = useAnnouncements();
 
-    // 表單狀態
-    const [formData, setFormData] = useState<AnnouncementFormData>({
+    // Modal 開關
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    /** 預設空白表單值 */
+    const emptyFormData: AnnouncementFormData = {
         title: '',
         content: '',
         target_type: 'all',
@@ -54,7 +57,33 @@ export function AnnouncementPage() {
         publish_date: '',
         expire_date: '',
         targets: [],
-    });
+    };
+
+    // 表單狀態
+    const [formData, setFormData] = useState<AnnouncementFormData>(emptyFormData);
+
+    // 編輯資料變化時同步開啟 Modal
+    useEffect(() => {
+        if (editingAnnouncement) {
+            setIsFormOpen(true);
+        }
+    }, [editingAnnouncement]);
+
+    /** 開啟新增 Modal */
+    const handleOpenAdd = useCallback(() => {
+        cancelEdit();
+        setFormData(emptyFormData);
+        setIsFormOpen(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
+
+    /** 關閉 Modal */
+    const handleCloseForm = useCallback(() => {
+        setIsFormOpen(false);
+        cancelEdit();
+        setFormData(emptyFormData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelEdit]);
 
     // 目標對象輸入
     const [targetInput, setTargetInput] = useState({ type: 'role' as 'role' | 'division' | 'user', value: '' });
@@ -130,29 +159,10 @@ export function AnnouncementPage() {
             } else {
                 await addAnnouncement(formData);
             }
-            resetForm();
+            handleCloseForm();
         } catch (err) {
             console.error('儲存失敗:', err);
         }
-    };
-
-    /**
-     * 重設表單
-     */
-    const resetForm = () => {
-        setFormData({
-            title: '',
-            content: '',
-            target_type: 'all',
-            category_id: '',
-            is_pinned: false,
-            is_active: true,
-            push_notification: false,
-            publish_date: '',
-            expire_date: '',
-            targets: [],
-        });
-        cancelEdit();
     };
 
     /**
@@ -216,6 +226,13 @@ export function AnnouncementPage() {
                     <button className="btn btn-secondary" onClick={refresh} disabled={isLoading}>
                         🔄 重新載入
                     </button>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleOpenAdd}
+                    >
+                        ＋ 新增公告
+                    </button>
                 </div>
             </header>
 
@@ -229,11 +246,32 @@ export function AnnouncementPage() {
 
             <main className="page-main">
                 <div className="container">
-                    {/* 公告表單 */}
-                    <section className="section card">
-                        <h2 className="section-title">
-                            {editingAnnouncement ? '✏️ 編輯公告' : '➕ 新增公告'}
-                        </h2>
+                    {/* 公告表單 Modal（新增/編輯） */}
+                    {isFormOpen && (
+                    <div
+                        className="ann-form-modal-overlay"
+                        onClick={handleCloseForm}
+                        role="dialog"
+                        aria-modal="true"
+                    >
+                    <div
+                        className="ann-form-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="ann-form-modal-header">
+                            <h2 className="ann-form-modal-title">
+                                {editingAnnouncement ? '編輯公告' : '新增公告'}
+                            </h2>
+                            <button
+                                type="button"
+                                className="ann-form-modal-close"
+                                onClick={handleCloseForm}
+                                aria-label="關閉"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="ann-form-modal-body">
                         <form onSubmit={handleSubmit} className="announcement-form">
                             <div className="form-row">
                                 <div className="form-group">
@@ -424,17 +462,18 @@ export function AnnouncementPage() {
                             )}
 
                             <div className="form-actions">
-                                <button type="submit" className="btn btn-primary">
-                                    {editingAnnouncement ? '💾 儲存變更' : '➕ 新增公告'}
+                                <button type="button" className="btn btn-secondary" onClick={handleCloseForm}>
+                                    取消
                                 </button>
-                                {editingAnnouncement && (
-                                    <button type="button" className="btn btn-secondary" onClick={resetForm}>
-                                        取消
-                                    </button>
-                                )}
+                                <button type="submit" className="btn btn-primary">
+                                    {editingAnnouncement ? '儲存變更' : '新增公告'}
+                                </button>
                             </div>
                         </form>
-                    </section>
+                        </div>
+                    </div>
+                    </div>
+                    )}
 
                     {/* 篩選區 */}
                     <section className="section filter-section">

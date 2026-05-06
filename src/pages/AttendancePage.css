@@ -1,12 +1,134 @@
+/* ============================================
+   請假維護頁
+   風格：InfoReach Smart FIXGate
+   ============================================ */
+
 .attendance-page {
     min-height: 100vh;
 }
 
+/* ============================================
+   請假表單 Modal（atd-form-modal-*）
+   獨立類名，不與 emp-form-modal-* 衝突
+   ============================================ */
+.atd-form-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 25, 40, 0.45);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3vh 16px 16px;
+    z-index: 1000;
+    overflow-y: auto;
+    animation: atdFormFadeIn 0.15s ease;
+}
+
+[data-theme="dark"] .atd-form-modal-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes atdFormFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.atd-form-modal-content {
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    width: 100%;
+    max-width: 900px;
+    box-shadow: var(--fg-shadow-lg);
+    animation: atdFormSlideUp 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 6vh);
+}
+
+@keyframes atdFormSlideUp {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.atd-form-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    background: var(--fg-bg-thead);
+    border-radius: var(--fg-radius-md) var(--fg-radius-md) 0 0;
+    flex-shrink: 0;
+}
+
+.atd-form-modal-title {
+    font-size: var(--fg-font-size-md);
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.atd-form-modal-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--fg-accent);
+    border-radius: var(--fg-radius-sm);
+}
+
+.atd-form-modal-close {
+    width: 28px;
+    height: 28px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--fg-text-secondary);
+    border-radius: var(--fg-radius-sm);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--fg-transition), color var(--fg-transition);
+}
+
+.atd-form-modal-close:hover {
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border);
+    color: var(--fg-text-primary);
+}
+
+.atd-form-modal-body {
+    padding: 10px 14px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* form 在 modal 裡時，移除卡片框，避免雙層邊框 */
+.atd-form-modal-body .attendance-form {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* 標題已由 modal-header 提供 */
+.atd-form-modal-content .attendance-form > h2 {
+    display: none;
+}
+
+/* ----- 頁首 ----- */
 .page-header {
-    background: rgba(30, 41, 59, 0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-    padding: 20px 32px;
+    background: var(--fg-bg-card);
+    border-bottom: 1px solid var(--fg-border);
+    padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,54 +137,69 @@
 
 .page-header h1 {
     margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
+    font-size: var(--fg-font-size-xl);
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    letter-spacing: -0.01em;
 }
 
 .page-header .header-actions {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
 }
 
 .page-content {
-    padding: 32px;
-    max-width: 1400px;
+    padding: 16px 20px;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
-/* 表單 */
+/* ----- 表單區塊 ----- */
 .form-section {
-    margin-bottom: 32px;
+    margin-bottom: 16px;
 }
 
 .attendance-form {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 16px;
-    padding: 24px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 14px 16px;
 }
 
 .attendance-form h2 {
-    margin: 0 0 20px 0;
-    font-size: 1.125rem;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    font-size: var(--fg-font-size-md);
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--fg-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.attendance-form h2::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--fg-accent);
+    border-radius: var(--fg-radius-sm);
 }
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px 12px;
+    margin-bottom: 8px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 2px;
 }
 
 .form-group-full {
@@ -70,66 +207,105 @@
 }
 
 .form-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
+    font-size: var(--fg-font-size-xs);
+    font-weight: 600;
+    color: var(--fg-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 0.875rem;
-    color: var(--color-text-primary);
-    transition: all 0.2s ease;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 5px 10px;
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
     outline: none;
     width: 100%;
     box-sizing: border-box;
 }
 
+.form-group textarea {
+    min-height: 38px;
+    padding: 5px 10px;
+    resize: vertical;
+}
+
+.form-group input:hover:not(:disabled),
+.form-group select:hover:not(:disabled),
+.form-group textarea:hover:not(:disabled) {
+    border-color: var(--fg-border-strong);
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
 .form-group input:disabled,
 .form-group select:disabled {
-    opacity: 0.5;
+    opacity: 0.55;
     cursor: not-allowed;
+    background: var(--fg-bg-subtle);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--fg-text-muted);
 }
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--fg-border-subtle);
 }
 
-/* 篩選 */
+/* ----- 篩選區 ----- */
 .filter-section {
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
 
 .filters {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .filters input,
 .filters select {
-    background: rgba(30, 41, 59, 0.8);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.875rem;
-    color: var(--color-text-primary);
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 5px 10px;
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
     outline: none;
     box-sizing: border-box;
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
+}
+
+.filters input:hover,
+.filters select:hover {
+    border-color: var(--fg-border-strong);
+}
+
+.filters input:focus,
+.filters select:focus {
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
 .filters input {
@@ -144,47 +320,54 @@
 .date-range {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .date-range span {
-    color: var(--color-text-secondary);
+    color: var(--fg-text-muted);
+    font-size: var(--fg-font-size-sm);
 }
 
 .date-range input {
-    width: 140px;
+    width: 130px;
+    flex: none;
+    font-family: var(--fg-font-mono);
 }
 
-/* 員工資訊顯示 */
+/* ----- 員工資訊（表格內） ----- */
 .employee-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0;
+    line-height: 1.25;
 }
 
 .employee-name {
     font-weight: 500;
+    color: var(--fg-text-primary);
 }
 
 .employee-id {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    font-family: 'SF Mono', Monaco, monospace;
+    font-size: var(--fg-font-size-xs);
+    color: var(--fg-text-muted);
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
 }
 
-/* 表格 */
+/* ----- 表格 ----- */
 .table-section h2 {
-    margin: 0 0 16px 0;
-    font-size: 1rem;
+    margin: 0 0 8px 0;
+    font-size: var(--fg-font-size-md);
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--fg-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .table-container {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 16px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
     overflow: hidden;
     overflow-x: auto;
 }
@@ -192,130 +375,166 @@
 .attendance-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: var(--fg-font-size-base);
     min-width: 600px;
 }
 
 .attendance-table thead {
-    background: rgba(15, 23, 42, 0.6);
+    background: var(--fg-bg-thead);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .attendance-table th {
-    padding: 12px;
+    padding: 6px 12px;
     text-align: left;
     font-weight: 600;
-    color: var(--color-text-secondary);
-    font-size: 0.75rem;
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-xs);
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--fg-border);
     white-space: nowrap;
+    height: 30px;
 }
 
 .attendance-table td {
-    padding: 12px;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
-    color: var(--color-text-primary);
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    color: var(--fg-text-primary);
+    height: var(--fg-row-height);
+    line-height: 1.3;
+}
+
+.attendance-table tbody tr {
+    transition: background var(--fg-transition);
 }
 
 .attendance-table tbody tr:hover {
-    background: rgba(59, 130, 246, 0.05);
+    background: var(--fg-bg-hover);
 }
 
+.attendance-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 假別 / 標籤 */
 .badge {
     display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    background: rgba(59, 130, 246, 0.15);
-    color: var(--color-primary);
+    padding: 1px 6px;
+    border-radius: var(--fg-radius-sm);
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--fg-accent-soft);
+    color: var(--fg-accent);
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
 }
 
+/* ----- 操作按鈕 ----- */
 .action-buttons {
     display: flex;
-    gap: 6px;
+    gap: 4px;
 }
 
 .btn-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--fg-radius-sm);
+    border: 1px solid transparent;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
     flex-shrink: 0;
+    background: transparent;
+    font-size: 12px;
 }
 
 .btn-edit {
-    background: rgba(59, 130, 246, 0.1);
+    color: var(--fg-accent);
 }
 
 .btn-edit:hover {
-    background: rgba(59, 130, 246, 0.2);
-    transform: scale(1.1);
+    background: var(--fg-accent-soft);
+    border-color: var(--fg-accent);
 }
 
 .btn-delete {
-    background: rgba(239, 68, 68, 0.1);
+    color: var(--fg-danger);
 }
 
 .btn-delete:hover {
-    background: rgba(239, 68, 68, 0.2);
-    transform: scale(1.1);
+    background: var(--fg-danger-soft);
+    border-color: var(--fg-danger);
 }
 
+/* ----- 載入 / 空狀態 ----- */
 .loading,
 .empty {
     text-align: center;
-    padding: 40px;
-    color: var(--color-text-secondary);
+    padding: 32px 16px;
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-sm);
 }
 
+/* ----- 通用按鈕 ----- */
 .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-sm);
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
+    border: 1px solid transparent;
+    line-height: 1.4;
+    font-family: var(--fg-font-ui);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--color-primary), #6366f1);
-    color: white;
+    background: var(--fg-accent, #0b5cab);
+    color: var(--fg-text-on-accent, #ffffff);
+    border-color: var(--fg-accent, #0b5cab);
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+.btn-primary:hover:not(:disabled) {
+    background: var(--fg-accent-hover, #094a8a);
+    border-color: var(--fg-accent-hover, #094a8a);
+}
+
+.btn-primary:active:not(:disabled) {
+    background: var(--fg-accent-active, #073a6e);
 }
 
 .btn-secondary {
-    background: rgba(71, 85, 105, 0.5);
-    color: var(--btn-text);
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    border: 1px solid var(--fg-border);
 }
 
 .btn-secondary:hover {
-    background: rgba(71, 85, 105, 0.7);
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border-strong);
 }
 
 /* ============================================
-   響應式設計 - RWD
+   響應式
    ============================================ */
 
-/* 平板螢幕 (768px - 1024px) */
 @media (max-width: 1024px) {
     .page-header {
-        padding: 16px 24px;
+        padding: 10px 16px;
     }
 
     .page-content {
-        padding: 24px;
+        padding: 12px 16px;
     }
 
     .form-grid {
@@ -327,31 +546,25 @@
     }
 }
 
-/* 手機螢幕 (小於 768px) */
 @media (max-width: 768px) {
     .page-header {
-        padding: 16px;
+        padding: 10px 12px;
     }
 
     .page-header h1 {
-        font-size: 1.25rem;
+        font-size: var(--fg-font-size-lg);
     }
 
     .page-content {
-        padding: 16px;
+        padding: 12px;
     }
 
     .attendance-form {
-        padding: 16px;
-    }
-
-    .attendance-form h2 {
-        font-size: 1rem;
+        padding: 12px;
     }
 
     .form-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
     }
 
     .form-actions {
@@ -366,10 +579,15 @@
 
     .filters {
         flex-direction: column;
+        align-items: stretch;
     }
 
     .filters input,
     .filters select {
+        width: 100%;
+    }
+
+    .date-range input {
         width: 100%;
     }
 
@@ -395,43 +613,45 @@
     .attendance-table tbody {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
     }
 
     .attendance-table tbody tr {
         display: flex;
         flex-direction: column;
-        background: rgba(30, 41, 59, 0.8);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        border-radius: 12px;
-        padding: 16px;
-        gap: 8px;
+        background: var(--fg-bg-card);
+        border: 1px solid var(--fg-border);
+        border-radius: var(--fg-radius-md);
+        padding: 12px;
+        gap: 6px;
     }
 
     .attendance-table tbody tr:hover {
-        background: rgba(30, 41, 59, 0.95);
+        background: var(--fg-bg-hover);
     }
 
     .attendance-table td {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 4px 0;
+        padding: 3px 0;
+        height: auto;
         border-bottom: none;
     }
 
     .attendance-table td::before {
         content: attr(data-label);
         font-weight: 600;
-        font-size: 0.75rem;
-        color: var(--color-text-secondary);
+        font-size: var(--fg-font-size-xs);
+        color: var(--fg-text-secondary);
         text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     .attendance-table td:last-child {
-        border-top: 1px solid rgba(148, 163, 184, 0.1);
-        padding-top: 12px;
-        margin-top: 8px;
+        border-top: 1px solid var(--fg-border-subtle);
+        padding-top: 8px;
+        margin-top: 4px;
         justify-content: flex-end;
     }
 
@@ -440,144 +660,36 @@
     }
 
     .action-buttons {
-        gap: 8px;
+        gap: 6px;
     }
 
     .btn-icon {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
     }
 }
 
-/* 小手機螢幕 (小於 480px) */
 @media (max-width: 480px) {
     .page-header h1 {
-        font-size: 1.125rem;
+        font-size: var(--fg-font-size-md);
     }
 
     .page-content {
-        padding: 12px;
+        padding: 10px;
     }
 
     .attendance-form {
-        padding: 12px;
+        padding: 10px;
     }
 
+    /* 防止 iOS 縮放 */
     .form-group input,
     .form-group select,
     .form-group textarea {
-        padding: 12px;
         font-size: 16px;
-        /* 防止 iOS 縮放 */
     }
 
     .table-section h2 {
-        font-size: 0.875rem;
-    }
-}
-
-/* ============================================
-   明亮模式樣式覆蓋
-   ============================================ */
-[data-theme="light"] .page-header {
-    background: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
-}
-
-[data-theme="light"] .attendance-form {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.15);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .form-group input,
-[data-theme="light"] .form-group select,
-[data-theme="light"] .form-group textarea {
-    background: rgba(248, 250, 252, 1);
-    border: 1px solid rgba(100, 116, 139, 0.25);
-}
-
-[data-theme="light"] .form-group input:focus,
-[data-theme="light"] .form-group select:focus,
-[data-theme="light"] .form-group textarea:focus {
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-[data-theme="light"] .filters input,
-[data-theme="light"] .filters select {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .table-container {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(100, 116, 139, 0.15);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .attendance-table thead {
-    background: rgba(241, 245, 249, 0.95);
-}
-
-[data-theme="light"] .attendance-table th {
-    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
-}
-
-[data-theme="light"] .attendance-table td {
-    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
-}
-
-[data-theme="light"] .attendance-table tbody tr:hover {
-    background: rgba(37, 99, 235, 0.05);
-}
-
-[data-theme="light"] .btn-secondary {
-    background: rgba(241, 245, 249, 0.9);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-}
-
-[data-theme="light"] .btn-secondary:hover {
-    background: rgba(226, 232, 240, 1);
-}
-
-[data-theme="light"] .btn-edit {
-    background: rgba(37, 99, 235, 0.1);
-}
-
-[data-theme="light"] .btn-edit:hover {
-    background: rgba(37, 99, 235, 0.2);
-}
-
-[data-theme="light"] .btn-delete {
-    background: rgba(220, 38, 38, 0.1);
-}
-
-[data-theme="light"] .btn-delete:hover {
-    background: rgba(220, 38, 38, 0.2);
-}
-
-/* 手機版卡片樣式 - 明亮模式 */
-@media (max-width: 768px) {
-    [data-theme="light"] .table-container {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-    }
-
-    [data-theme="light"] .attendance-table tbody tr {
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid rgba(100, 116, 139, 0.15);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-
-    [data-theme="light"] .attendance-table tbody tr:hover {
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    [data-theme="light"] .attendance-table td:last-child {
-        border-top: 1px solid rgba(100, 116, 139, 0.12);
+        font-size: var(--fg-font-size-sm);
     }
 }

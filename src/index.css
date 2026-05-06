@@ -1,330 +1,186 @@
 /* ============================================
-   設計系統 - CSS 變數與全域樣式
-   Wrike 風格重新設計
+   全域基礎樣式
+   風格：InfoReach Smart FIXGate
    ============================================ */
 
-/* 字體引入 */
+/* 設計 Token（淺色為主 + 深色交易終端變體） */
+@import './styles/theme-fixgate.css';
+
+/* UI 字體 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* 色彩變數 - 預設明亮模式 */
-:root {
-  /* 側邊欄 - 淺色主題 */
-  --color-sidebar-bg: #f8fafc;
-  --color-sidebar-hover: #e2e8f0;
-  --color-sidebar-active: #dbeafe;
-  --color-sidebar-text: #475569;
-  --color-sidebar-text-active: #1e293b;
-  --color-sidebar-accent: #05cd99;
-
-  /* 主色調 */
-  --color-primary: #05cd99;
-  --color-primary-dark: #04b888;
-  --color-primary-light: rgba(5, 205, 153, 0.15);
-  --color-accent: #3b82f6;
-
-  /* 狀態色 */
-  --color-success: #05cd99;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
-
-  /* 狀態標籤色 */
-  --color-status-new: #05cd99;
-  --color-status-inreview: #3b82f6;
-  --color-status-completed: rgba(5, 205, 153, 0.9);
-  --color-status-low: #10b981;
-  --color-status-medium: #f59e0b;
-  --color-status-high: #ef4444;
-
-  /* 背景色 - 主內容區淺色 */
-  --color-bg-primary: #f7f9fc;
-  --color-bg-secondary: #ffffff;
-  --color-bg-tertiary: #eef2f6;
-  --color-bg-card: #ffffff;
-
-  /* 文字色 */
-  --color-text-primary: #1e293b;
-  --color-text-secondary: #64748b;
-  --color-text-muted: #94a3b8;
-
-  /* 邊框與分隔線 */
-  --color-border: #e2e8f0;
-  --color-border-light: #f1f5f9;
-  --color-border-hover: #cbd5e1;
-
-  /* 陰影 */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-
-  /* 間距 */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-
-  /* 圓角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-
-  /* 過渡 */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.2s ease;
-  --transition-slow: 0.3s ease;
-
-  /* 舊變數相容 */
-  --primary-color: var(--color-primary);
-  --primary-color-rgb: 5, 205, 153;
-  --text-primary: var(--color-text-primary);
-  --text-secondary: var(--color-text-secondary);
-  --card-bg: var(--color-bg-card);
-  --card-shadow: var(--shadow-card);
-  --border-color: var(--color-border);
-  --input-bg: var(--color-bg-secondary);
-  --hover-bg: var(--color-bg-tertiary);
-  --active-bg: #e2e8f0;
-  --disabled-bg: #f1f5f9;
-
-  /* 暗黑模式通用變數 */
-  --color-surface: var(--color-bg-card);
-  --color-bg: var(--color-bg-primary);
-  --color-text: var(--color-text-primary);
-  --color-text-muted: var(--color-text-secondary);
-
-  /* 按鈕文字顏色 - 明亮模式使用深色文字 */
-  --btn-text: #1e293b;
-  --btn-text-on-primary: #ffffff;
-  --btn-text-active: #1e293b;
-  --btn-icon-text: #475569;
-  --btn-icon-edit: #2563eb;
-  --btn-icon-delete: #dc2626;
-}
-
-/* 暗黑模式 */
-[data-theme="dark"] {
-  /* 背景色 - 深色 */
-  --color-bg-primary: #0f172a;
-  --color-bg-secondary: #1e293b;
-  --color-bg-tertiary: #334155;
-  --color-bg-card: #1e293b;
-
-  /* 文字色 - 淺色 */
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-
-  /* 邊框 */
-  --color-border: #334155;
-  --color-border-light: #475569;
-  --color-border-hover: #475569;
-
-  /* 側邊欄 - 深色 */
-  --color-sidebar-bg: #0f172a;
-  --color-sidebar-hover: #1e293b;
-  --color-sidebar-active: #334155;
-  --color-sidebar-text: #94a3b8;
-  --color-sidebar-text-active: #ffffff;
-
-  /* 輸入框 */
-  --input-bg: #1e293b;
-  --hover-bg: #334155;
-  --active-bg: #475569;
-  --disabled-bg: #1e293b;
-
-  /* 卡片 */
-  --card-bg: #1e293b;
-  --color-surface: #1e293b;
-  --color-bg: #0f172a;
-  --color-text: #f1f5f9;
-
-  /* 陰影 */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
-
-  /* 按鈕文字顏色 - 暗黑模式使用淺色文字 */
-  --btn-text: #f1f5f9;
-  --btn-text-on-primary: #ffffff;
-  --btn-text-active: #ffffff;
-  --btn-icon-text: #cbd5e1;
-  --btn-icon-edit: #60a5fa;
-  --btn-icon-delete: #f87171;
-}
-
-/* 重置樣式 */
+/* ----- 重置 ----- */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* 基礎樣式 */
 html {
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  line-height: 1.5;
-  min-height: 100vh;
+    font-family: var(--fg-font-ui);
+    font-size: var(--fg-font-size-base);
+    background: var(--fg-bg-page);
+    color: var(--fg-text-primary);
+    line-height: 1.45;
+    min-height: 100vh;
 }
 
 #root {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 
-/* 選取樣式 */
+/* 等寬：員工編號、日期、數字 */
+.mono,
+.emp-id,
+code,
+kbd,
+samp {
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+/* 文字選取 */
 ::selection {
-  background: rgba(5, 205, 153, 0.3);
-  color: var(--color-text-primary);
+    background: var(--fg-accent-soft);
+    color: var(--fg-accent);
 }
 
-/* 滾動條樣式 */
+/* 滾動條 */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-primary);
+    background: var(--fg-bg-page);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-bg-tertiary);
-  border-radius: 4px;
+    background: var(--fg-border-strong);
+    border-radius: var(--fg-radius-sm);
+    border: 2px solid var(--fg-bg-page);
+    background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
+    background: var(--fg-text-muted);
+    border: 2px solid var(--fg-bg-page);
+    background-clip: padding-box;
 }
 
-/* 載入畫面 */
+/* ----- 載入畫面 ----- */
 .loading-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 16px;
-  color: var(--color-text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: var(--fg-space-4);
+    color: var(--fg-text-secondary);
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--fg-border);
+    border-top-color: var(--fg-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-/* 權限不足頁面 */
+/* ----- 權限不足 ----- */
 .access-denied {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 8px;
-  text-align: center;
-  color: var(--color-text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: var(--fg-space-2);
+    text-align: center;
+    color: var(--fg-text-secondary);
 }
 
 .access-denied h1 {
-  font-size: 2rem;
-  margin: 0;
-  color: var(--color-danger);
-}
-
-.access-denied p {
-  margin: 0;
+    font-size: 1.75rem;
+    margin: 0;
+    color: var(--fg-danger);
 }
 
 .access-denied-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+    display: flex;
+    gap: var(--fg-space-3);
+    margin-top: var(--fg-space-5);
 }
 
 .access-denied-actions .btn-primary {
-  padding: 0.75rem 1.5rem;
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    padding: 8px 16px;
+    background: var(--fg-accent);
+    color: var(--fg-text-on-accent);
+    border: 1px solid var(--fg-accent);
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--fg-transition);
 }
 
 .access-denied-actions .btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+    background: var(--fg-accent-hover);
+    border-color: var(--fg-accent-hover);
 }
 
 .access-denied-actions .btn-secondary {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    padding: 8px 16px;
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--fg-transition);
 }
 
 .access-denied-actions .btn-secondary:hover {
-  background: var(--color-bg-secondary);
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border-strong);
 }
 
-/* ============================================
-   全域按鍵文字顏色 - 確保明亮/暗黑模式可讀性
-   ============================================ */
-
-/* 圖示按鍵基礎樣式 */
+/* ----- 全域圖示按鈕（保留舊類別） ----- */
 .btn-icon {
-  color: var(--btn-icon-text);
+    color: var(--fg-text-secondary);
 }
 
 .btn-edit {
-  color: var(--btn-icon-edit);
+    color: var(--fg-accent);
 }
 
 .btn-delete {
-  color: var(--btn-icon-delete);
+    color: var(--fg-danger);
 }
 
-/* 次要按鍵 */
 .btn-secondary {
-  color: var(--btn-text);
+    color: var(--fg-text-primary);
 }
 
-/* 模式切換按鍵 */
 .mode-btn {
-  color: var(--btn-text);
+    color: var(--fg-text-primary);
 }
 
 .mode-btn.active {
-  color: var(--btn-text-on-primary);
+    color: var(--fg-text-on-accent);
 }

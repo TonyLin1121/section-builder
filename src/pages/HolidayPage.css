@@ -1,80 +1,557 @@
-/**
- * 假日維護頁面樣式
- * NOTE: 遵循 AttendancePage.css 的設計系統
- */
+/* ============================================
+   假日檔維護頁
+   風格：InfoReach Smart FIXGate
+   ============================================ */
 
 .holiday-page {
     min-height: 100vh;
 }
 
-/* 複用 .page-header, .page-content, .form-section, .filter-section, .table-section
-   這些共用 class 已由 AttendancePage.css 定義 */
+/* ============================================
+   假日表單 Modal（hld-form-modal-*）
+   ============================================ */
+.hld-form-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 25, 40, 0.45);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3vh 16px 16px;
+    z-index: 1000;
+    overflow-y: auto;
+    animation: hldFormFadeIn 0.15s ease;
+}
 
-/* 表單 */
+[data-theme="dark"] .hld-form-modal-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes hldFormFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.hld-form-modal-content {
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    width: 100%;
+    max-width: 720px;
+    box-shadow: var(--fg-shadow-lg);
+    animation: hldFormSlideUp 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 6vh);
+}
+
+@keyframes hldFormSlideUp {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.hld-form-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    background: var(--fg-bg-thead);
+    border-radius: var(--fg-radius-md) var(--fg-radius-md) 0 0;
+    flex-shrink: 0;
+}
+
+.hld-form-modal-title {
+    font-size: var(--fg-font-size-md);
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.hld-form-modal-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--fg-accent);
+    border-radius: var(--fg-radius-sm);
+}
+
+.hld-form-modal-close {
+    width: 28px;
+    height: 28px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--fg-text-secondary);
+    border-radius: var(--fg-radius-sm);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--fg-transition), color var(--fg-transition);
+}
+
+.hld-form-modal-close:hover {
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border);
+    color: var(--fg-text-primary);
+}
+
+.hld-form-modal-body {
+    padding: 10px 14px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* form 在 modal 內：移除卡片框與重複標題 */
+.hld-form-modal-body .holiday-form {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.hld-form-modal-content .holiday-form > h2 {
+    display: none;
+}
+
+/* ----- 頁首 ----- */
+.page-header {
+    background: var(--fg-bg-card);
+    border-bottom: 1px solid var(--fg-border);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: var(--fg-font-size-xl);
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    letter-spacing: -0.01em;
+}
+
+.page-header .header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.page-content {
+    padding: 16px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ----- 表單 ----- */
+.form-section {
+    margin-bottom: 16px;
+}
+
 .holiday-form {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(148, 163, 184, 0.1);
-    border-radius: 16px;
-    padding: 24px;
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 14px 16px;
 }
 
 .holiday-form h2 {
-    margin: 0 0 20px 0;
-    font-size: 1.125rem;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    font-size: var(--fg-font-size-md);
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--fg-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* 表格 */
+.holiday-form h2::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--fg-accent);
+    border-radius: var(--fg-radius-sm);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px 12px;
+    margin-bottom: 8px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.form-group label {
+    font-size: var(--fg-font-size-xs);
+    font-weight: 600;
+    color: var(--fg-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.form-group input,
+.form-group select {
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    padding: 5px 10px;
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    color: var(--fg-text-primary);
+    font-family: var(--fg-font-ui);
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input[type="date"] {
+    font-family: var(--fg-font-mono);
+}
+
+.form-group input:hover:not(:disabled),
+.form-group select:hover:not(:disabled) {
+    border-color: var(--fg-border-strong);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
+}
+
+.form-group input:disabled,
+.form-group select:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--fg-bg-subtle);
+}
+
+.form-group input::placeholder {
+    color: var(--fg-text-muted);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--fg-border-subtle);
+}
+
+/* ----- 篩選 ----- */
+.filter-section {
+    margin-bottom: 12px;
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filters select {
+    padding: 5px 10px;
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    font-size: var(--fg-font-size-sm);
+    line-height: 1.4;
+    font-family: var(--fg-font-ui);
+    min-width: 130px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color var(--fg-transition), box-shadow var(--fg-transition);
+}
+
+.filters select:hover {
+    border-color: var(--fg-border-strong);
+}
+
+.filters select:focus {
+    border-color: var(--fg-accent);
+    box-shadow: 0 0 0 3px var(--fg-accent-ring);
+}
+
+/* ----- 表格 ----- */
+.table-section h2 {
+    margin: 0 0 8px 0;
+    font-size: var(--fg-font-size-md);
+    font-weight: 600;
+    color: var(--fg-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.table-container {
+    background: var(--fg-bg-card);
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-md);
+    overflow: hidden;
+    overflow-x: auto;
+}
+
 .holiday-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: var(--fg-font-size-base);
     min-width: 500px;
 }
 
 .holiday-table thead {
-    background: rgba(15, 23, 42, 0.6);
+    background: var(--fg-bg-thead);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .holiday-table th {
-    padding: 12px;
+    padding: 6px 12px;
     text-align: left;
     font-weight: 600;
-    color: var(--color-text-secondary);
-    font-size: 0.75rem;
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-xs);
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--fg-border);
     white-space: nowrap;
+    height: 30px;
 }
 
 .holiday-table td {
-    padding: 12px;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
-    color: var(--color-text-primary);
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--fg-border-subtle);
+    color: var(--fg-text-primary);
+    height: var(--fg-row-height);
+    line-height: 1.3;
+}
+
+.holiday-table tbody tr {
+    transition: background var(--fg-transition);
 }
 
 .holiday-table tbody tr:hover {
-    background: rgba(59, 130, 246, 0.05);
+    background: var(--fg-bg-hover);
 }
 
-/* 類型標籤 */
-.badge-holiday {
-    background: rgba(239, 68, 68, 0.15);
-    color: #fca5a5;
+.holiday-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
-.badge-makeup {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
+/* 日期欄位等寬字 */
+.holiday-table td:first-child {
+    font-family: var(--fg-font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-text-primary);
+    font-weight: 500;
+}
+
+/* ----- 假日 / 補班日 標籤 ----- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: var(--fg-radius-pill);
+    font-size: var(--fg-font-size-xs);
+    font-weight: 500;
+    border: 1px solid transparent;
+    line-height: 1.4;
+}
+
+.badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.badge.badge-holiday {
+    background: var(--fg-danger-soft);
+    color: var(--fg-danger);
+}
+
+.badge.badge-holiday::before {
+    background: var(--fg-danger);
+}
+
+.badge.badge-makeup {
+    background: var(--fg-success-soft);
+    color: var(--fg-success);
+}
+
+.badge.badge-makeup::before {
+    background: var(--fg-success);
+}
+
+/* ----- 操作按鈕 ----- */
+.action-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--fg-radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
+    flex-shrink: 0;
+    background: transparent;
+    font-size: 12px;
+}
+
+.btn-edit {
+    color: var(--fg-accent);
+}
+
+.btn-edit:hover {
+    background: var(--fg-accent-soft);
+    border-color: var(--fg-accent);
+}
+
+.btn-delete {
+    color: var(--fg-danger);
+}
+
+.btn-delete:hover {
+    background: var(--fg-danger-soft);
+    border-color: var(--fg-danger);
+}
+
+/* ----- 載入 / 空狀態 ----- */
+.loading,
+.empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-sm);
+}
+
+/* ----- 錯誤 ----- */
+.error-banner {
+    margin: 12px 20px 0;
+    padding: 8px 12px;
+    background: var(--fg-danger-soft);
+    border: 1px solid var(--fg-danger);
+    border-radius: var(--fg-radius-md);
+    color: var(--fg-danger);
+    font-size: var(--fg-font-size-sm);
+}
+
+/* ----- 通用按鈕 ----- */
+.btn {
+    padding: 5px 14px;
+    border-radius: var(--fg-radius-md);
+    font-size: var(--fg-font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--fg-transition), border-color var(--fg-transition);
+    border: 1px solid transparent;
+    line-height: 1.4;
+    font-family: var(--fg-font-ui);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary {
+    background: var(--fg-accent, #0b5cab);
+    color: var(--fg-text-on-accent, #ffffff);
+    border-color: var(--fg-accent, #0b5cab);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--fg-accent-hover, #094a8a);
+    border-color: var(--fg-accent-hover, #094a8a);
+}
+
+.btn-secondary {
+    background: var(--fg-bg-card);
+    color: var(--fg-text-primary);
+    border: 1px solid var(--fg-border);
+}
+
+.btn-secondary:hover {
+    background: var(--fg-bg-hover);
+    border-color: var(--fg-border-strong);
 }
 
 /* ============================================
-   響應式設計
+   響應式
    ============================================ */
-
 @media (max-width: 768px) {
+    .page-header {
+        padding: 10px 12px;
+    }
+
+    .page-header h1 {
+        font-size: var(--fg-font-size-lg);
+    }
+
+    .page-content {
+        padding: 12px;
+    }
+
+    .holiday-form {
+        padding: 12px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters select {
+        width: 100%;
+    }
+
+    /* 卡片式表格 */
+    .table-container {
+        background: transparent;
+        border: none;
+        overflow: visible;
+    }
+
     .holiday-table {
         min-width: unset;
     }
@@ -86,101 +563,65 @@
     .holiday-table tbody {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
     }
 
     .holiday-table tbody tr {
         display: flex;
         flex-direction: column;
-        background: rgba(30, 41, 59, 0.8);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        border-radius: 12px;
-        padding: 16px;
-        gap: 8px;
-    }
-
-    .holiday-table tbody tr:hover {
-        background: rgba(30, 41, 59, 0.95);
+        background: var(--fg-bg-card);
+        border: 1px solid var(--fg-border);
+        border-radius: var(--fg-radius-md);
+        padding: 12px;
+        gap: 6px;
     }
 
     .holiday-table td {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 4px 0;
+        padding: 3px 0;
+        height: auto;
         border-bottom: none;
     }
 
     .holiday-table td::before {
         content: attr(data-label);
         font-weight: 600;
-        font-size: 0.75rem;
-        color: var(--color-text-secondary);
+        font-size: var(--fg-font-size-xs);
+        color: var(--fg-text-secondary);
         text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     .holiday-table td:last-child {
-        border-top: 1px solid rgba(148, 163, 184, 0.1);
-        padding-top: 12px;
-        margin-top: 8px;
+        border-top: 1px solid var(--fg-border-subtle);
+        padding-top: 8px;
+        margin-top: 4px;
         justify-content: flex-end;
     }
 
     .holiday-table td:last-child::before {
         display: none;
     }
-}
 
-/* ============================================
-   明亮模式
-   ============================================ */
-
-[data-theme="light"] .holiday-form {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(100, 116, 139, 0.15);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .holiday-table thead {
-    background: rgba(241, 245, 249, 0.95);
-}
-
-[data-theme="light"] .holiday-table th {
-    border-bottom: 1px solid rgba(100, 116, 139, 0.15);
-}
-
-[data-theme="light"] .holiday-table td {
-    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
-}
-
-[data-theme="light"] .holiday-table tbody tr:hover {
-    background: rgba(37, 99, 235, 0.05);
-}
-
-[data-theme="light"] .badge-holiday {
-    background: rgba(220, 38, 38, 0.12);
-    color: #dc2626;
-}
-
-[data-theme="light"] .badge-makeup {
-    background: rgba(22, 163, 74, 0.12);
-    color: #16a34a;
-}
-
-/* 手機版卡片 - 明亮模式 */
-@media (max-width: 768px) {
-    [data-theme="light"] .holiday-table tbody tr {
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid rgba(100, 116, 139, 0.15);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    .action-buttons {
+        gap: 6px;
     }
 
-    [data-theme="light"] .holiday-table tbody tr:hover {
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: var(--fg-font-size-md);
     }
 
-    [data-theme="light"] .holiday-table td:last-child {
-        border-top: 1px solid rgba(100, 116, 139, 0.12);
+    .form-group input,
+    .form-group select {
+        font-size: 16px;
     }
 }
