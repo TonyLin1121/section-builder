@@ -29,6 +29,11 @@ export function useLeaveStats() {
     const [sortBy, setSortBy] = useState<SortBy>('english_name');
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
+    // 身份別過濾（預設：正職、經理人、工讀生）
+    const [selectedTypes, setSelectedTypes] = useState<string[]>(['member', 'manager', 'intern']);
+    // 在職狀態過濾（預設：在職）
+    const [selectedStatus, setSelectedStatus] = useState<string[]>(['employed']);
+
     /**
      * 載入統計資料
      */
@@ -46,6 +51,12 @@ export function useLeaveStats() {
             if (mode === 'month') {
                 params.month = selectedMonth;
             }
+            if (selectedTypes.length > 0) {
+                params.member_types = selectedTypes.join(',');
+            }
+            if (selectedStatus.length > 0) {
+                params.employed_status = selectedStatus.join(',');
+            }
 
             const response = await api.getLeaveStats(params);
             setRecords(response.items);
@@ -56,7 +67,7 @@ export function useLeaveStats() {
         } finally {
             setIsLoading(false);
         }
-    }, [mode, selectedYear, selectedMonth, sortBy, sortOrder]);
+    }, [mode, selectedYear, selectedMonth, sortBy, sortOrder, selectedTypes, selectedStatus]);
 
     // 模式、年度、月份、排序變更時重新載入
     useEffect(() => {
@@ -76,6 +87,24 @@ export function useLeaveStats() {
             setSortOrder('asc');
         }
     }, [sortBy]);
+
+    /**
+     * 切換身份別選項
+     */
+    const toggleType = useCallback((value: string) => {
+        setSelectedTypes(prev =>
+            prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]
+        );
+    }, []);
+
+    /**
+     * 切換在職狀態選項
+     */
+    const toggleStatus = useCallback((value: string) => {
+        setSelectedStatus(prev =>
+            prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]
+        );
+    }, []);
 
     /**
      * 年度選項（當年前後各一年）
@@ -113,6 +142,11 @@ export function useLeaveStats() {
         sortBy,
         sortOrder,
         handleSort,
+        // 身份別 / 在職狀態過濾
+        selectedTypes,
+        toggleType,
+        selectedStatus,
+        toggleStatus,
         // 操作
         refresh: fetchStats,
     };

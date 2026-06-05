@@ -54,6 +54,10 @@ export interface LeaveStatsQueryParams {
     month?: string;
     sort_by?: 'emp_id' | 'english_name' | 'chinese_name';
     sort_order?: 'asc' | 'desc';
+    /** 身份別（逗號分隔）: member,manager,intern,consultant,outsourcing */
+    member_types?: string;
+    /** 在職狀態（逗號分隔）: employed,unemployed */
+    employed_status?: string;
 }
 
 /**
@@ -77,6 +81,12 @@ export async function getLeaveStats(
     }
     if (params.sort_order) {
         searchParams.append('sort_order', params.sort_order);
+    }
+    if (params.member_types) {
+        searchParams.append('member_types', params.member_types);
+    }
+    if (params.employed_status) {
+        searchParams.append('employed_status', params.employed_status);
     }
 
     const queryString = searchParams.toString();

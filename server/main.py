@@ -1136,11 +1136,14 @@ def get_leave_stats(
     month: Optional[str] = Query(None, description="月份 MM (mode=month 時必填)"),
     sort_by: str = Query("english_name", description="排序欄位: emp_id/english_name/chinese_name"),
     sort_order: str = Query("asc", description="排序方向 asc/desc"),
+    member_types: Optional[str] = Query(None, description="身份別（逗號分隔）: member,manager,intern,consultant,outsourcing"),
+    employed_status: Optional[str] = Query(None, description="在職狀態（逗號分隔）: employed,unemployed"),
 ):
     """
     取得休假統計資料
     NOTE: 支援年度統計（整年累計）與月份統計（單月累計）
     回傳每位員工各假別的可休、已休、未休天數
+    可依身份別（is_member/is_manager/...）與在職狀態（is_employed）過濾
     """
     try:
         with get_cursor() as cursor:
@@ -1169,8 +1172,8 @@ def get_leave_stats(
                 SELECT code_subcode, code_subname
                 FROM gen001_allcode
                 WHERE code_code = '0001' AND used_mark = '1'
-                ORDER BY 
-                    CASE code_subname
+                ORDER BY
+                    CASE TRIM(code_subname)
                         WHEN '特休' THEN 1
                         WHEN '補休' THEN 2
                         WHEN '凌群假' THEN 3
@@ -1182,7 +1185,8 @@ def get_leave_stats(
             """)
             leave_type_rows = cursor.fetchall()
             leave_type_order = {row['code_subcode']: idx for idx, row in enumerate(leave_type_rows)}
-            leave_type_names = {row['code_subcode']: row['code_subname'] for row in leave_type_rows}
+            # NOTE: code_subname 為定長欄位可能帶前後空白，統一 trim 以利前端比對與顯示
+            leave_type_names = {row['code_subcode']: (row['code_subname'] or '').strip() for row in leave_type_rows}
 
             # 取得所有有資料的假別（可休或已休）
             cursor.execute("""
@@ -1234,13 +1238,36 @@ def get_leave_stats(
             # 合併所有有資料的員工
             all_emp_ids = set(available_days.keys()) | set(used_days.keys())
 
-            # 取得員工資訊
+            # 身份別與在職狀態過濾條件
+            type_column_map = {
+                'member': 'is_member',
+                'manager': 'is_manager',
+                'intern': 'is_intern',
+                'consultant': 'is_consultant',
+                'outsourcing': 'is_outsourcing',
+            }
+            member_conditions = []
+            if member_types:
+                selected_types = [t.strip() for t in member_types.split(',') if t.strip() in type_column_map]
+                if selected_types:
+                    type_conditions = [f"{type_column_map[t]} = TRUE" for t in selected_types]
+                    member_conditions.append(f"({' OR '.join(type_conditions)})")
+            if employed_status:
+                status_list = [s.strip() for s in employed_status.split(',') if s.strip()]
+                if 'employed' in status_list and 'unemployed' not in status_list:
+                    member_conditions.append("is_employed = TRUE")
+                elif 'unemployed' in status_list and 'employed' not in status_list:
+                    member_conditions.append("is_employed = FALSE")
+                # 兩者都選或都不選 → 不加條件（顯示全部）
+
+            # 取得員工資訊（套用身份別/在職狀態過濾）
             if all_emp_ids:
                 placeholders = ', '.join(['%s'] * len(all_emp_ids))
+                extra_clause = (' AND ' + ' AND '.join(member_conditions)) if member_conditions else ''
                 cursor.execute(f"""
                     SELECT emp_id, name as english_name, chinese_name
                     FROM member
-                    WHERE emp_id IN ({placeholders})
+                    WHERE emp_id IN ({placeholders}){extra_clause}
                 """, tuple(all_emp_ids))
                 member_rows = cursor.fetchall()
                 members = {row['emp_id']: row for row in member_rows}
@@ -1250,7 +1277,10 @@ def get_leave_stats(
             # 組合結果
             items = []
             for emp_id in all_emp_ids:
-                member_info = members.get(emp_id, {})
+                member_info = members.get(emp_id)
+                # 不符合身份別/在職狀態過濾條件者排除
+                if member_info is None:
+                    continue
                 record = {
                     'emp_id': emp_id,
                     'english_name': member_info.get('english_name', ''),

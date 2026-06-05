@@ -141,6 +141,54 @@
     box-shadow: 0 0 0 3px var(--fg-accent-ring);
 }
 
+/* 勾選式過濾（在職狀態 / 身份別） */
+.leave-stats-page .filter-checks {
+    align-items: center;
+}
+
+.leave-stats-page .check-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.leave-stats-page .check-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border: 1px solid var(--fg-border);
+    border-radius: var(--fg-radius-pill);
+    background: var(--fg-bg-card);
+    color: var(--fg-text-secondary);
+    font-size: var(--fg-font-size-sm);
+    font-family: var(--fg-font-ui);
+    line-height: 1.4;
+    cursor: pointer;
+    user-select: none;
+    transition: background var(--fg-transition), border-color var(--fg-transition), color var(--fg-transition);
+}
+
+.leave-stats-page .check-chip:hover {
+    border-color: var(--fg-border-strong);
+    background: var(--fg-bg-hover);
+}
+
+.leave-stats-page .check-chip:has(input:checked) {
+    border-color: var(--fg-accent);
+    background: var(--fg-accent-soft);
+    color: var(--fg-accent);
+    font-weight: 600;
+}
+
+.leave-stats-page .check-chip input {
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    accent-color: var(--fg-accent);
+    cursor: pointer;
+}
+
 /* ----- 表格區塊 ----- */
 .leave-stats-page .table-section {
     background: var(--fg-bg-card);
